@@ -1,0 +1,32 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  test_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY_ACCESS }}
+
+      - name: Deploying to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no lucifer@api.prody.istenith.com << EOF
+            cd prody-backend
+            git config pull.rebase false
+            git pull origin master
+            sudo make up
+          EOF
