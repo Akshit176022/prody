@@ -1,65 +1,131 @@
 "use client";
+import React, { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import Burger from '../home/components/hamburger';
-import Link from 'next/link';
-import React from 'react';
-import { useState , useEffect } from 'react';
-import Image from 'next/image';
 import { MdKeyboardArrowRight } from "react-icons/md";
-import Display from '../componenets/eventdisplay';
+import axios from "axios";
+
+type Event = {
+  id: number;
+  name: string;
+  description: string;
+  poster: string;
+  is_live: boolean;
+  is_completed: boolean;
+  is_team_event: boolean;
+  registered_users: number[];
+  registered_teams: number[]; 
+};
+
+type User = {
+  username: string;
+  user_id: string;
+  prody_points: number;
+  registered_events: {
+    is_live_events: Event[];
+    is_upcoming_events: Event[];
+    is_completed_events: Event[];
+  };
+};
 
 const Profile = () => {
-
-  const profileImages = ["/p1.svg", "/p2.svg", "/p3.svg", "/p4.svg", "/p5.svg"];
+  const profileImages = useMemo(() => ["/p1.svg", "/p2.svg", "/p3.svg", "/p4.svg", "/p5.svg"], []);
   const [profileImg, setProfileImg] = useState("");
+  const [user, setUser] = useState<User | null>(null);
+  const [moreEvents, setMoreEvents] = useState<Event[]>([]);
+  const [token, setToken] = useState<string | null>(null);
+  const [isLoadingMoreEvents, setIsLoadingMoreEvents] = useState(false);
+  const [errorMoreEvents, setErrorMoreEvents] = useState<unknown>(null);
+  const [errorUser, setErrorUser] = useState<unknown>(null);
 
   useEffect(() => {
-    // Check if a profile image is already stored
+    const storedToken = localStorage.getItem("jwt");
+    setToken(storedToken);
+    console.log("Token retrieved from localStorage:", storedToken);
+
+    if (!storedToken) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
+          {
+            headers: {
+              Authorization: `${storedToken}`,
+            },
+          }
+        );
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+        setErrorUser(error);
+      }
+    };
+
+    const fetchMoreEvents = async () => {
+      setIsLoadingMoreEvents(true);
+      setErrorMoreEvents(null);
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/`
+        );
+        setMoreEvents(response.data);
+      } catch (error) {
+        console.error("Failed to fetch more events:", error);
+        setErrorMoreEvents(error);
+      } finally {
+        setIsLoadingMoreEvents(false);
+      }
+    };
+
     const storedImage = localStorage.getItem("profileImg");
     if (storedImage) {
       setProfileImg(storedImage);
     } else {
-      // Select a random image and store it
-      const randomImg = profileImages[Math.floor(Math.random() * profileImages.length)];
+      const randomImg =
+        profileImages[Math.floor(Math.random() * profileImages.length)];
       localStorage.setItem("profileImg", randomImg);
       setProfileImg(randomImg);
     }
+
+    fetchUserProfile();
+    fetchMoreEvents();
   }, []);
 
-const events= [
-  {
-    id: 1,
-    img: "/image77.jpg",
-    text:"mousetrap"
-   },
-   {
-    id: 2,
-    img: "/image77.jpg",
-    text:"Abhedya 4.0"
-   },
-   {
-    id: 3,
-    img: "/image77.jpg",
-    text:"aeroquest"
-   },
-   {
-    id: 4,
-    img: "/image77.jpg",
-    text:"CSE Event"
-   },
-];
+  if (errorUser) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-white">
+        Failed to load profile. Please try again later.
+      </div>
+    );
+  }
 
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-white">
+        Loading...
+      </div>
+    );
+  }
+
+  const { is_live_events = [], is_upcoming_events = [], is_completed_events = [] } =
+    user.registered_events || {};
 
   return (
     <div
       className="flex flex-col items-center h-screen bg-cover bg-center bg-no-repeat min-w-screen"
-       style={{
+      style={{
         backgroundImage: `url('/background.png')`,
-       }}
+      }}
     >
-      <Burger/>
+      <Burger />
       <div className="mt-20 participant_info font-inter flex flex-col text-white items-center justify-center">
         <div className="relative flex items-center justify-center w-36 h-36 rounded-full bg-gradient-to-b from-[#1B7774] to-[#0E1F25]">
-          <div className="w-28 h-28 rounded-full overflow-hidden my-3 ">
+          <div className="w-28 h-28 rounded-full overflow-hidden my-3">
             {profileImg && (
               <Image
                 src={profileImg}
@@ -69,49 +135,113 @@ const events= [
                 className="w-full h-full object-cover"
               />
             )}
-        
-</div>
+          </div>
         </div>
-        <div className='name text-lg mt-2 font-semibold text-white'>Amit Singh Bathyal</div>
-        <div className='prodyid text-lg font-semibold py-3 text-white'>prody_id 011</div>
-        <div className='points text-lg font-semibold text-white'>1000</div>
-        <div className='points text-base font-medium mb-8 text-white'>Prody Points</div>
+        <div className="name text-lg mt-2 font-semibold text-white">{user.username}</div>
+        <div className="prodyid text-lg font-semibold py-3 text-white">Prody ID: {user.user_id}</div>
+        <div className="points text-lg font-semibold text-white">{user.prody_points}</div>
+        <div className="points text-base font-medium mb-8 text-white">Prody Points</div>
       </div>
-      <Display/>
-      {/* <CircularProgressBar events={eventNames.length} eventNames={eventNames}/> */}
-      <div className='flex px-6 pt-7 pb-2 justify-between w-full'>
-      <div className='text-white font-semibold text-lg'>More Events</div>
-      <MdKeyboardArrowRight size={24} className='text-white'/>
-      </div>
-      <Link href="/events">        
-<div className="grid grid-rows-2 grid-flow-col gap-4 bg-[##010101] p-4 w-full text-white ">
-  {events.map((event) => (
-    <div key={event.id} className="flex items-center mb-4 hover:scale-110 transition-all duration-300">
-      
-      
-        <Image
-              src={event.img}
-              alt={event.text}
-              width={64} 
-              height={64} 
-              className="rounded-full object-cover w-[14vw] translate-x-2"
-            />
-      <Image
-      src="/Subtract.svg" 
-  alt="Circular Image" 
-  width={500} 
-  height={500} 
-  className="w-[30vw] relative" 
-/>
-      <div className='absolute translate-x-20 -translate-y-2 bg- px-2'>
-        {event.text}
-        
-      </div>
-    </div>
-  ))}
-</div>
-</Link>
 
+      <div className="w-full px-6 pb-2 mt-12">
+        <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
+          Registered Events
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+          {is_live_events.map((event) => (
+            <div
+              key={event.id}
+              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-600 min-h-[200px] rounded-lg p-4 shadow-lg"
+            >
+              <div className="text-center mt-2">
+                <p className="font-semibold text-2xl">{event.name}</p>
+                <p className="text-1xl text-[#FFD700]">Status: Live</p>
+                <p className="text-1xl">
+                  {event.is_team_event ? "Team Event" : "Individual Event"}
+                </p>
+                <p className="font-semibold text-lg">{event.description}</p>
+                {event.is_team_event && (
+                  <div className="text-sm mt-2">
+                    <p>Teams Registered:</p>
+                    {event.registered_teams.map((team_id) => (
+                      <p key={team_id}>Team ID: {team_id}</p> 
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {is_upcoming_events.map((event) => (
+            <div
+              key={event.id}
+              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-[#1B7774] rounded-lg p-4 shadow-lg"
+            >
+              <div className="text-center mt-2">
+                <p className="font-semibold text-lg">{event.name}</p>
+                <p className="text-sm text-[#00FF00]">Status: Upcoming</p>
+                <p className="text-sm">
+                  {event.is_team_event ? "Team Event" : "Individual Event"}
+                </p>
+                <p className="font-semibold text-lg">{event.description}</p>
+              </div>
+            </div>
+          ))}
+
+          {is_completed_events.map((event) => (
+            <div
+              key={event.id}
+              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-[#1B7774] rounded-lg p-4 shadow-lg"
+            >
+              <div className="text-center mt-2">
+                <p className="font-semibold text-lg">{event.name}</p>
+                <p className="text-sm text-[#FF6347]">Status: Completed</p>
+                <p className="text-sm">
+                  {event.is_team_event ? "Team Event" : "Individual Event"}
+                </p>
+                <p className="font-semibold text-lg">{event.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex px-6 pt-7 pb-2 justify-between w-full">
+        <div className="text-white font-semibold text-lg">More Events</div>
+        <MdKeyboardArrowRight size={24} className="text-white" />
+      </div>
+
+      {isLoadingMoreEvents ? (
+        <div className="text-white">Loading more events...</div>
+      ) : errorMoreEvents ? (
+        <div className="text-red-500">Failed to load more events.</div>
+      ) : (
+        <Link href="/events">
+          <div className="grid grid-rows-2 grid-flow-col gap-4 bg-[##010101] p-4 w-full text-white">
+            {moreEvents.map((event) => (
+              <div key={event.id} className="flex items-center mb-4 hover:scale-110 transition-all duration-300">
+                <Image
+                  src={event.poster}
+                  alt={event.name}
+                  width={64}
+                  height={64}
+                  className="rounded-full object-cover w-[14vw] translate-x-2"
+                />
+                <Image
+                  src="/Subtract.svg"
+                  alt="Decoration"
+                  width={500}
+                  height={500}
+                  className="w-[30vw] relative"
+                />
+                <div className="absolute translate-x-20 -translate-y-2 bg- px-2">
+                  {event.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </Link>
+      )}
     </div>
   );
 };

@@ -1,28 +1,165 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Burger from "../home/components/hamburger";
 import Image from "next/image";
-import { events } from "@/lib/constants";
-import EventRegister from "../componenets/ui/EventRegister";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+
+interface Event {
+  id: number;
+  name: string;
+  description: string;
+  abstract_link: string;
+  poster: string;
+  date_time: string;
+  is_live: boolean;
+  is_completed: boolean;
+  is_team_event: boolean;
+  max_members: number;
+}
 
 export default function Event() {
   const [visibleEvent, setVisibleEvent] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<string>("");
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [teamId, setTeamId] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [isCreateTeam, setIsCreateTeam] = useState(false);
+  const [isJoinTeam, setIsJoinTeam] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get<Event[]>(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/`
+        );
+        setEvents(response.data);
+      } catch (err) {
+        setError("Failed to fetch events.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
 
   const toggleEventDetails = (index: number) => {
     setVisibleEvent((prev) => (prev === index ? null : index));
   };
 
-  const handleRegisterClick = (eventName: string) => {
-    setSelectedEvent(eventName);
+  const handleRegisterClick = (event: Event) => {
+    setSelectedEvent(event);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setIsCreateTeam(false);
+    setIsJoinTeam(false);
+    setTeamId("");
+    setTeamName("");
   };
+
+  const handleRegister = async () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      alert("You must be logged in to register for an event.");
+      router.push("/login");
+      return;
+    }
+
+    const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+    const expiration = tokenPayload.exp * 1000;
+    if (Date.now() > expiration) {
+      alert("Your session has expired. Please log in again.");
+      localStorage.removeItem("jwt");
+      router.push("/login");
+      return;
+    }
+
+    if (!selectedEvent) {
+      alert("Event details are not available.");
+      return;
+    }
+
+    try {
+      if (selectedEvent.is_team_event) {
+        if (isCreateTeam) {
+          const createTeamResponse = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-team/`,
+            { name: teamName },
+            { headers: { Authorization: ` ${token}` } }
+          );
+
+          const newTeamId = createTeamResponse.data.team_id;
+
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${selectedEvent.id}/`,
+            { team_id: newTeamId },
+            { headers: { Authorization: ` ${token}` } }
+          );
+        } else if (isJoinTeam) {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team/`,
+            { user_id: tokenPayload.user_id, team_id: teamId },
+            { headers: { Authorization: ` ${token}` } }
+          );
+
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${selectedEvent.id}/`,
+            { team_id: teamId },
+            { headers: { Authorization: ` ${token}` } }
+          );
+        }
+      } else {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register-event/${selectedEvent.id}/`,
+          { user_id: tokenPayload.user_id },
+          { headers: { Authorization: ` ${token}` } }
+        );
+      }
+
+      alert("Registration successful!");
+      handleCloseModal();
+      router.push("/profile");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert("Your session has expired. Please log in again.");
+          localStorage.removeItem("jwt");
+          router.push("/login");
+        } else {
+          console.error("Registration failed:", error);
+          alert("Registration failed. Please try again.");
+        }
+      } else {
+        console.error("Registration failed:", error);
+        alert("Registration failed. Please try again.");
+      }
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-black min-h-screen flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-black min-h-screen flex items-center justify-center text-red-500">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <>
@@ -35,7 +172,7 @@ export default function Event() {
           <div className="w-full flex flex-col">
             {events.map((event, index) => (
               <motion.div
-                key={index}
+                key={event.id}
                 className="mb-0 w-full flex flex-col items-center"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -83,22 +220,25 @@ export default function Event() {
                     <Image
                       width={149}
                       height={149}
-                      src={event.image}
+                      src={event.poster}
                       alt="Event Image"
                       className="w-full h-full object-cover rounded-t-[30px]"
                     />
                     <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px]">
+                    <Link href={event.abstract_link}>
                       <div className="text-center border-2 absolute right-4 top-2 rounded-[4px] w-5/12 text-[10px] border-white">
                         CLICK FOR ABSTRACT
                       </div>
+                      </Link>
                       <div className="text-center mt-20 text-3xl">{event.name}</div>
+                
                       <div className="text-[14px] mt-2 text-center">
                         {event.description}
                       </div>
                       <div className="text-center p-4">
                         <button
                           className="border px-3 border-white"
-                          onClick={() => handleRegisterClick(event.name)}
+                          onClick={() => handleRegisterClick(event)}
                         >
                           Register
                         </button>
@@ -112,9 +252,87 @@ export default function Event() {
         </div>
       </div>
 
-      
-      {isModalOpen && (
-        <EventRegister eventName={selectedEvent} onClose={handleCloseModal} />
+      {isModalOpen && selectedEvent && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div
+            className="fixed inset-0 bg-black/30 backdrop-blur-md"
+            onClick={handleCloseModal}
+          ></div>
+          <div className="bg-black border-2 border-teal-600 rounded-3xl p-6 w-[90%] max-w-md relative z-50">
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Register for {selectedEvent.name}
+            </h2>
+            {selectedEvent.is_team_event ? (
+              <>
+                {!isCreateTeam && !isJoinTeam ? (
+                  <div className="mb-4">
+                    <button
+                      onClick={() => setIsCreateTeam(true)}
+                      className="bg-teal-600 text-white px-4 py-2 rounded-lg mr-2"
+                    >
+                      Create Team
+                    </button>
+                    <button
+                      onClick={() => setIsJoinTeam(true)}
+                      className="bg-teal-600 text-white px-4 py-2 rounded-lg"
+                    >
+                      Join Team
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {isCreateTeam && (
+                      <div className="mb-4">
+                        <label className="block text-white text-sm mb-2">
+                          Team Name:
+                        </label>
+                        <input
+                          type="text"
+                          value={teamName}
+                          onChange={(e) => setTeamName(e.target.value)}
+                          className="w-full p-2 border border-teal-600 bg-black text-white rounded-lg"
+                          placeholder="Enter Team Name"
+                        />
+                      </div>
+                    )}
+                    {isJoinTeam && (
+                      <div className="mb-4">
+                        <label className="block text-white text-sm mb-2">
+                          Team ID:
+                        </label>
+                        <input
+                          type="text"
+                          value={teamId}
+                          onChange={(e) => setTeamId(e.target.value)}
+                          className="w-full p-2 border border-teal-600 bg-black text-white rounded-lg"
+                          placeholder="Enter Team ID"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <p className="text-white mb-4">
+                You are registering as an individual for this event.
+              </p>
+            )}
+            <div className="flex justify-end">
+              <button
+                onClick={handleCloseModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRegister}
+                className="bg-teal-600 text-white px-4 py-2 rounded-lg"
+              >
+                Register
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );

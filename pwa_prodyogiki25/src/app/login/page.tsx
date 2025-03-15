@@ -1,38 +1,73 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
 
 const LoginPage: React.FC = () => {
-  // State to store input values
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
-    console.log("Form Data:", formData); // Replace this with backend API call later
+  const handleSubmit = async () => {
+    setErrorMessage("");
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      localStorage.setItem("jwt", response.data.jwt);
+      console.log("Token stored in localStorage:", response.data.jwt);
+
+      router.push("/home");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
+    }
   };
 
   return (
     <div className="bg-black min-h-screen flex flex-col pt-5 items-center sm:pt-32 relative">
-      
-      {/* Sign Up & Logo (Outside the Border) */}
       <div className="flex items-center justify-between w-[90%] max-w-[400px] sm:mb-12 mb-6">
         <h2 className="text-white text-4xl sm:text-4xl font-black">Login</h2>
         <Image src="/images/logo.png" alt="Logo" width={60} height={50} />
       </div>
 
-      {/* Signup Form */}
-      <div className="p-4 mx-2 sm:border-[2px] border-[#1B7774] w-[90%] max-w-[400px] bg-black rounded-3xl h-auto flex flex-col justify-center items-center">
-        
-        {["name", "email", "password"].map((field, index) => (
+      {errorMessage && (
+        <div className="mb-4 p-4 bg-red-500 text-white rounded-lg">
+          {errorMessage}
+        </div>
+      )}
+      <motion.div
+        className="p-4 mx-2 sm:border-[2px] border-[#1B7774] w-[90%] max-w-[400px] bg-black rounded-3xl h-auto flex flex-col justify-center items-center"
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {["email", "password"].map((field, index) => (
           <div key={index} className="w-full max-w-[350px] mb-11 sm:mb-9">
             <label
               htmlFor={field}
@@ -45,31 +80,27 @@ const LoginPage: React.FC = () => {
                 type={field === "password" ? "password" : "text"}
                 id={field}
                 name={field}
-                value={formData[field as keyof typeof formData]} // Bind state
-                onChange={handleChange} // Capture input
+                value={formData[field as keyof typeof formData]}
+                onChange={handleChange}
                 className="mt-2 p-2 pl-4 sm:pl-6 border-b-[1px] border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl w-full h-full placeholder-white"
                 placeholder={`Enter your ${field}`}
               />
             </div>
           </div>
         ))}
-
-        {/* Sign Up Button */}
         <button
-          onClick={handleSubmit} // Trigger data collection
-          className="mt-6 px-5 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-44"
+          onClick={handleSubmit}
+          className="mt-6 px-5 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-44 hover:scale-105 transition delay-100 duration-300 ease-in-out"
         >
           Login
         </button>
-
-        {/* Already have an account? */}
         <div className="mt-6 text-white text-base">
-          Do not have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a href="/signup" className="text-[#1B7774] font-semibold hover:underline">
-            SignUp
+            Sign Up
           </a>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
