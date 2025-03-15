@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Display from "../componenets/eventdisplay";
@@ -7,7 +7,9 @@ import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
 
 const Profile = () => {
-  const profileImages = ["/p1.svg", "/p2.svg", "/p3.svg", "/p4.svg", "/p5.svg"];
+  // Memoize the profileImages array to prevent it from changing on every render
+  const profileImages = useMemo(() => ["/p1.svg", "/p2.svg", "/p3.svg", "/p4.svg", "/p5.svg"], []);
+
   const [profileImg, setProfileImg] = useState("");
 
   useEffect(() => {
@@ -21,7 +23,7 @@ const Profile = () => {
       localStorage.setItem("profileImg", randomImg);
       setProfileImg(randomImg);
     }
-  }, []);
+  }, [profileImages]); // Add profileImages to the dependency array
 
   const user = {
     name: "Amit Singh Bathyal",

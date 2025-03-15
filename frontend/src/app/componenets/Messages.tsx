@@ -7,7 +7,7 @@ import React from "react";
 const quotes = [
   { text: "The best way to predict the future is to invent it.", person: "Alan Kay" ,designation:'secretary'},
   { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", person: "Winston Churchill",designation:'secretary' },
-  { text: "Opportunities don&apos;t happen. You create them.", person: "Chris Grosser" ,designation:'secretary'},
+  { text: "Opportunities don't happen. You create them.", person: "Chris Grosser" ,designation:'secretary'},
   { text: "The only limit to our realization of tomorrow is our doubts of today.", person: "Franklin D. Roosevelt",designation:'secretary' },
 ];
 

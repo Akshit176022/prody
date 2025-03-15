@@ -62,7 +62,7 @@ const Workshop = () => {
       </div>
       <div className="w-[20vw] mt-4 text-white text-left">
         <p className="text-lg">
-        Get ready to learn, innovate, and explore! Prodyogiki brings you a series of amazing workshops designed to enhance your technical skills and ignite your creativity.Whether you&apos;re a beginner or an expert, there&apos;s something for everyone. Don&apos;t miss the chance to level up your skills!
+        Get ready to learn, innovate, and explore! Prodyogiki brings you a series of amazing workshops designed to enhance your technical skills and ignite your creativity.Whether you're a beginner or an expert, there's something for everyone. Don’t miss the chance to level up your skills!
         </p>
       </div>
     </div>

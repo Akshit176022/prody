@@ -27,7 +27,7 @@ const Members = () => {
       >
         {/* Image */}
         <Image
-          src="/images/WhatsApp Image 2025-03-04 at 23.33.55.jpeg"
+          src="/images/members.webp"
           alt="Team"
           layout="fill"
           objectFit="cover"
@@ -44,11 +44,8 @@ const Members = () => {
       {/* Text Section */}
       <div className="w-[20vw] ml-10 text-white">
         <div className="text-7xl font-semibold mt-1 mb-8">MEET OUR TEAM</div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit,
-          ducimus voluptas. Fugiat vero, at animi deleniti cumque iure unde
-          molestiae reprehenderit adipisci, cum similique delectus tempore
-          deserunt ea dolorum itaque.
+        <p className='text-lg'>
+        Behind Prodyogiki is a team of passionate and dedicated individuals committed to making this technical extravaganza a grand success. Get to know the people who make it all happen—our innovators, organizers, and tech enthusiasts working tirelessly to bring Prodyogiki to life! 
         </p>
       </div>
     </div>

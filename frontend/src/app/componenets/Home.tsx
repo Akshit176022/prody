@@ -67,7 +67,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="absolute flex flex-col items-center  justify-center">
+      <div className="absolute w-[50vw] flex flex-col items-center  justify-center">
         <Image 
           className="p-4 m-4"
           src="/images/bgnew5.png"
@@ -75,7 +75,7 @@ export default function Home() {
           width={800}
           height={400}
         />
-        <div className="m-2 font-heading text-7xl">PRODYOGIKI</div>
+        <div className="m-2 text-bold text-7xl">PRODYOGIKI</div>
         <div className="m-2">{displayedText}<span className="animate-blink">|</span></div>
 
         <div className="grid grid-cols-4 grid-rows-1 gap-8 p-8 mt-8 bg-black">

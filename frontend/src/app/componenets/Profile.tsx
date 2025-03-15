@@ -22,7 +22,7 @@ const Register: React.FC = () => {
       >
         {/* Image */}
         <Image
-          src="/images/profilef.jpeg"
+          src="/images/profile.webp"
           alt="Team"
           layout="fill"
           objectFit="cover"
@@ -40,7 +40,9 @@ const Register: React.FC = () => {
 
   <div className="w-[20vw]  ml-10 text-white">
     <div className="text-5xl  font-semibold mt-1  mb-16"> EXPLORE YOUR PROFILE</div>
-  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit, ducimus voluptas. Fugiat vero, at animi deleniti cumque iure unde molestiae reprehenderit adipisci, cum similique delectus tempore deserunt ea dolorum itaque.
+    <p className='text-lg'>
+    Unlock your journey with us! Dive into your achievements, track your progress, and stay updated with your latest activities. Whether it&apos;s past accomplishments or new milestones, your profile is your gateway to everything you&apos;ve been a part of. Stay connected and keep growing!
+  </p>
   </div>
 </div>
   );
