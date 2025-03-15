@@ -1,22 +1,35 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
-const EventRegister = () => {
+interface RegisterModalProps {
+  eventName: string;
+  onClose: () => void;
+}
+
+const EventRegister: React.FC<RegisterModalProps> = ({ eventName, onClose }) => {
   const [prodyId, setProdyId] = useState("");
   const [teamId, setTeamId] = useState("");
-  const [isOpen, setIsOpen] = useState(true); // Manage modal state
 
-  const eventName = "Some Event"; // Define event name inside the component
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Prody ID:", prodyId);
-    console.log("Team ID:", teamId);
-    setIsOpen(false); // Close modal after submission
-  };
 
-  if (!isOpen) return null; // Hide modal if closed
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/register-event/", 
+        {
+          user_id: prodyId,
+          team_id: teamId,
+        }
+      );
+
+      console.log("Registration successful:", response.data);
+      onClose(); 
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
+  };
 
   return (
     <div
@@ -31,7 +44,6 @@ const EventRegister = () => {
           WebkitBackdropFilter: "blur(10px)",
         }}
       ></div>
-
       <motion.div
         className="bg-black border-2 border-teal-600 rounded-[30px] w-[90%] max-w-[400px] p-6 relative z-50"
         initial={{ opacity: 0, scale: 0.8 }}
@@ -70,7 +82,7 @@ const EventRegister = () => {
           <div className="flex justify-end">
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={onClose}
               className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
             >
               Cancel

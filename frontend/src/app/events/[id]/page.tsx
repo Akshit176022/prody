@@ -1,77 +1,175 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { events, Event } from "../../../../public/data/event";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import axios from "axios";
+import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import Navbar from "@/app/componenets/Navbar";
-import Footer from "@/app/componenets/Footer";
-const EventDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+import Footer from "../../componenets/Footer";
+
+interface Event {
+  id: number;
+  name: string;
+  description: string;
+  abstract_link: string;
+  poster: string;
+  date_time: string;
+  is_live: boolean;
+  is_completed: boolean;
+  is_team_event: boolean;
+  max_members: number;
+}
+
+export default function EventDetails() {
+  const { id } = useParams();
+  const router = useRouter();
   const [event, setEvent] = useState<Event | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [teamId, setTeamId] = useState("");
+  const [teamName, setTeamName] = useState("");
+  const [isCreateTeam, setIsCreateTeam] = useState(false);
+  const [isJoinTeam, setIsJoinTeam] = useState(false);
 
   useEffect(() => {
-    // Find the event with the matching ID
-    const foundEvent = events.find((event) => event.id === parseInt(id));
-    setEvent(foundEvent || null);
+    const fetchEvent = async () => {
+      try {
+        const response = await axios.get<Event>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${id}/`);
+        setEvent(response.data);
+      } catch (err) {
+        setError("Failed to fetch event details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvent();
   }, [id]);
 
-  if (!event) {
-    return <div className="p-8 text-center">Event not found!</div>;
-  }
+  const handleRegister = async () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      alert("You must be logged in to register for an event.");
+      router.push("/login");
+      return;
+    }
 
-  const handleRegisterClick = () => {
-    setIsModalOpen(true); // Open the modal
+    const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+    const expiration = tokenPayload.exp * 1000;
+    if (Date.now() > expiration) {
+      alert("Your session has expired. Please log in again.");
+      localStorage.removeItem("jwt");
+      router.push("/login");
+      return;
+    }
+
+    if (!event) {
+      alert("Event details are not available.");
+      return;
+    }
+
+    try {
+      if (event.is_team_event) {
+        if (isCreateTeam) {
+          const createTeamResponse = await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-team/`,
+            { name: teamName },
+            { headers: { Authorization: ` ${token}` } }
+          );
+
+          const newTeamId = createTeamResponse.data.team_id;
+
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${id}/`,
+            { team_id: newTeamId },
+            { headers: { Authorization: ` ${token}` } }
+          );
+        } else if (isJoinTeam) {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team/`,
+            { user_id: tokenPayload.user_id, team_id: teamId },
+            { headers: { Authorization: ` ${token}` } }
+          );
+
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${id}/`,
+            { team_id: teamId },
+            { headers: { Authorization: ` ${token}` } }
+          );
+        }
+      } else {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register-event/${id}/`,
+          { user_id: tokenPayload.user_id },
+          { headers: { Authorization: ` ${token}` } }
+        );
+      }
+
+      alert("Registration successful!");
+      setShowRegistrationModal(false);
+      router.push("/");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          alert("Your session has expired. Please log in again.");
+          localStorage.removeItem("jwt");
+          router.push("/login");
+        } else {
+          console.error("Registration failed:", error);
+          alert("Registration failed. Please try again.");
+        }
+      } else {
+        console.error("Registration failed:", error);
+        alert("Registration failed. Please try again.");
+      }
+    }
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
-  };
+  if (loading) return <div className="p-8 text-center text-white">Loading...</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+  if (!event) return <div className="p-8 text-center text-white">Event not found!</div>;
 
   return (
-    <div
-      className="min-h-screen bg-fixed bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/background.webp')",
-      }}
-    >
-      
-      <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-md"
-        style={{
-          WebkitBackdropFilter: "blur(10px)",
-        }}
-      ></div>
-      {/* Event Details Content */}
-      <Navbar/>
-      <main className="relative py-32 z-10">
-        <div className="max-w-4xl mx-auto my-auto p-6 rounded-3xl shadow-lg border-4 border-teal-700 backdrop-blur-sm">
-          <div className="flex space-x-6">
-            <Image
-              src={event.photoUrl}
-              alt={event.name}
-              className="w-96 ml-4 mt-4 h-64 border-2 border-teal-500 rounded-2xl object-cover"
-              height={256}
-              width={384}
-            />
-            <p className="text-white pt-5 pr-4 pl-4 pb-5 text-base">
-              {event.description}
-            </p>
-          </div>
+    <div className="min-h-screen bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/background.webp')" }}>
+      <div className="fixed inset-0 bg-black/30 backdrop-blur-md" style={{ WebkitBackdropFilter: "blur(10px)" }}></div>
+      <main className="relative pt-20 z-10">
+        <div className="max-w-4xl mx-auto p-6 rounded-3xl shadow-lg border-4 border-teal-700 backdrop-blur-sm">
+          <Image
+            src={event.poster}
+            alt={event.name}
+            className="w-96 ml-4 mt-4 h-64 border-2 border-teal-500 rounded-2xl object-cover"
+            height={256}
+            width={384}
+          />
           <div className="p-6">
             <h1 className="text-3xl font-bold text-white mb-4">{event.name}</h1>
+            <div className="mb-4">
+              {event.is_live ? (
+                <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Live</span>
+              ) : event.is_completed ? (
+                <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm">Completed</span>
+              ) : (
+                <span className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Upcoming</span>
+              )}
+            </div>
+            {event.is_team_event && (
+              <div className="mb-4">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-sm">
+                  Team Event (Max {event.max_members} members)
+                </span>
+              </div>
+            )}
+            <p className="text-white mb-6">{event.description}</p>
             <div className="space-y-4 space-x-4">
-              <a
-                href={event.abstractLink}
+              <Link
+                href={event.abstract_link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition-all"
               >
                 View Abstract
-              </a>
+              </Link>
               <button
-                onClick={handleRegisterClick} // Open the modal on click
+                onClick={() => setShowRegistrationModal(true)}
                 className="inline-block bg-teal-500 text-white px-8 py-2 rounded-lg hover:bg-teal-600 transition-all"
               >
                 Register
@@ -79,102 +177,78 @@ const EventDetails: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className='mb-12'></div>
-        <Footer/>
+        <div className="mb-12"></div>
+        <Footer />
       </main>
-      
 
-      {/* Registration Modal */}
-      {isModalOpen && (
-        <EventRegister eventName={event.name} onClose={handleCloseModal} />
+      {showRegistrationModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-md" onClick={() => setShowRegistrationModal(false)}></div>
+          <div className="bg-black border-2 border-teal-600 rounded-3xl p-6 w-[90%] max-w-md relative z-50">
+            <h2 className="text-2xl font-bold text-white mb-4">Register for {event.name}</h2>
+            {event.is_team_event ? (
+              <>
+                {!isCreateTeam && !isJoinTeam ? (
+                  <div className="mb-4">
+                    <button
+                      onClick={() => setIsCreateTeam(true)}
+                      className="bg-teal-600 text-white px-4 py-2 rounded-lg mr-2"
+                    >
+                      Create Team
+                    </button>
+                    <button
+                      onClick={() => setIsJoinTeam(true)}
+                      className="bg-teal-600 text-white px-4 py-2 rounded-lg"
+                    >
+                      Join Team
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {isCreateTeam && (
+                      <div className="mb-4">
+                        <label className="block text-white text-sm mb-2">Team Name:</label>
+                        <input
+                          type="text"
+                          value={teamName}
+                          onChange={(e) => setTeamName(e.target.value)}
+                          className="w-full p-2 border border-teal-600 bg-black text-white rounded-lg"
+                          placeholder="Enter Team Name"
+                        />
+                      </div>
+                    )}
+                    {isJoinTeam && (
+                      <div className="mb-4">
+                        <label className="block text-white text-sm mb-2">Team ID:</label>
+                        <input
+                          type="text"
+                          value={teamId}
+                          onChange={(e) => setTeamId(e.target.value)}
+                          className="w-full p-2 border border-teal-600 bg-black text-white rounded-lg"
+                          placeholder="Enter Team ID"
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <p className="text-white mb-4">You are registering as an individual for this event.</p>
+            )}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowRegistrationModal(false)}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2"
+              >
+                Cancel
+              </button>
+              <button onClick={handleRegister} className="bg-teal-600 text-white px-4 py-2 rounded-lg">
+                Register
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-      
     </div>
   );
-};
-
-// Registration Modal Component
-const EventRegister: React.FC<{ eventName: string; onClose: () => void }> = ({
-  eventName,
-  onClose,
-}) => {
-  const [prodyId, setProdyId] = useState("");
-  const [teamId, setTeamId] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Prody ID:", prodyId);
-    console.log("Team ID:", teamId);
-    console.log("Event Name:", eventName); // Log the event name
-    onClose(); // Close the modal after submission
-  };
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      {/* Background Blur Overlay */}
-      <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-md"
-        style={{
-          WebkitBackdropFilter: "blur(10px)",
-        }}
-        onClick={onClose} // Close modal when clicking outside
-      ></div>
-
-      {/* Modal Content */}
-      <motion.div
-        className="bg-black border-2 border-teal-600 rounded-[30px] w-[90%] max-w-[400px] p-6 relative z-50"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h2 className="text-white text-2xl font-bold text-center mb-6">
-          Register for {eventName}
-        </h2>
-
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-white text-sm mb-2">Prody ID</label>
-            <input
-              type="text"
-              value={prodyId}
-              onChange={(e) => setProdyId(e.target.value)}
-              className="w-full p-2 border border-teal-600 bg-black text-white rounded-[10px]"
-              placeholder="Enter your Prody ID"
-              required
-            />
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-white text-sm mb-2">Team ID</label>
-            <input
-              type="text"
-              value={teamId}
-              onChange={(e) => setTeamId(e.target.value)}
-              className="w-full p-2 border border-teal-600 bg-black text-white rounded-[10px]"
-              placeholder="Enter your Team ID"
-              required
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-teal-600 text-white px-4 py-2 rounded"
-            >
-              Register
-            </button>
-          </div>
-        </form>
-      </motion.div>
-    </div>
-  );
-};
-
-export default EventDetails;
+}

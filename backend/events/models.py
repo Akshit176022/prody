@@ -4,6 +4,14 @@ from accounts.models import CustomUser
 import random
 
 
+TEAM_TYPE_CHOICES = [
+    ("CORE", "Core Team"),
+    ("DESIGN", "Design Team"),
+    ("TECH", "Tech Team"),
+    ("FINANCE", "Finance Team"),
+    ("PR", "PR Team"),
+]
+
 def generate_unique_team_id():
     return f'#PDTM{random.randint(100000, 999999)}'
 
@@ -21,7 +29,7 @@ class Event(models.Model):
     is_team_event = models.BooleanField(default=False)
     registered_teams = models.ManyToManyField(
         'Team', related_name='events_registered', blank=True)
-    max_members = models.IntegerField(default=4)  # New field
+    max_members = models.IntegerField(default=4)  
 
     def __str__(self):
         return self.name
@@ -38,7 +46,6 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Sponsor(models.Model):
     name = models.CharField(max_length=100)
@@ -64,6 +71,13 @@ class ContactUs(models.Model):
     email = models.EmailField(max_length=100)
     phone = models.CharField(max_length=20, default='N/A')
     image = models.ImageField(upload_to='contactus_images/', blank=True)
+    bitemoji = models.ImageField(upload_to='contactus_images/', blank=True)
+    team_type = models.CharField(
+        max_length=10,
+        choices=TEAM_TYPE_CHOICES,
+        default="CORE",  
+    )
+    
 
     def __str__(self):
         return self.name
