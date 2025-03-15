@@ -148,73 +148,72 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Registered Events Section */}
-      <div className="w-full px-6 pb-2 mt-12">
-        <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
-          Registered Events
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-          {/* Live Events */}
-          {is_live_events.map((event) => (
-            <div
-              key={event.id}
-              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-600 min-h-[200px] rounded-lg p-4 shadow-lg"
-            >
-              <div className="text-center mt-2">
-                <p className="font-semibold text-2xl">{event.name}</p>
-                <p className="text-1xl text-[#FFD700]">Status: Live</p>
-                <p className="text-1xl">
-                  {event.is_team_event ? "Team Event" : "Individual Event"}
-                </p>
-                <p className="font-semibold text-lg">{event.description}</p>
-                {event.is_team_event && (
-                  <div className="text-sm mt-2">
-                    <p>Teams Registered:</p>
-                    {/* Debugging: Registered Teams: {event.registered_teams} */}
-                    {event.registered_teams.map((team_id) => (
-                      <p key={team_id}>Team ID: {team_id}</p> // Display team ID
-                    ))}
-                  </div>
-                )}
-              </div>
+     {/* Registered Events Section */}
+<div className="w-full px-6 pb-2 mt-12">
+  <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
+    Registered Events
+  </div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+    {/* Live Events */}
+    {is_live_events.map((event) => (
+      <div
+        key={event.id}
+        className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
+      >
+        <div className="text-center mt-2">
+          <p className="font-semibold text-2xl text-white">{event.name}</p>
+          <p className="text-1xl text-[#FFD700]">Status: Live</p>
+          <p className="text-1xl text-teal-200">
+            {event.is_team_event ? "Team Event" : "Individual Event"}
+          </p>
+          <p className="font-semibold text-lg text-teal-100">{event.description}</p>
+          {event.is_team_event && (
+            <div className="text-sm mt-2 text-teal-200">
+              <p>Teams Registered:</p>
+              {event.registered_teams.map((team_id) => (
+                <p key={team_id}>Team ID: {team_id}</p>
+              ))}
             </div>
-          ))}
-
-          {/* Upcoming Events */}
-          {is_upcoming_events.map((event) => (
-            <div
-              key={event.id}
-              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-[#1B7774] rounded-lg p-4 shadow-lg"
-            >
-              <div className="text-center mt-2">
-                <p className="font-semibold text-lg">{event.name}</p>
-                <p className="text-sm text-[#00FF00]">Status: Upcoming</p>
-                <p className="text-sm">
-                  {event.is_team_event ? "Team Event" : "Individual Event"}
-                </p>
-                <p className="font-semibold text-lg">{event.description}</p>
-              </div>
-            </div>
-          ))}
-
-          {/* Completed Events */}
-          {is_completed_events.map((event) => (
-            <div
-              key={event.id}
-              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-[#1B7774] rounded-lg p-4 shadow-lg"
-            >
-              <div className="text-center mt-2">
-                <p className="font-semibold text-lg">{event.name}</p>
-                <p className="text-sm text-[#FF6347]">Status: Completed</p>
-                <p className="text-sm">
-                  {event.is_team_event ? "Team Event" : "Individual Event"}
-                </p>
-                <p className="font-semibold text-lg">{event.description}</p>
-              </div>
-            </div>
-          ))}
+          )}
         </div>
       </div>
+    ))}
+
+    {/* Upcoming Events */}
+    {is_upcoming_events.map((event) => (
+      <div
+        key={event.id}
+        className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
+      >
+        <div className="text-center mt-2">
+          <p className="font-semibold text-lg text-white">{event.name}</p>
+          <p className="text-sm text-[#00FF00]">Status: Upcoming</p>
+          <p className="text-sm text-teal-200">
+            {event.is_team_event ? "Team Event" : "Individual Event"}
+          </p>
+          <p className="font-semibold text-lg text-teal-100">{event.description}</p>
+        </div>
+      </div>
+    ))}
+
+    {/* Completed Events */}
+    {is_completed_events.map((event) => (
+      <div
+        key={event.id}
+        className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
+      >
+        <div className="text-center mt-2">
+          <p className="font-semibold text-lg text-white">{event.name}</p>
+          <p className="text-sm text-[#FF6347]">Status: Completed</p>
+          <p className="text-sm text-teal-200">
+            {event.is_team_event ? "Team Event" : "Individual Event"}
+          </p>
+          <p className="font-semibold text-lg text-teal-100">{event.description}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
 
       {/* More Events Section */}
       <div className="flex px-6 pb-2 mt-12 justify-between w-full">

@@ -129,7 +129,7 @@ const WorkshopSlider = () => {
           {cards[currentIndex].date}
         </div>
 
-        <div
+        {/* <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
           style={{
             background: "linear-gradient(0deg, #8BDBD8, #70C6F6)",
@@ -137,7 +137,8 @@ const WorkshopSlider = () => {
           onClick={handleRegisterClick}
         >
           Register Now
-        </div>
+        </div> */}
+        
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 backdrop-blur-sm z-50">
@@ -207,7 +208,9 @@ const WorkshopSlider = () => {
         </div>
 
       )}
+      <div>
       <Footer/>
+      </div>
     </div>
   );
 };

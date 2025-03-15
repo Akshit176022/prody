@@ -93,3 +93,4 @@ class JoinTeamEventSerializer(serializers.Serializer):
     team_id = serializers.CharField(max_length=12)
     events = serializers.PrimaryKeyRelatedField(
         queryset=Event.objects.all(), many=True)
+    

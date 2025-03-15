@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Burger from "../home/components/hamburger";
 import { useSwipeable } from "react-swipeable";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const cards = [
   {
@@ -34,6 +36,9 @@ const WorkshopSlider = () => {
   const [selectedWorkshop, setSelectedWorkshop] = useState(cards[0].title);
   const [name, setName] = useState("");
   const [rollNo, setRollNo] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,17 +66,76 @@ const WorkshopSlider = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+    setName("");
+    setRollNo("");
+    setError("");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registered for:", selectedWorkshop, "Name:", name, "Roll No:", rollNo);
-    setIsModalOpen(false);
+    setLoading(true);
+    setError("");
+
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      alert("You must be logged in to register for a workshop.");
+      router.push("/login");
+      return;
+    }
+
+    const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+    const expiration = tokenPayload.exp * 1000;
+    if (Date.now() > expiration) {
+      alert("Your session has expired. Please log in again.");
+      localStorage.removeItem("jwt");
+      router.push("/login");
+      return;
+    }
+
+    try {
+      const workshopId = cards.find((card) => card.title === selectedWorkshop)?.id;
+      if (!workshopId) {
+        throw new Error("Invalid workshop selected.");
+      }
+
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register-workshop/`,
+        {
+          workshop_id: workshopId,
+          user_id: tokenPayload.user_id,
+          name,
+          roll_no: rollNo,
+        },
+        {
+          headers: { Authorization: ` ${token}` },
+        }
+      );
+
+      alert("Registration successful!");
+      handleModalClose();
+      router.push("/profile");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          alert("Your session has expired. Please log in again.");
+          localStorage.removeItem("jwt");
+          router.push("/login");
+        } else {
+          setError("Registration failed. Please try again.");
+          console.error("Registration failed:", err);
+        }
+      } else {
+        setError("Registration failed. Please try again.");
+        console.error("Registration failed:", err);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-cover bg-center bg-no-repeat bg-black px-4" {...handlers}>
-      <Burger/>
+      <Burger />
       <div className="mt-36 relative w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl overflow-hidden rounded-2xl transition-transform duration-300 ease-in-out transform hover:scale-105">
         <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {cards.map((card) => (
@@ -85,7 +149,6 @@ const WorkshopSlider = () => {
         </div>
       </div>
 
-      
       <div className="flex space-x-2 mt-4">
         {cards.map((_, index) => (
           <div
@@ -96,20 +159,18 @@ const WorkshopSlider = () => {
         ))}
       </div>
 
-      
       <div className="mt-6 text-center">
         <div className="text-white font-bold text-lg sm:text-2xl">{cards[currentIndex].title}</div>
         <div className="text-white font-bold mt-3 text-base sm:text-lg mb-6">{cards[currentIndex].date}</div>
-        <button
+        {/* <button
           className="mt-4 text-black px-6 py-2 text-sm sm:text-base rounded-full transition-transform transform hover:scale-110"
           style={{ background: "linear-gradient(0deg, #8BDBD8, #70C6F6)" }}
           onClick={handleRegisterClick}
         >
           Register Now
-        </button>
+        </button> */}
       </div>
 
-      
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50 p-4">
           <div className="bg-[#121212] p-6 rounded-lg w-full max-w-sm sm:max-w-md">
@@ -149,9 +210,14 @@ const WorkshopSlider = () => {
                   required
                 />
               </div>
+              {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
               <div className="flex justify-end space-x-2">
-                <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded" onClick={handleModalClose}>Cancel</button>
-                <button type="submit" className="bg-[#70C6F6] text-black px-4 py-2 rounded">Register</button>
+                <button type="button" className="bg-gray-500 text-white px-4 py-2 rounded" onClick={handleModalClose}>
+                  Cancel
+                </button>
+                <button type="submit" className="bg-[#70C6F6] text-black px-4 py-2 rounded" disabled={loading}>
+                  {loading ? "Registering..." : "Register"}
+                </button>
               </div>
             </form>
           </div>
