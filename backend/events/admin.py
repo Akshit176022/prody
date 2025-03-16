@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Event, Team, Sponsor, ContactUs, FAQ
+from .models import Event, Team, Sponsor, ContactUs, FAQ, Workshop
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.admin import RelatedFieldListFilter
 from .resources import CustomTeamResource, CustomEventResource
+from django.utils.html import format_html
 
 
 class CustomRelatedFieldListFilter(RelatedFieldListFilter):
@@ -29,9 +30,8 @@ class EventAdmin(ImportExportModelAdmin):
     get_registered_teams.short_description = 'Registered Teams'
 
     def get_readonly_fields(self, request, obj=None):
-        if obj:  # Editing an existing object
+        if obj:  
             return []
-        # Creating a new object
         return ['registered_users', 'registered_teams']
 
     def save_related(self, request, form, formsets, change):
@@ -141,6 +141,19 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'answer')
     search_fields = ('question', 'answer')
 
+
+@admin.register(Workshop)
+class WorkshopAdmin(admin.ModelAdmin):
+    list_display = ("title", "date", "location", "max_participants", "registered_participants_list")
+    search_fields = ("title", "location")
+    list_filter = ("date", "location")
+
+    def registered_participants_list(self, obj):
+        participants = obj.registered_participants.all()
+        participant_list = [user.username for user in participants]
+        return format_html(", ".join(participant_list))
+
+    registered_participants_list.short_description = "Registered Participants"
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(Team, TeamAdmin)

@@ -6,7 +6,7 @@ import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
 
 const SponsorsPage: React.FC = () => {
-  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  const [sponsors, setSponsors] = useState<ponsor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 

@@ -24,25 +24,26 @@ BRANCH_CHOICES = (
     ('Other', 'Other'),
 )
 
-
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     user_id = models.CharField(
-        max_length=12, unique=True, default=generate_default_user_id)
+        max_length=12, unique=True, default=generate_default_user_id
+    )
     registered_events = models.ManyToManyField(
-        'events.Event', related_name='reg_users', blank=True)
+        "events.Event", related_name="reg_users", blank=True
+    )
     registered_teams = models.ManyToManyField(
-        'events.Team', related_name='reg_users_teams', blank=True)
-
+        "events.Team", related_name="reg_users_teams", blank=True
+    )
     is_verified = models.BooleanField(default=False)
-    roll_no = models.CharField(
-        max_length=20, null=True, blank=True, default='0')
+    roll_no = models.CharField(max_length=20, null=True, blank=True, default="0")
     branch = models.CharField(
-        max_length=100, choices=BRANCH_CHOICES, null=True, blank=True, default='Other')
+        max_length=100, choices=BRANCH_CHOICES, null=True, blank=True, default="Other"
+    )
     prody_points = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.username} - {self.user_id}'
+        return f"{self.username} - {self.user_id}"
 
     def register_for_event(self, event):
         self.registered_events.add(event)
@@ -57,3 +58,4 @@ class CustomUser(AbstractUser):
     def verify_email(self):
         self.is_verified = True
         self.save()
+        

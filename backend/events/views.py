@@ -1,15 +1,19 @@
 from rest_framework import generics
-from .models import Event, Sponsor, ContactUs, FAQ
-from .serializers import EventSerializer, SponsorSerializer, ContactUsSerializer, FAQSerializer, TeamSerializer,EventRegistrationSerializer, Team, CustomUser
-
-
+from .models import Event, Sponsor, ContactUs, FAQ,Workshop
+from .serializers import EventSerializer, SponsorSerializer, ContactUsSerializer, FAQSerializer, TeamSerializer,EventRegistrationSerializer, Team, CustomUser, WorkshopSerializer
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import AuthenticationFailed
+
 from django.http import JsonResponse
 from accounts.models import CustomUser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+import jwt
 
 from rest_framework.views import APIView
 
@@ -185,3 +189,54 @@ def join_team_event(request, event_id):
             return Response({'message': 'Event does not exist.'}, status=status.HTTP_404_NOT_FOUND)
         except Team.DoesNotExist:
             return Response({'message': 'Team does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class WorkshopList(generics.ListAPIView):
+    queryset = Workshop.objects.all()
+    serializer_class = WorkshopSerializer
+
+class WorkshopDetail(generics.RetrieveAPIView):
+    queryset = Workshop.objects.all()
+    serializer_class = WorkshopSerializer
+
+class RegisterForWorkshop(APIView):
+    def post(self, request, *args, **kwargs):
+        token = request.headers.get('Authorization') or request.COOKIES.get('jwt')
+
+        if not token:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        user = CustomUser.objects.filter(user_id=payload['user_id']).first()
+        if not user:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        workshop_id = request.data.get("workshop_id")
+        if not workshop_id:
+            return Response(
+                {"error": "workshop_id is required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        workshop = get_object_or_404(Workshop, id=workshop_id)
+        
+        if workshop.registered_participants.count() >= workshop.max_participants:
+            return Response(
+                {"error": "Workshop is full."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if user in workshop.registered_participants.all():
+            return Response(
+                {"error": "You are already registered for this workshop."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        workshop.registered_participants.add(user)
+
+        return Response(
+            {"message": "Successfully registered for the workshop."},
+            status=status.HTTP_200_OK,
+        )

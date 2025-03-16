@@ -1,6 +1,6 @@
 from .models import Team
 from rest_framework import serializers
-from .models import Event, Team, Sponsor, ContactUs, FAQ
+from .models import Event, Team, Sponsor, ContactUs, FAQ, Workshop
 import random
 from accounts.models import CustomUser
 
@@ -93,4 +93,18 @@ class JoinTeamEventSerializer(serializers.Serializer):
     team_id = serializers.CharField(max_length=12)
     events = serializers.PrimaryKeyRelatedField(
         queryset=Event.objects.all(), many=True)
-    
+
+
+class WorkshopSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Workshop
+        fields = [
+            "id",
+            "title",
+            "description",
+            "date",
+            "image",
+            "location",
+            "max_participants",
+            "registered_participants",
+        ]

@@ -77,10 +77,8 @@ class UserView(APIView):
 
 
 class UserEventsView(APIView):
-
     def get(self, request):
-        token = request.headers.get(
-            'Authorization') or request.COOKIES.get('jwt')
+        token = request.headers.get('Authorization') or request.COOKIES.get('jwt')
 
         if not token:
             raise AuthenticationFailed('Unauthenticated!')
@@ -91,8 +89,35 @@ class UserEventsView(APIView):
             raise AuthenticationFailed('Unauthenticated!')
 
         user = CustomUser.objects.filter(user_id=payload['user_id']).first()
-        serializer = FullUserSerializer(user)
-        return Response({"registed_events": serializer.data["registered_events"]})
+        if not user:
+            raise AuthenticationFailed('Unauthenticated!')
+
+        registered_events = user.registered_events.all()
+        events_data = []
+
+        for event in registered_events:
+            event_data = {
+                'id': event.id,
+                'name': event.name,
+                'description': event.description,
+                'poster': event.poster,
+                'is_live': event.is_live,
+                'is_completed': event.is_completed,
+                'is_team_event': event.is_team_event,
+                'registered_users': list(event.registered_users.values_list('user_id', flat=True)),
+                'registered_teams': list(event.registered_teams.values_list('team_id', flat=True)),
+                'team_members': []
+            }
+
+            if event.is_team_event:
+                team = user.registered_teams.filter(registered_events=event).first()
+                if team:
+                    event_data['team_id'] = team.team_id
+                    event_data['team_members'] = list(team.registered_users.values_list('user_id', flat=True))
+
+            events_data.append(event_data)
+
+        return Response({"registered_events": events_data}, status=status.HTTP_200_OK)
 
 
 class LogoutView(APIView):
@@ -100,7 +125,6 @@ class LogoutView(APIView):
         response = Response()
         response.delete_cookie('jwt')
 
-        # Remove the JWT token from Authorization header
         if 'Authorization' in request.headers:
             del request.headers['Authorization']
 
@@ -145,7 +169,6 @@ class RegisterEventView(APIView):
         if user in event.registered_users.all():
             return Response({'message': 'User is already registered for the event'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if the event is a team event
         if event.is_team_event:
             team_id = request.data.get('team_id')
 

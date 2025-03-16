@@ -244,6 +244,7 @@ const Profile = () => {
         </Swiper>
       </div>
 
+
       <div className="flex px-6 pt-7 pb-2 justify-between w-full">
         <div className="text-white font-semibold text-lg">
           <Link href="/events">More Events</Link>

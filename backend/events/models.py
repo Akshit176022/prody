@@ -83,3 +83,19 @@ class ContactUs(models.Model):
         return self.name
     
     
+
+class Workshop(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    date = models.DateTimeField()
+    image = models.ImageField(upload_to="workshops/")
+    location = models.CharField(max_length=200)
+    max_participants = models.PositiveIntegerField()
+    registered_participants = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,  
+        related_name="registered_workshops",
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.title
