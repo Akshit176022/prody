@@ -29,10 +29,10 @@ const Timeline = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black p-6">
+    <div className="min-h-screen  p-6">
       <Burger/>
-      <div className="flex items-center justify-center bg-black mt-12">
-  <div className="text-white text-2xl font-semibold">Timeline</div>
+      <div className="flex items-center justify-center  mt-12">
+  <div className="text-white text-3xl font-bold mb-4">Timeline</div>
 </div>
 
       {timelineData.map((day: Day, dayIndex: number) => (

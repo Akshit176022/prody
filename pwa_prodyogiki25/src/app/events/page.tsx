@@ -163,7 +163,7 @@ export default function Event() {
 
   return (
     <>
-      <div className="bg-black bg-cover bg-center font-sans min-h-screen">
+      <div className=" bg-cover bg-center font-sans min-h-screen">
         <Burger />
         <div className="text-center pt-24 text-white font-sans text-[28px]">
           OUR EVENTS

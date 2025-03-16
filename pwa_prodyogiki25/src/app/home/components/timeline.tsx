@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";  
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai'
 import { timelineData } from "@/lib/constants";
+import Link from "next/link";
 
 export default function Timeline() {
   const [currentDayIndex, setCurrentDayIndex] = useState(0);
@@ -19,7 +20,7 @@ export default function Timeline() {
     <div className="flex flex-col w-full h-full pt-16">
 
       <div className="text-white border-b-4 mx-auto text-[17px] border-[#008080] text-center border-2 w-[219px] h-[48px] rounded-3xl p-2">
-        TIMELINE
+        <Link rel="stylesheet" href="/timeline">TIMELINE</Link>
       </div>
 
 

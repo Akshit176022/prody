@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-black min-h-screen flex flex-col pt-5 items-center sm:pt-32 relative">
+    <div className="min-h-screen flex flex-col pt-5 items-center sm:pt-32 relative">
       <div className="flex items-center justify-between w-[90%] max-w-[400px] sm:mb-12 mb-6">
         <h2 className="text-white text-4xl sm:text-4xl font-black">Login</h2>
         <Image src="/images/logo.png" alt="Logo" width={60} height={50} />
@@ -62,7 +62,7 @@ const LoginPage: React.FC = () => {
         </div>
       )}
       <motion.div
-        className="p-4 mx-2 sm:border-[2px] border-[#1B7774] w-[90%] max-w-[400px] bg-black rounded-3xl h-auto flex flex-col justify-center items-center"
+        className="p-4 mx-2 sm:border-[2px] border-[#1B7774] bg-black/30 backdrop-blur-md w-[90%] max-w-[400px]  rounded-3xl h-auto flex flex-col justify-center items-center"
         variants={cardVariants}
         initial="hidden"
         animate="visible"

@@ -10,23 +10,16 @@ const cards = [
   {
     id: 1,
     img: "/ws1.svg",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nulla, neque iusto libero aliquid, enim magni, corporis quam ullam molestiae odit possimus eaque ex!",
-    title: "WORKSHOP 1",
-    date: "7TH FEB",
+    text: "Join for an amazing workshop on glider construction, learn all about aerodynamics, suitable materials and how to malke your glider fly the farthest !!",
+    title: "Glider construction",
+    date: "21 March,2025",
   },
   {
     id: 2,
     img: "/ws2.svg",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nulla, neque iusto libero aliquid, enim magni, corporis quam ullam molestiae odit possimus eaque ex!",
-    title: "WORKSHOP 2",
-    date: "8TH FEB",
-  },
-  {
-    id: 3,
-    img: "/ws2.svg",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nulla, neque iusto libero aliquid, enim magni, corporis quam ullam molestiae odit possimus eaque ex!",
-    title: "WORKSHOP 3",
-    date: "8TH FEB",
+    text: "Get hands on experience on Lua for Gamedev.Learn to create exciting games that mesmerize the world, and bring out the developer inside you to life !!",
+    title: "Lua for Gamedev",
+    date: "22 March, 2025",
   },
 ];
 
@@ -134,13 +127,13 @@ const WorkshopSlider = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-cover bg-center bg-no-repeat bg-black px-4" {...handlers}>
+    <div className="flex flex-col items-center min-h-screen bg-cover bg-center bg-no-repeat px-4" {...handlers}>
       <Burger />
-      <div className="mt-36 relative w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl overflow-hidden rounded-2xl transition-transform duration-300 ease-in-out transform hover:scale-105">
+      <div className="mt-36 relative w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl overflow-hidden  rounded-2xl transition-transform duration-300 ease-in-out transform hover:scale-105">
         <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
           {cards.map((card) => (
-            <div key={card.id} className="flex-shrink-0 w-full p-[3px] rounded-2xl bg-[#1B7774]">
-              <div className="flex flex-col items-center bg-[#121212] opacity-80 rounded-2xl w-full h-full p-4">
+            <div key={card.id} className="flex-shrink-0 w-full p-[3px] rounded-2xl  bg-black/40 backdrop-blur-md">
+              <div className="flex flex-col items-center opacity-80 rounded-2xl w-full h-full p-4">
                 <Image src={card.img} alt={card.title} width={180} height={180} className="mt-4 mb-4 object-cover w-36 h-36 sm:w-44 sm:h-44" />
                 <div className="text-center text-sm sm:text-base text-white">{card.text}</div>
               </div>

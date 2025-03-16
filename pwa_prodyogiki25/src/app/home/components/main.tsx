@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { AnimatedTestimonials } from "@/app/componenets/ui/animated-testimonials";
 import { testimonials } from "@/lib/constants";
-// Importing icons from react-icons
+
 import { FaRegCalendarAlt, FaRegLightbulb } from "react-icons/fa";
 import Link from "next/link";
 
@@ -53,11 +53,8 @@ export default function Main() {
           <AnimatedTestimonials testimonials={testimonials} />
         </div>
 
-        <div className="w-6/12 ml-4 mr-2 h-[205px] text-[13px] text-white">
-          s vitae amet! Consequuntur, laudantium ut? Lorem ipsum dolor sit amet.
-          consectetur adipisicing elit. Aspernatur adipisci repudiandae, tempore
-          quis sed sint ex maxime odit voluptatem. Obcaecati pariatur facere
-          fugiat nemo! Doloribus quisquam culpa quo sequi! Distinctio!
+        <div className="w-6/12 ml-4 mr-2 h-[205px] text-[14px] text-white">
+        Prodyogiki is a technical event organized every year by ISTE at NIT Hamirpur. It is a nurturing and motivating environment where students get to showcase their technical expertise.
         </div>
       </div>
 

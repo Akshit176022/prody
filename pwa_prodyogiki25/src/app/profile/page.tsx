@@ -123,9 +123,7 @@ const Profile = () => {
   return (
     <div
       className="flex flex-col items-center h-screen bg-cover bg-center bg-no-repeat min-w-screen"
-      style={{
-        backgroundImage: `url('/background.png')`,
-      }}
+     
     >
       <Burger />
       <div className="mt-20 participant_info font-inter flex flex-col text-white items-center justify-center">
@@ -261,7 +259,7 @@ const Profile = () => {
         <div className="text-red-500">Failed to load more events.</div>
       ) : (
         <Link href="/events">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-[#010101] p-4 w-full text-white">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 w-full text-white">
           {moreEvents.map((event) => (
             <div
               key={event.id}

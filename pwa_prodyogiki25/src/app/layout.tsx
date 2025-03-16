@@ -17,14 +17,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`w-screen select-none flex justify-center items-center parent`}
+        className="min-h-screen bg-fixed bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/mobilebg.jpg')",
+        }}
       >
-        <div className={`sm-container relative pb-[150px]`}>
-          <div className="w-full h-full pb-[150px]">
-            {children}
-          </div>
-        </div>
-
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-md"
+          style={{
+            WebkitBackdropFilter: "blur(10px)",
+          }}
+        ></div>
+        <main className="relative z-10">{children}</main>
       </body>
     </html>
   );

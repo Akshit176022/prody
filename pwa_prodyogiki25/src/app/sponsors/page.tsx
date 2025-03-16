@@ -4,6 +4,15 @@ import Image from "next/image";
 import axios from "axios";
 import Burger from "../home/components/hamburger";
 
+// Define the Sponsor type
+interface Sponsor {
+  id: number;
+  name: string;
+  logo: string;
+  tier: string;
+  website?: string;
+}
+
 const SponsorsPage: React.FC = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,7 +33,7 @@ const SponsorsPage: React.FC = () => {
   }, []);
 
   // Group sponsors by tier
-  const groupedSponsors = sponsors.reduce((acc, sponsor) => {
+  const groupedSponsors = sponsors.reduce((acc: Record<string, Sponsor[]>, sponsor: Sponsor) => {
     if (!acc[sponsor.tier]) {
       acc[sponsor.tier] = [];
     }
@@ -49,14 +58,14 @@ const SponsorsPage: React.FC = () => {
   }
 
   return (
-    <div className=" text-white p-6">
-        <Burger/>
+    <div className="text-white p-6">
+      <Burger />
       <h1 className="text-4xl mt-20 font-bold text-center mb-8">Our Partners</h1>
       {Object.entries(groupedSponsors).map(([tier, sponsors]) => (
         <div key={tier} className="mb-12">
           <h2 className="text-2xl font-semibold text-center mt-6 mb-12">{tier} Sponsors</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {sponsors.map((sponsor) => (
+            {sponsors.map((sponsor: Sponsor) => (
               <div
                 key={sponsor.id}
                 className="flex flex-col items-center bg-teal-300/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg hover:scale-105 transition-transform duration-300"
@@ -85,9 +94,6 @@ const SponsorsPage: React.FC = () => {
           </div>
         </div>
       ))}
-      <div>
-        
-      </div>
     </div>
   );
 };

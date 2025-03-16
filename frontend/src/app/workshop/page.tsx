@@ -9,23 +9,16 @@ const cards = [
   {
     id: 1,
     img: "/ws1.svg",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nulla, neque iusto libero aliquid, enim magni, corporis quam ullam molestiae odit possimus eaque ex!",
-    title: "WORKSHOP 1",
-    date: "7TH FEB",
+    text: "Join for an amazing workshop on glider construction, learn all about aerodynamics, suitable materials and how to malke your glider fly the farthest !!",
+    title: "Glider construction",
+    date: "21 March,2025",
   },
   {
     id: 2,
     img: "/ws2.svg",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nulla, neque iusto libero aliquid, enim magni, corporis quam ullam molestiae odit possimus eaque ex!",
-    title: "WORKSHOP 2",
-    date: "8TH FEB",
-  },
-  {
-    id: 3,
-    img: "/ws2.svg",
-    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet nulla, neque iusto libero aliquid, enim magni, corporis quam ullam molestiae odit possimus eaque ex!",
-    title: "WORKSHOP 3",
-    date: "8TH FEB",
+    text: "Get hands on experience on Lua for Gamedev.Learn to create exciting games that mesmerize the world, and bring out the developer inside you to life !!",
+    title: "Lua for Gamedev",
+    date: "22 March, 2025",
   },
 ];
 

@@ -8,7 +8,8 @@ export const links: LinkState[] = [
   { href: "/workshop", name: "Workshop" },
   { href: "/timeline", name: "Timeline" },
   { href: "/signup", name: "SignUp" },
-  { href:"/login",name:"Login"}
+  { href:"/login",name:"Login"},
+  { href:"/sponsors",name:"Sponsors"}
 ];
 
 export const testimonials = [
@@ -21,17 +22,17 @@ export const testimonials = [
       {
         day: "DAY 1",
         content:
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velestias distinctio qui commodi fugit? Aut pariatur tempora repellat consectetur fuga iure, nesciunt quibusdam veritatis perspiciatis, molestiae voluptatibus natus, sapiente blanditiis inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+          "The Opening Ceremony of Prodyogiki 2025 takes place, marking the grand commencement of the event. Alongside the ceremony, various events kick off, with material distribution ensuring participants are well-prepared. Round 1 of the competitions also begins, setting the stage for an exciting start to the festivities.",
       },
       {
         day: "DAY 2",
         content:
-          "Sed ut perspiciatis unde omnis  totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+          "Building on the momentum of Day 1, events like Ohm Alone, FilteRaid, and Chemystrey 2.0 take place, along with Round 2 of various competitions.",
       },
       {
         day: "DAY 3",
         content:
-          "Neque porro quisquam est, qui dolorem ipsum quia dolor  sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.",
+          "The final day concludes with the completion of Round 2 of all events, and the final judging sheets are prepared. Stay tuned for the result declaration on the next day!",
       },
     ];
 
@@ -134,7 +135,7 @@ export const teamSections = [
   export const timelineData2: TimelineEvent[] = [
     {
       day: "Day 1",
-      title: "Event 1",
+      title: "Event z",
       description:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed qui as debitis dicta dolore.",
     },

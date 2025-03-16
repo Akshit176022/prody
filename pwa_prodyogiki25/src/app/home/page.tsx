@@ -22,7 +22,7 @@ export default function Home() {
       )}
 
       {showBackground && (
-        <div className="bg-black bg-cover bg-center relative min-h-screen font-light">
+        <div className="bg-cover bg-center relative min-h-screen font-light">
           <div className="absolute inset-0 top-28 bg-gradient-to-t h-[600px] from-transparent via-[#59F7E2] to-transparent opacity-40 blur-xl z-0"></div>
             <Top/>
             <Main/>
