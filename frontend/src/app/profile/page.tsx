@@ -5,7 +5,6 @@ import Image from "next/image";
 import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
 import axios from "axios";
-import { any } from "three/tsl";
 
 type Event = {
   id: number;
@@ -16,7 +15,7 @@ type Event = {
   is_completed: boolean;
   is_team_event: boolean;
   registered_users: number[];
-  registered_teams: number[]; // Only team IDs are provided
+  registered_teams: number[];
 };
 
 type User = {
@@ -31,20 +30,17 @@ type User = {
 };
 
 const Profile = () => {
-  // Memoize the profileImages array to prevent it from changing on every render
   const profileImages = useMemo(() => ["/p1.svg", "/p2.svg", "/p3.svg", "/p4.svg", "/p5.svg"], []);
 
   const [profileImg, setProfileImg] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [moreEvents, setMoreEvents] = useState<Event[]>([]);
-  const [token, setToken] = useState<string | null>(null);
   const [isLoadingMoreEvents, setIsLoadingMoreEvents] = useState(false);
   const [errorMoreEvents, setErrorMoreEvents] = useState<unknown>(null);
   const [errorUser, setErrorUser] = useState<unknown>(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
-    setToken(storedToken);
     console.log("Token retrieved from localStorage:", storedToken);
 
     if (!storedToken) {
@@ -65,7 +61,7 @@ const Profile = () => {
         setUser(response.data.user);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
-        setErrorUser(error );
+        setErrorUser(error);
       }
     };
 
@@ -85,19 +81,20 @@ const Profile = () => {
       }
     };
 
+    fetchUserProfile();
+    fetchMoreEvents();
+  }, []);
+
+  useEffect(() => {
     const storedImage = localStorage.getItem("profileImg");
     if (storedImage) {
       setProfileImg(storedImage);
     } else {
-      const randomImg =
-        profileImages[Math.floor(Math.random() * profileImages.length)];
+      const randomImg = profileImages[Math.floor(Math.random() * profileImages.length)];
       localStorage.setItem("profileImg", randomImg);
       setProfileImg(randomImg);
     }
-
-    fetchUserProfile();
-    fetchMoreEvents();
-  }, []);
+  }, [profileImages]);
 
   if (errorUser) {
     return (
@@ -119,7 +116,7 @@ const Profile = () => {
     user.registered_events || {};
 
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center">
       <Navbar />
 
       {/* Profile Section */}
@@ -148,72 +145,33 @@ const Profile = () => {
         </div>
       </div>
 
-     {/* Registered Events Section */}
-<div className="w-full px-6 pb-2 mt-12">
-  <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
-    Registered Events
-  </div>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-    {/* Live Events */}
-    {is_live_events.map((event) => (
-      <div
-        key={event.id}
-        className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
-      >
-        <div className="text-center mt-2">
-          <p className="font-semibold text-2xl text-white">{event.name}</p>
-          <p className="text-1xl text-[#FFD700]">Status: Live</p>
-          <p className="text-1xl text-teal-200">
-            {event.is_team_event ? "Team Event" : "Individual Event"}
-          </p>
-          <p className="font-semibold text-lg text-teal-100">{event.description}</p>
-          {event.is_team_event && (
-            <div className="text-sm mt-2 text-teal-200">
-              <p>Teams Registered:</p>
-              {event.registered_teams.map((team_id) => (
-                <p key={team_id}>Team ID: {team_id}</p>
-              ))}
+      {/* Registered Events Section */}
+      <div className="w-full px-6 pb-2 mt-12">
+        <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
+          Registered Events
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+          {[...is_live_events, ...is_upcoming_events, ...is_completed_events].map((event) => (
+            <div
+              key={event.id}
+              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
+            >
+              <div className="text-center mt-2">
+                <p className="font-semibold text-2xl text-white">{event.name}</p>
+                <p className={`text-1xl ${
+                  event.is_live ? "text-[#FFD700]" : event.is_completed ? "text-[#FF6347]" : "text-[#00FF00]"
+                }`}>
+                  Status: {event.is_live ? "Live" : event.is_completed ? "Completed" : "Upcoming"}
+                </p>
+                <p className="text-1xl text-teal-200">
+                  {event.is_team_event ? "Team Event" : "Individual Event"}
+                </p>
+                <p className="font-semibold text-lg text-teal-100">{event.description}</p>
+              </div>
             </div>
-          )}
+          ))}
         </div>
       </div>
-    ))}
-
-    {/* Upcoming Events */}
-    {is_upcoming_events.map((event) => (
-      <div
-        key={event.id}
-        className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
-      >
-        <div className="text-center mt-2">
-          <p className="font-semibold text-lg text-white">{event.name}</p>
-          <p className="text-sm text-[#00FF00]">Status: Upcoming</p>
-          <p className="text-sm text-teal-200">
-            {event.is_team_event ? "Team Event" : "Individual Event"}
-          </p>
-          <p className="font-semibold text-lg text-teal-100">{event.description}</p>
-        </div>
-      </div>
-    ))}
-
-    {/* Completed Events */}
-    {is_completed_events.map((event) => (
-      <div
-        key={event.id}
-        className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
-      >
-        <div className="text-center mt-2">
-          <p className="font-semibold text-lg text-white">{event.name}</p>
-          <p className="text-sm text-[#FF6347]">Status: Completed</p>
-          <p className="text-sm text-teal-200">
-            {event.is_team_event ? "Team Event" : "Individual Event"}
-          </p>
-          <p className="font-semibold text-lg text-teal-100">{event.description}</p>
-        </div>
-      </div>
-    ))}
-  </div>
-</div>
 
       {/* More Events Section */}
       <div className="flex px-6 pb-2 mt-12 justify-between w-full">
@@ -227,7 +185,7 @@ const Profile = () => {
       ) : errorMoreEvents ? (
         <div className="text-red-500">Failed to load more events.</div>
       ) : (
-        <div className="grid grid-cols-4 gap-20   p-4 w-3/4 text-white">
+        <div className="grid grid-cols-4 gap-20 p-4 w-3/4 text-white">
           {moreEvents.map((event) => (
             <Link key={event.id} href={`/events/${event.id}`}>
               <div className="flex items-center hover:scale-110 transition-all duration-300 mb-32">

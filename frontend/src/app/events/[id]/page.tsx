@@ -37,6 +37,7 @@ export default function EventDetails() {
         const response = await axios.get<Event>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${id}/`);
         setEvent(response.data);
       } catch (err) {
+        console.error("Error fetching event:", err); 
         setError("Failed to fetch event details.");
       } finally {
         setLoading(false);
@@ -44,6 +45,7 @@ export default function EventDetails() {
     };
     fetchEvent();
   }, [id]);
+  
 
   const handleRegister = async () => {
     const token = localStorage.getItem("jwt");

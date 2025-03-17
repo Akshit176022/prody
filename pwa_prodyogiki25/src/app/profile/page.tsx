@@ -39,14 +39,13 @@ const Profile = () => {
   const [profileImg, setProfileImg] = useState("");
   const [user, setUser] = useState<User | null>(null);
   const [moreEvents, setMoreEvents] = useState<Event[]>([]);
-  const [token, setToken] = useState<string | null>(null);
   const [isLoadingMoreEvents, setIsLoadingMoreEvents] = useState(false);
   const [errorMoreEvents, setErrorMoreEvents] = useState<unknown>(null);
   const [errorUser, setErrorUser] = useState<unknown>(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
-    setToken(storedToken);
+    
     console.log("Token retrieved from localStorage:", storedToken);
 
     if (!storedToken) {
@@ -99,7 +98,7 @@ const Profile = () => {
 
     fetchUserProfile();
     fetchMoreEvents();
-  }, []);
+  }, [profileImages]);
 
   if (errorUser) {
     return (

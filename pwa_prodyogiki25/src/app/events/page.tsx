@@ -41,6 +41,7 @@ export default function Event() {
         );
         setEvents(response.data);
       } catch (err) {
+        console.error("Error fetching events:", err); // Log error
         setError("Failed to fetch events.");
       } finally {
         setLoading(false);
@@ -48,6 +49,7 @@ export default function Event() {
     };
     fetchEvents();
   }, []);
+  
 
   const toggleEventDetails = (index: number) => {
     setVisibleEvent((prev) => (prev === index ? null : index));

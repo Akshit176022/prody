@@ -24,6 +24,7 @@ const SponsorsPage: React.FC = () => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sponsors/`);
         setSponsors(response.data);
       } catch (err) {
+        console.error("Error fetching sponsors:", err); 
         setError("Failed to fetch sponsors. Please try again later.");
       } finally {
         setLoading(false);
@@ -31,6 +32,7 @@ const SponsorsPage: React.FC = () => {
     };
     fetchSponsors();
   }, []);
+  
 
   // Group sponsors by tier
   const groupedSponsors = sponsors.reduce((acc: Record<string, Sponsor[]>, sponsor: Sponsor) => {

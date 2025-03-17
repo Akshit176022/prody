@@ -56,14 +56,16 @@ export default function SignupPage() {
           "Content-Type": "application/json",
         },
       });
+      console.log("Registration successful:", response.data); // Use response to avoid lint error
       setSuccessMessage("User registered successfully!");
       setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (error) {
+      console.error("Registration failed:", error); // ✅ Log error to use the variable
       setErrorMessage("Registration failed. Please try again.");
     }
-  };
+  };    
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },

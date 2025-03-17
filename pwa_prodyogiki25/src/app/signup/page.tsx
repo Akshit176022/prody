@@ -50,21 +50,28 @@ const SignupPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
-
+  
     try {
       const response = await axios.post(`${backendUrl}/api/auth/register/`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+    
+      console.log("Registration response:", response.data); // Logging response data for debugging
+    
       setSuccessMessage("User registered successfully!");
       setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (error) {
-      setErrorMessage("Registration failed. Please try again.");
+      if (axios.isAxiosError(error)) {
+        setErrorMessage(error.response?.data?.message || "Registration failed. Please try again.");
+      } else {
+        setErrorMessage("Registration failed. Please try again.");
+      }
     }
-  };
+  };    
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
