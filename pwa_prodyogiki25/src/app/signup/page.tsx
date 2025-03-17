@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Burger from "../home/components/hamburger";
 
 interface FormData {
   username: string;
@@ -80,8 +81,8 @@ const SignupPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col pt-5 items-center sm:pt-32 relative">
-      {/* Sign Up & Logo (Outside the Border) */}
-      <div className="flex items-center justify-between w-[90%] max-w-[400px] sm:mb-12 mb-6">
+      <Burger/>
+      <div className="flex items-center justify-between mt-10 w-[90%] max-w-[400px] sm:mb-12 mb-6">
         <h2 className="text-white text-4xl sm:text-4xl font-black">Sign Up</h2>
         <Image src="/images/logo.png" alt="Logo" width={60} height={50} />
       </div>
@@ -100,7 +101,7 @@ const SignupPage: React.FC = () => {
 
       {/* Signup Form */}
       <motion.div
-        className="p-4 mx-2 sm:border-[2px] border-[#1B7774] w-[90%] max-w-[400px] bg-black/30 backdrop-blur-md rounded-3xl h-auto flex flex-col justify-center items-center"
+        className="p-4 mx-2 mb-9 sm:border-[2px] border-[#1B7774] w-[90%] max-w-[400px] bg-black/30 backdrop-blur-md rounded-3xl h-auto flex flex-col justify-center items-center"
         variants={cardVariants}
         initial="hidden"
         animate="visible"
@@ -146,12 +147,14 @@ const SignupPage: React.FC = () => {
           ))}
 
           {/* Sign Up Button */}
-          <button
-            type="submit"
-            className="mt-6 px-5 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-44 hover:scale-105 transition delay-100 duration-300 ease-in-out"
-          >
-            Sign Up
-          </button>
+          <div className="flex items-center justify-center">
+  <button
+    type="submit"
+    className="mt-6 px-6 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-40 hover:scale-105 transition delay-100 duration-300 ease-in-out text-lg"
+  >
+    Sign Up
+  </button>
+</div>
         </form>
 
         {/* Already have an account? */}

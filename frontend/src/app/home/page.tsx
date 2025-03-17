@@ -119,7 +119,7 @@ const MouseScrollGrids = () => {
 
 <button
         onClick={toggleScale}
-        className="fixed right-[46%] top-[1%] z-50 px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-600 transition-all"
+        className="fixed right-[46%] top-[1%] z-50 px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition-all"
       >
         {isScaled ? "Scale Up" : "Scale Down"}
       </button>

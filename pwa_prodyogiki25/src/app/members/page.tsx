@@ -243,7 +243,8 @@ const Members  = () => {
   return (
     <div>
       <Burger/>
-      <div className="flex mt-24 space-x-6  overflow-x-auto whitespace-nowrap">
+    <div>
+      <div className="flex pt-20 space-x-6 overflow-x-auto whitespace-nowrap">
         {teamSections.map((section) => (
           <motion.div
             key={section.id}
@@ -272,7 +273,7 @@ const Members  = () => {
           </div>
         </div>
       ))}
-
+</div>
     </div>
   );
 };

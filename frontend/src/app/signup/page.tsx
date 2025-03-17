@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Navbar from "../componenets/Navbar";
 
 interface FormData {
   username: string;
@@ -74,8 +75,9 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex flex-col pt-5 mb-12 items-center lg:pt-0 relative">
-      <div className="flex items-center justify-center w-[96%] max-w-[580px] sm:mb-12 mt-8 mb-6">
-        <h2 className="text-white text-4xl sm:text-5xl font-bold">SIGN UP</h2>
+      <Navbar/>
+      <div className="flex items-center justify-center w-[96%] max-w-[580px] sm:mb-12 mt-24 mb-6">
+        <h2 className="text-white text-4xl sm:text-5xl font-bold">Sign Up</h2>
       </div>
 
       {successMessage && (
@@ -132,13 +134,14 @@ export default function SignupPage() {
               </div>
             </div>
           ))}
-
-          <button
-            type="submit"
-            className="mt-6 px-6 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-52 hover:scale-105 transition delay-100 duration-300 ease-in-out text-lg"
-          >
-            Sign Up
-          </button>
+<div className="flex items-center justify-center">
+  <button
+    type="submit"
+    className="mt-6 px-6 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-52 hover:scale-105 transition delay-100 duration-300 ease-in-out text-lg"
+  >
+    Sign Up
+  </button>
+</div>
         </form>
 
         <div className="mt-6 text-white text-lg">

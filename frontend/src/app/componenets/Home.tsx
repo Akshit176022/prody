@@ -62,7 +62,7 @@ export default function Home() {
           REGISTER NOW FOR EXISTING EVENTS !!
         </div>
 
-        <div className=" absolute top-80 right-20 -translate-x-7 hover:bg-transparent w-56 h-16 flex items-center justify-center rounded-2xl border-[1px] border-white p-2 text-white text-[24px]  shadow-lg text-center">
+        <div className=" absolute top-80 right-20 -translate-x-7 hover:bg-transparent w-56 h-16 flex items-center justify-center rounded-2xl border-[1px] border-white p-2 text-white text-[24px] hover:bg-teal-500 hover:scale-105 transition-transform duration-300 shadow-lg text-center">
           <a href="/signup">SIGN UP</a>
         </div>
       </div>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Burger from "../home/components/hamburger";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 50 },
@@ -51,7 +52,8 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col pt-5 items-center sm:pt-32 relative">
-      <div className="flex items-center justify-between w-[90%] max-w-[400px] sm:mb-12 mb-6">
+      <Burger/>
+      <div className="flex items-center justify-between w-[90%] max-w-[400px] sm:mb-12 mb-6 mt-10">
         <h2 className="text-white text-4xl sm:text-4xl font-black">Login</h2>
         <Image src="/images/logo.png" alt="Logo" width={60} height={50} />
       </div>

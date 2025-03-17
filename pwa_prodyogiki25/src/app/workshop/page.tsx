@@ -23,8 +23,6 @@ const WorkshopSlider = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [registrationLoading, setRegistrationLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [rollNo, setRollNo] = useState("");
 
   useEffect(() => {
     const fetchWorkshops = async () => {
@@ -35,7 +33,7 @@ const WorkshopSlider = () => {
         }
         const data = await response.json();
         setWorkshops(data);
-        setSelectedWorkshop(data[0]);
+        setSelectedWorkshop(data[0]); 
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load workshops. Please try again later.");
       } finally {
@@ -77,8 +75,6 @@ const WorkshopSlider = () => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
-    setName("");
-    setRollNo("");
     setError("");
   };
 
@@ -103,12 +99,10 @@ const WorkshopSlider = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: ` ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           workshop_id: selectedWorkshop.id,
-          name: name,
-          roll_no: rollNo,
         }),
       });
 
@@ -150,7 +144,7 @@ const WorkshopSlider = () => {
 
   return (
     <div
-      className="flex flex-col items-center min-h-screen bg-cover bg-center bg-no-repeat bg-black px-4"
+      className="flex flex-col items-center min-h-screen bg-cover bg-center bg-no-repeat px-4"
       {...handlers}
     >
       <Burger />
@@ -235,30 +229,6 @@ const WorkshopSlider = () => {
                     </option>
                   ))}
                 </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-white text-sm font-bold mb-2">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 rounded bg-gray-800 text-white"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-white text-sm font-bold mb-2">
-                  Roll Number
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-2 rounded bg-gray-800 text-white"
-                  value={rollNo}
-                  onChange={(e) => setRollNo(e.target.value)}
-                  required
-                />
               </div>
               <div className="flex justify-end">
                 <button

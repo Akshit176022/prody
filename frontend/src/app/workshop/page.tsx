@@ -151,7 +151,7 @@ const WorkshopSlider = () => {
       {...handlers}
     >
       <Navbar />
-      <div className="mt-32 relative w-[351px] h-[438px] lg:w-[500px] lg:h-[600px] overflow-hidden rounded-[22px] transition-transform duration-300 ease-in-out transform hover:scale-105">
+      <div className="mt-32 relative w-[300px] h-[438px] lg:w-[500px] lg:h-[600px] overflow-hidden rounded-[22px] transition-transform duration-300 ease-in-out transform hover:scale-105">
         <div
           className="flex transition-transform duration-500"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -167,9 +167,9 @@ const WorkshopSlider = () => {
                   alt={workshop.title}
                   width={200}
                   height={200}
-                  className="mt-4 mb-4 object-cover w-40 h-40 lg:w-56 lg:h-56"
+                  className="mt-4 mb-4 object-cover w-40 h-40 lg:w-72 lg:h-72"
                 />
-                <div className="text-center text-sm lg:text-base text-white mx-4">
+                <div className="text-center text-md lg:text-lg text-white mx-4">
                   {workshop.description}
                 </div>
               </div>
