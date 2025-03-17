@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="min-h-screen bg-fixed bg-cover bg-center "
+        className="min-h-screen bg-fixed bg-cover bg-center"
         style={{
           backgroundImage: "url('background.webp')",
         }}

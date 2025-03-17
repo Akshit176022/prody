@@ -8,6 +8,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -79,4 +80,21 @@ body {
   src: url('/fonts/DRAGON HUNTER.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
+}
+
+/* globals.css */
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+body {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+body {
+  -ms-overflow-style: none;
 }

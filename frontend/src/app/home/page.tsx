@@ -115,7 +115,7 @@ const MouseScrollGrids = () => {
   };
 
   return (
-    <>
+    <div className='scrollbar-hide'>
 
 <button
         onClick={toggleScale}
@@ -149,7 +149,7 @@ const MouseScrollGrids = () => {
       <div className="w-[50vw] h-[50vh]">example</div>
     </div>
 
-    </>
+    </div>
   );
 };
 

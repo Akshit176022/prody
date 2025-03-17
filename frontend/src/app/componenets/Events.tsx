@@ -3,14 +3,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 const events = [
-  { id: 1, title: "Event 1", image: "/images/events.webp" },
+  { id: 1, title: "Event 1", image: "/images/members.webp" },
   // { id: 2, title: "Event 2", image: "/images/event2.jpeg" },
   // { id: 3, title: "Event 3", image: "/images/1.jpeg" },
 ];
 
 export default function Events() {
   const navigateToEvents = () => {
-    window.location.href = "/events";
+    window.location.href = "/members";
   };
 
   const [index, setIndex] = useState(0);
@@ -49,13 +49,12 @@ export default function Events() {
       </div>
 
 
-<div className="text-5xl pt-8 text-white font-bold">EXPLORE EVENTS</div>
+<div className="text-5xl pt-8 text-white font-bold">MEET OUR TEAM</div>
 
       {/* Text Section */}
       <div className="pt-4 text-white text-left px-4 w-[28vw] text-xl">
         <p>
-          Join us for an exciting series of events! Participate, learn, and showcase your skills. Register now and be a
-          part of something amazing.
+        Behind Prodyogiki is a team of passionate and dedicated individuals committed to making this technical extravaganza a grand success.
         </p>
       </div>
     </div>

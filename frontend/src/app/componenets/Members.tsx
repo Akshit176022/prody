@@ -8,7 +8,7 @@ const Members = () => {
   const [hovered, setHovered] = useState(false);
 
   const navigateToMembers = () => {
-    window.location.href = "/members";
+    window.location.href = "/events";
   };
 
   return (
@@ -27,7 +27,7 @@ const Members = () => {
       >
         {/* Image */}
         <Image
-          src="/images/members.webp"
+          src="/images/events.webp"
           alt="Team"
           layout="fill"
           objectFit="cover"
@@ -43,9 +43,10 @@ const Members = () => {
 
       {/* Text Section */}
       <div className="w-[20vw] ml-10 text-white">
-        <div className="text-7xl font-semibold mt-1 mb-8">MEET OUR TEAM</div>
+        <div className="text-7xl font-semibold mt-1 mb-8">EXPLORE EVENTS</div>
         <p className='text-lg'>
-        Behind Prodyogiki is a team of passionate and dedicated individuals committed to making this technical extravaganza a grand success. Get to know the people who make it all happen—our innovators, organizers, and tech enthusiasts working tirelessly to bring Prodyogiki to life! 
+        Join us for an exciting series of events! Participate, learn, and showcase your skills.Participate in events ranging in all domains and engineering branches. Register now and be a
+          part of something amazing. 
         </p>
       </div>
     </div>
