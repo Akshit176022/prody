@@ -20,6 +20,18 @@ interface Event {
   max_members: number;
 }
 
+interface User {
+  username: string;
+  user_id: string;
+  prody_points: number;
+  registered_events: {
+    is_live_events: Event[];
+    is_upcoming_events: Event[];
+    is_completed_events: Event[];
+  };
+}
+
+
 export default function Event() {
   const [visibleEvent, setVisibleEvent] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +44,9 @@ export default function Event() {
   const [isCreateTeam, setIsCreateTeam] = useState(false);
   const [isJoinTeam, setIsJoinTeam] = useState(false);
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -41,7 +56,7 @@ export default function Event() {
         );
         setEvents(response.data);
       } catch (err) {
-        console.error("Error fetching events:", err); // Log error
+        console.log("Error fetching events:", err); // Log error
         setError("Failed to fetch events.");
       } finally {
         setLoading(false);
@@ -49,6 +64,42 @@ export default function Event() {
     };
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
+  
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []); // Runs only on mount
+  
+  useEffect(() => {
+    if (user && user.registered_events) {
+      const { is_live_events, is_completed_events, is_upcoming_events } = user.registered_events;
+      const userRegisteredEvents = [...is_live_events, ...is_completed_events, ...is_upcoming_events];
+      
+      // Check if the event is already registered
+      if (selectedEvent) {
+        const found = userRegisteredEvents.some((e) => e.id === selectedEvent.id);
+        console.log(`Event ${selectedEvent.id} is registered:`, found);
+        setIsRegistered(found);
+      }
+    }
+  }, [user,events]); 
   
 
   const toggleEventDetails = (index: number) => {
@@ -120,6 +171,7 @@ export default function Event() {
           );
         }
       } else {
+        
         await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register-event/${selectedEvent.id}/`,
           { user_id: tokenPayload.user_id },
@@ -238,12 +290,20 @@ export default function Event() {
                         {event.description}
                       </div>
                       <div className="text-center p-4">
-                        <button
+                        {isRegistered ? (
+                          <button
+                          className="border px-3 border-white"
+                        >
+                          Registered
+                        </button>
+                        ) : (
+                          <button
                           className="border px-3 border-white"
                           onClick={() => handleRegisterClick(event)}
                         >
                           Register
                         </button>
+                        )}
                       </div>
                     </div>
                   </motion.div>

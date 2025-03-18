@@ -5,6 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import Footer from "../../componenets/Footer";
+import Navbar from "@/app/componenets/Navbar";
 
 interface Event {
   id: number;
@@ -19,6 +20,18 @@ interface Event {
   max_members: number;
 }
 
+
+interface User {
+  registered_events: {
+       is_live_events: Event[];
+       is_completed_events: Event[];
+       is_upcoming_events: Event[];
+  };
+  username: string;
+  user_id: string;
+  email: string;
+}
+
 export default function EventDetails() {
   const { id } = useParams();
   const router = useRouter();
@@ -30,22 +43,60 @@ export default function EventDetails() {
   const [teamName, setTeamName] = useState("");
   const [isCreateTeam, setIsCreateTeam] = useState(false);
   const [isJoinTeam, setIsJoinTeam] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
-    const fetchEvent = async () => {
+    const fetchEventDetails = async () => {
       try {
-        const response = await axios.get<Event>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${id}/`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${id}/`);
         setEvent(response.data);
-      } catch (err) {
-        console.error("Error fetching event:", err); 
-        setError("Failed to fetch event details.");
-      } finally {
+        setLoading(false);
+      } catch (error) {
+        console.log("Failed to fetch event details:", error);
+        setError("Registerations for this event will be starting soon!! Stay tuned.");
         setLoading(false);
       }
     };
-    fetchEvent();
-  }, [id]);
+
+    fetchEventDetails();
+  }, [id]); 
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt");
   
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
+          {
+            headers: {
+              Authorization: `${token}`,
+            },
+          }
+        );
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
+    };
+  
+    fetchUserProfile();
+  }, []); // Runs only on mount
+  
+  useEffect(() => {
+    if (user && user.registered_events) {
+      const { is_live_events, is_completed_events, is_upcoming_events } = user.registered_events;
+      const userRegisteredEvents = [...is_live_events, ...is_completed_events, ...is_upcoming_events];
+      
+      // Check if the event is already registered
+      if (event) {
+        const found = userRegisteredEvents.some((e) => e.id === event.id);
+        console.log(`Event ${event.id} is registered:`, found);
+        setIsRegistered(found);
+      }
+    }
+  }, [user, event]); 
 
   const handleRegister = async () => {
     const token = localStorage.getItem("jwt");
@@ -127,11 +178,12 @@ export default function EventDetails() {
   };
 
   if (loading) return <div className="p-8 text-center text-white">Loading...</div>;
-  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+  if (error) return <div className="p-20 font-bold text-center text-blue-900">{error}</div>;
   if (!event) return <div className="p-8 text-center text-white">Event not found!</div>;
 
   return (
     <div className="min-h-screen bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/background.webp')" }}>
+      <Navbar/>
       <div className="fixed inset-0 bg-black/30 backdrop-blur-md" style={{ WebkitBackdropFilter: "blur(10px)" }}></div>
       <main className="relative pt-20 z-10">
         <div className="max-w-4xl mx-auto p-6 rounded-3xl shadow-lg border-4 border-teal-700 backdrop-blur-sm">
@@ -170,12 +222,22 @@ export default function EventDetails() {
               >
                 View Abstract
               </Link>
-              <button
+              {isRegistered ?(
+                <button
+                
+                className="inline-block bg-teal-500 text-white px-8 py-2 rounded-lg "
+              >
+                Registered
+              </button>
+              ):(
+                <button
                 onClick={() => setShowRegistrationModal(true)}
                 className="inline-block bg-teal-500 text-white px-8 py-2 rounded-lg hover:bg-teal-600 transition-all"
-              >
+                >
                 Register
               </button>
+              )}
+              
             </div>
           </div>
         </div>
