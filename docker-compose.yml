@@ -11,18 +11,18 @@ services:
     env_file:
       - .env
 
-  # frontend:
-  #   build: ./frontend
-  #   container_name: nextjs_frontend
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - backend
+  frontend:
+    build: ./frontend
+    container_name: nextjs_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
-  # pwa:
-  #   build: ./pwa_prodyogiki25
-  #   container_name: nextjs_pwa
-  #   ports:
-  #     - "3001:3001"
-  #   depends_on:
-  #     - backend
+  pwa:
+    build: ./pwa_prodyogiki25
+    container_name: nextjs_pwa
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
