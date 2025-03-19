@@ -9,7 +9,6 @@ import Register from "../componenets/Profile";
 import Events from "../componenets/Events";
 import Gallery from "../componenets/Workshop";
 import Messages from "../componenets/Messages";
-import Timeline from "../componenets/Timeline";
 import CountdownTimer from "../componenets/timer"
 
 gsap.registerPlugin(ScrollToPlugin);
