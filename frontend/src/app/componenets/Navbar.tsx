@@ -16,7 +16,7 @@ const navItems = [
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 z-50  w-full flex justify-between items-center px-40  text-white  
+    <nav className="fixed top-0 left-0 z-50  w-full flex justify-between items-center px-28  text-white  
       border-b-[1px] border-gray-300/30 shadow-lg shadow-gray-900/10 backdrop-blur-sm">
       
       <div className="flex items-center">
@@ -31,7 +31,7 @@ const Navbar = () => {
       </div>
 
       
-      <ul className="flex space-x-8 text-xl">
+      <ul className="flex space-x-8 text-1xl">
         {navItems.map((item, index) => (
           <motion.li
             key={index}

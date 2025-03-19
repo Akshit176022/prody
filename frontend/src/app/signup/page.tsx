@@ -46,6 +46,7 @@ export default function SignupPage() {
     setFormData({ ...formData, [name]: value });
   };
 
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
@@ -76,7 +77,7 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex flex-col pt-5 mb-12 items-center lg:pt-0 relative">
       <Navbar/>
-      <div className="flex items-center justify-center w-[96%] max-w-[580px] sm:mb-12 mt-24 mb-6">
+      <div className="flex items-center justify-center w-[96%] max-w-[500px] sm:mb-12 mt-24 mb-6">
         <h2 className="text-white text-4xl sm:text-5xl font-bold">Sign Up</h2>
       </div>
 
@@ -100,8 +101,8 @@ export default function SignupPage() {
       >
         <form onSubmit={handleSubmit} className="w-full">
           {["username", "email", "password", "branch", "roll_no"].map((field, index) => (
-            <div key={index} className="w-full max-w-[450px] mb-11 sm:mb-9">
-              <label htmlFor={field} className="block text-white font-semibold sm:font-bold text-lg sm:text-xl mb-2">
+            <div key={index} className="w-full max-w-[400px] mb-11 sm:mb-9">
+              <label htmlFor={field} className="block text-white font-semibold lg:text-lg mb-2">
                 {field === "username" ? "Username" : field === "roll_no" ? "Roll No" : field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
               <div className="relative h-[70px] sm:h-[80px]">

@@ -9,6 +9,9 @@ const sponsors = [
   { type: "Gold Sponsor", name: "Company B", description: "Innovators in tech.", image: "/images/bgnew5.png" },
   { type: "Silver Sponsor", name: "Company C", description: "Revolutionizing AI.", image: "/images/bgnew5.png" },
   { type: "Bronze Sponsor", name: "Company D", description: "Your trusted partner.", image: "/images/bgnew5.png" },
+  { type: "Silver Sponsor", name: "Company C", description: "Revolutionizing AI.", image: "/images/bgnew5.png" },
+  { type: "Bronze Sponsor", name: "Company D", description: "Your trusted partner.", image: "/images/bgnew5.png" },
+
 ];
 
 
@@ -52,7 +55,7 @@ export default function Home() {
     }
   }, [charIndex, isDeleting, textIndex]); 
   return (
-    <div className="relative flex justify-center  text-white text-2xl ml-16 mt-10 font-bold w-[100vw] h-[150vh]" style={{ gridRow: "span 2" }}>
+    <div className="relative flex justify-center  text-white text-2xl ml-16 mt-16 font-bold w-[100vw] h-[200vh]" style={{ gridRow: "span 2" }}>
       <div className="absolute top-56 left-56 flex flex-col items-start">
         <div className="text-2xl border-2 border-white w-60 h-16 pt-3 rounded-2xl text-center">Total Events</div>
         <Countdown />
@@ -67,18 +70,18 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="absolute w-[50vw] flex flex-col items-center  justify-center">
+      <div className="absolute w-[50vw]  flex flex-col items-center  justify-center">
         <Image 
           className="p-4 m-4"
           src="/images/bgnew5.png"
           alt="Prodyogiki Logo"
-          width={800}
-          height={400}
+          width={2000}
+          height={1600}
         />
         <div className="m-2 text-bold text-7xl">PRODYOGIKI</div>
         <div className="m-2">{displayedText}<span className="animate-blink">|</span></div>
 
-        <div className="grid grid-cols-4 grid-rows-1 gap-8 p-8 mt-8 bg-black">
+        <div className="grid grid-cols-3 grid-rows-1 gap-8 p-8 mt-20 bg-black">
       {sponsors.map((sponsor, index) => (
         <div key={index} className="flex flex-col justify-center p-4  rounded-lg shadow-lg">
           <h3 className="text-lg font-bold text-white">{sponsor.type}</h3>

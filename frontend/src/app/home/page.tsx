@@ -10,6 +10,7 @@ import Events from "../componenets/Events";
 import Gallery from "../componenets/Workshop";
 import Messages from "../componenets/Messages";
 import Timeline from "../componenets/Timeline";
+import CountdownTimer from "../componenets/timer"
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -20,9 +21,8 @@ const MouseScrollGrids = () => {
   const targetY = useRef(0);
   const gridRef = useRef(null);
   const pathname = usePathname();
-  const [isScaled, setIsScaled] = useState(false);
-  const [isScrollActive, setIsScrollActive] = useState(true);
-  const animationFrameRef = useRef<number | null>(null);
+  const [isScaled, setIsScaled] = useState(false); 
+
 
   useLayoutEffect(() => {
     console.log("Resetting Scroll Position on Route Change:", pathname);
@@ -32,47 +32,37 @@ const MouseScrollGrids = () => {
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      if (isScrollActive) {
-        cursorX.current = event.clientX / window.innerWidth;
-        cursorY.current = event.clientY / window.innerHeight;
-      }
+      cursorX.current = event.clientX / window.innerWidth;
+      cursorY.current = event.clientY / window.innerHeight;
     };
 
     document.addEventListener("mousemove", handleMouseMove);
     return () => document.removeEventListener("mousemove", handleMouseMove);
-  }, [isScrollActive]);
+  }, []);
 
   useEffect(() => {
     const smoothScroll = () => {
-      if (isScrollActive) {
-        targetX.current += (cursorX.current - targetX.current) * 0.1;
-        targetY.current += (cursorY.current - targetY.current) * 0.1;
+      targetX.current += (cursorX.current - targetX.current) * 0.1;
+      targetY.current += (cursorY.current - targetY.current) * 0.1;
 
-        const scrollWidth = document.documentElement.scrollWidth - window.innerWidth;
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollWidth = document.documentElement.scrollWidth - window.innerWidth;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
 
-        gsap.to(window, {
-          duration: 1.5,
-          ease: "power2.out",
-          scrollTo: {
-            x: targetX.current * scrollWidth,
-            y: targetY.current * scrollHeight,
-            autoKill: false,
-          },
-        });
-      }
+      gsap.to(window, {
+        duration: 1.5,
+        ease: "power2.out",
+        scrollTo: {
+          x: targetX.current * scrollWidth,
+          y: targetY.current * scrollHeight,
+          autoKill: false,
+        },
+      });
 
-      animationFrameRef.current = requestAnimationFrame(smoothScroll);
+      requestAnimationFrame(smoothScroll);
     };
 
-    animationFrameRef.current = requestAnimationFrame(smoothScroll);
-    
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [isScrollActive]);
+    smoothScroll();
+  }, []);
 
   useEffect(() => {
     const timeline = gsap.timeline();
@@ -103,20 +93,19 @@ const MouseScrollGrids = () => {
     );
   }, []);
 
+
   const toggleScale = () => {
     if (isScaled) {
-      // Scale up to 1 and enable mouse scrolling
+      // Scale up to 1
       gsap.to(gridRef.current, {
         scale: 1,
         duration: 1.5,
         x: "0%",
         y: "0%",
         ease: "power2.out",
-        onComplete: () => setIsScrollActive(true)
       });
     } else {
-      // Scale down to 0.5 and disable mouse scrolling
-      setIsScrollActive(false);
+
       gsap.to(gridRef.current, {
         scale: 0.5,
         duration: 1.5,
@@ -128,34 +117,39 @@ const MouseScrollGrids = () => {
 
   return (
     <div className='scrollbar-hide'>
-      <button
+
+<button
         onClick={toggleScale}
         className="fixed right-[46%] top-[1%] z-50 px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition-all"
       >
         {isScaled ? "Scale Up" : "Scale Down"}
       </button>
 
-      <div
-        ref={gridRef}
-        className="grid md:grid-cols-3 md:grid-rows-3 grid-cols-1 grid-rows-1 overflow-hidden bg-black transform origin-top-left"
-        style={{
-          width: "210vw",
-          height: "230vh",
-          display: "grid",
-          gridTemplateColumns: "50vw  100vw 50vw",
-          gridTemplateRows: "80vh  80vh  80vh",
-          gap: "5px",
-        }}
-      >
-        <Members />
-        <Home />
-        <Events />
-        <Register />
-        <Gallery />
-        <Messages />
-        <Timeline />
-        <div className="w-[50vw] h-[50vh]">example</div>
-      </div>
+    <div
+      ref={gridRef}
+      className="grid md:grid-cols-3 md:grid-rows-3 grid-cols-1 grid-rows-1 overflow-hidden bg-black transform origin-top-left"
+      style={{
+        width: "210vw",
+        height: "230vh",
+        display: "grid",
+        gridTemplateColumns: "50vw  100vw 50vw",
+        gridTemplateRows: "80vh  80vh  80vh",
+        gap: "5px",
+      }}
+    >
+
+
+
+      <Members />
+      <Home />
+      <Events />
+      <Register />
+      <Gallery />
+      <Messages />
+      <CountdownTimer/>
+      <div className="w-[50vw] h-[50vh]">example</div>
+    </div>
+
     </div>
   );
 };

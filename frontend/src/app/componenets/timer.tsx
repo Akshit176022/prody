@@ -1,67 +1,134 @@
 "use client";
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from "react";
 
-const Timer: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState<number>(60); // 60 seconds countdown
-  const [isActive, setIsActive] = useState<boolean>(false);
+type TargetDateResponse = {
+  targetDate: string; 
+};
 
-  // Start the timer
-  const startTimer = useCallback(() => {
-    setIsActive(true);
-  }, []);
+const CountdownTimer = () => {
+  const [targetDate, setTargetDate] = useState<Date | null>(null);
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Reset the timer
-  const resetTimer = useCallback(() => {
-    setIsActive(false);
-    setTimeLeft(60);
-  }, []);
 
-  // Handle timer countdown
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-
-    if (isActive && timeLeft > 0) {
-      interval = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
-    } else if (timeLeft === 0) {
-      setIsActive(false);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
+    const fetchTargetDate = async () => {
+      try {
+        const response = await fetch("/data/target-date.json"); 
+        if (!response.ok) {
+          throw new Error("Failed to fetch target date");
+        }
+        const data: TargetDateResponse = await response.json();
+        const date = new Date(data.targetDate);
+        setTargetDate(date);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Failed to fetch target date:", err);
+        setError("Failed to load countdown. Please try again later.");
+        setIsLoading(false);
+      }
     };
-  }, [isActive, timeLeft]);
 
-  // Format time to display as MM:SS
-  const formatTime = (time: number): string => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
+    fetchTargetDate();
+  }, []);
+
+  useEffect(() => {
+    if (!targetDate) return;
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const difference = targetDate.getTime() - now;
+
+      if (difference <= 0) {
+        clearInterval(interval);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTimeLeft({ days, hours, minutes, seconds });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+        Loading countdown...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+        {error}
+      </div>
+    );
+  }
+
+  if (!targetDate) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+        No target date found.
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-4 p-6 bg-gray-800 rounded-lg shadow-lg">
-      <div className="text-4xl font-mono font-bold text-blue-400">
-        {formatTime(timeLeft)}
+
+<div className="ml-32" >
+<div className="bg-black backdrop-blur-md  rounded-3xl shadow-2xl mt-20  text-white border-2 mx-[20%] justify-center h-64 border-white">
+        <h1 className="text-4xl font-bold mb-8 text-center mt-12 ">TIME LEFT</h1>
+        <div className="flex gap-4 justify-center">
+
+          <div className="flex flex-col  ">
+            <div className="flex flex-row">
+            <span className="text-6xl font-mono font-bold">{timeLeft.days}</span>
+            <span className="text-6xl ml-2 font-mono font-bold">:</span>
+            </div>
+  
+            <span className="text-lg ">Days</span>
+          </div>
+
+          <div className="flex flex-col ">
+            <div className="flex flex-row">
+            <span className="text-6xl font-mono font-bold">{timeLeft.hours}</span>
+            <span className="text-6xl ml-2 font-mono font-bold">:</span>
+            </div>
+
+            <span className="text-lg">Hours</span>
+          </div>
+
+          <div className="flex flex-col ">
+            <div className="flex flex-row">
+            <span className="text-6xl font-mono font-bold">{timeLeft.minutes}</span>
+            <span className="text-6xl ml-2 font-mono font-bold">:</span>
+            </div>
+ 
+            <span className="text-lg">Minutes</span>
+          </div>
+
+          <div className="flex flex-col ">
+            <span className="text-6xl font-mono font-bold">{timeLeft.seconds}</span>
+            <span className="text-lg">Seconds</span>
+          </div>
+        </div>
       </div>
-      <div className="flex space-x-4">
-        <button
-          onClick={startTimer}
-          disabled={isActive}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed"
-        >
-          Start
-        </button>
-        <button
-          onClick={resetTimer}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-        >
-          Reset
-        </button>
-      </div>
-    </div>
+</div>
+
   );
 };
 
-export default Timer;
+export default CountdownTimer;

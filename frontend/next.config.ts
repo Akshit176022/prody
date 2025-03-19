@@ -1,6 +1,6 @@
 const nextConfig = {
   experimental: {
-    turbo: false, // Disable Turbopack
+    turbo: false, 
   },
   images: {
     domains: ["127.0.0.1", "localhost"],

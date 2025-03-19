@@ -5,9 +5,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import gsap from 'gsap';
 import { events } from '../../../public/data/event';
-import './styles.css'; // Import your CSS file
+import './styles.css';
 
-// Define the type for Vanta effect
 type VantaEffect = {
   destroy: () => void;
 };
@@ -16,116 +15,140 @@ const ThreeScene: React.FC = () => {
   const mountRef = React.useRef<HTMLDivElement>(null);
   const [vantaEffect, setVantaEffect] = React.useState<VantaEffect | null>(null);
 
-  let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    controls: OrbitControls;
-  const islandObjects: { object: THREE.Object3D; position: THREE.Vector3 }[] = [];
+  // Use useRef to store Three.js objects
+  const cameraRef = React.useRef<THREE.PerspectiveCamera | null>(null);
+  const sceneRef = React.useRef<THREE.Scene | null>(null);
+  const rendererRef = React.useRef<THREE.WebGLRenderer | null>(null);
+  const controlsRef = React.useRef<OrbitControls | null>(null);
+
+  const islandObjects = React.useRef<{ object: THREE.Object3D; position: THREE.Vector3 }[]>([]);
   const labelsRef = React.useRef<{ label: HTMLDivElement; island: THREE.Object3D }[]>([]);
-  const pins: THREE.Mesh[] = [];
+  const pins = React.useRef<THREE.Mesh[]>([]);
 
-  React.useEffect(() => {
-    // Initialize Three.js scene
-    init();
-
-    // Set up Vanta.js effect
-    const effect = window.VANTA?.CLOUDS2({
-      el: ".s-page-1 .s-section-1 .s-section",
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.0,
-      minWidth: 200.0,
-      scale: 1.0,
-      texturePath: "./texture.png",
-    });
-    setVantaEffect(effect as VantaEffect); // Cast to VantaEffect type
-
-    // Cleanup on unmount
-    return () => {
-      // Destroy Vanta.js effect
-      if (vantaEffect) vantaEffect.destroy();
-
-      // Dispose of Three.js renderer and scene resources
-      if (renderer) {
-        renderer.dispose();
-      }
-      if (scene) {
-        scene.traverse((object) => {
-          if (object instanceof THREE.Mesh) {
-            object.geometry?.dispose(); // Dispose of geometry
-            object.material?.dispose(); // Dispose of material
-          }
-        });
-      }
-
-      // Remove all text labels from the DOM
-      labelsRef.current.forEach(({ label }) => {
-        if (label && document.body.contains(label)) {
-          document.body.removeChild(label);
-        }
-      });
-      labelsRef.current = [];
-
-      // Remove event listeners
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('click', onClick);
-    };
-  }, []);
-
-  const init = () => {
+  // Memoized init function
+  const init = React.useCallback(() => {
     // Camera
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(800, 450, 1200);
+    cameraRef.current = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    cameraRef.current.position.set(800, 450, 1200);
 
     // Scene
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0d1b2a);
-    scene.fog = new THREE.Fog(0x0d1b2a, 500, 900);
+    sceneRef.current = new THREE.Scene();
+    sceneRef.current.background = new THREE.Color(0x0d1b2a);
+    sceneRef.current.fog = new THREE.Fog(0x0d1b2a, 500, 900);
 
     const textureLoader = new THREE.TextureLoader();
     const backgroundTexture = textureLoader.load('galaxy3.jpg');
-    scene.background = backgroundTexture;
+    sceneRef.current.background = backgroundTexture;
 
     // Lights
-    scene.add(new THREE.HemisphereLight(0xf0f5f5, 0xd0dee7, 0.5));
+    sceneRef.current.add(new THREE.HemisphereLight(0xf0f5f5, 0xd0dee7, 0.5));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 10, 5).normalize();
-    scene.add(directionalLight);
+    sceneRef.current.add(directionalLight);
 
     // Renderer
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    mountRef.current?.appendChild(renderer.domElement);
+    rendererRef.current = new THREE.WebGLRenderer({ antialias: true });
+    rendererRef.current.setPixelRatio(window.devicePixelRatio);
+    rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+    mountRef.current?.appendChild(rendererRef.current.domElement);
 
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    rendererRef.current.toneMapping = THREE.ACESFilmicToneMapping;
+    rendererRef.current.toneMappingExposure = 1.2;
+    rendererRef.current.outputColorSpace = THREE.SRGBColorSpace;
 
     // Controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 2, 0);
-    controls.minDistance = 1;
-    controls.maxDistance = 500;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.5;
-    controls.update();
+    controlsRef.current = new OrbitControls(cameraRef.current, rendererRef.current.domElement);
+    controlsRef.current.target.set(0, 2, 0);
+    controlsRef.current.minDistance = 1;
+    controlsRef.current.maxDistance = 500;
+    controlsRef.current.maxPolarAngle = Math.PI / 2;
+    controlsRef.current.autoRotate = true;
+    controlsRef.current.autoRotateSpeed = 0.5;
+    controlsRef.current.update();
 
-    // Add stars and islands
     addStars();
     loadIslands();
 
-    // Event listeners
     window.addEventListener('resize', resize);
     window.addEventListener('click', onClick);
 
     // Start animation loop
     animate();
-  };
+  }, []);
 
+  // Memoized resize function
+  const resize = React.useCallback(() => {
+    if (cameraRef.current && rendererRef.current) {
+      cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+      cameraRef.current.updateProjectionMatrix();
+      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+    }
+  }, []);
+
+  // Memoized onClick function
+  const onClick = React.useCallback((event: MouseEvent) => {
+    if (!cameraRef.current || !controlsRef.current) return;
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, cameraRef.current);
+    const intersects = raycaster.intersectObjects(islandObjects.current.map((obj) => obj.object), true);
+
+    if (intersects.length > 0) {
+      let clickedObject = intersects[0].object;
+
+      while (clickedObject.parent && !islandObjects.current.some((obj) => obj.object === clickedObject)) {
+        clickedObject = clickedObject.parent;
+      }
+
+      const islandData = islandObjects.current.find((obj) => obj.object === clickedObject);
+      if (islandData) {
+        console.log('Island clicked:', clickedObject.name);
+
+        const islandCenter = new THREE.Vector3(
+          islandData.position.x,
+          islandData.position.y,
+          islandData.position.z
+        );
+
+        const directionToIsland = new THREE.Vector3().subVectors(cameraRef.current.position, islandCenter).normalize();
+        const fixedScale = 120;
+        const zoomDistance = fixedScale * 2;
+        const newCameraPosition = islandCenter.clone().addScaledVector(directionToIsland, zoomDistance);
+
+        controlsRef.current.enabled = false;
+
+        gsap.to(cameraRef.current.position, {
+          duration: 2,
+          x: newCameraPosition.x,
+          y: newCameraPosition.y,
+          z: newCameraPosition.z,
+          onUpdate: () => {
+            cameraRef.current?.lookAt(islandCenter);
+          },
+          onComplete: () => {
+            if (controlsRef.current) controlsRef.current.enabled = true;
+          },
+        });
+
+        gsap.to(controlsRef.current.target, {
+          duration: 2,
+          x: islandCenter.x,
+          y: islandCenter.y,
+          z: islandCenter.z,
+        });
+      }
+    }
+  }, []);
+
+  // Add stars to the scene
   const addStars = () => {
+    if (!sceneRef.current) return;
+
     const starGeometry = new THREE.BufferGeometry();
     const starVertices: number[] = [];
 
@@ -146,10 +169,13 @@ const ThreeScene: React.FC = () => {
     });
 
     const starField = new THREE.Points(starGeometry, starMaterial);
-    scene.add(starField);
+    sceneRef.current.add(starField);
   };
 
+  // Load island models
   const loadIslands = () => {
+    if (!sceneRef.current) return;
+
     const islandModels = [
       'models/floating_island.gltf',
       'models/islanddd.gltf',
@@ -205,10 +231,10 @@ const ThreeScene: React.FC = () => {
           const scaleFactor = fixedScale / maxDimension;
           island.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-          scene.add(island);
-          islandObjects.push({ object: island, position: new THREE.Vector3(pos.x, pos.y, pos.z) });
+          sceneRef.current?.add(island);
+          islandObjects.current.push({ object: island, position: new THREE.Vector3(pos.x, pos.y, pos.z) });
 
-          addPinOnIsland(island, );
+          addPinOnIsland(island);
           addTextLabel(island, event.name);
         },
         undefined,
@@ -219,7 +245,10 @@ const ThreeScene: React.FC = () => {
     });
   };
 
+  // Add a pin on the island
   const addPinOnIsland = (island: THREE.Object3D) => {
+    if (!sceneRef.current) return;
+
     const pinHeight = 20;
     const pinRadius = 5;
 
@@ -235,12 +264,15 @@ const ThreeScene: React.FC = () => {
     const centerZ = islandBoundingBox.getCenter(new THREE.Vector3()).z;
 
     pin.position.set(centerX, centerY, centerZ);
-    scene.add(pin);
+    sceneRef.current.add(pin);
 
-    pins.push(pin);
+    pins.current.push(pin);
   };
 
-  const addTextLabel = (island: THREE.Object3D, text: string, ) => {
+  // Add a text label for the island
+  const addTextLabel = (island: THREE.Object3D, text: string) => {
+    if (!cameraRef.current) return;
+
     const islandBoundingBox = new THREE.Box3().setFromObject(island);
     const centerX = islandBoundingBox.getCenter(new THREE.Vector3()).x;
     const centerY = islandBoundingBox.max.y;
@@ -251,10 +283,12 @@ const ThreeScene: React.FC = () => {
     label.textContent = text;
     label.style.position = 'absolute';
     label.style.color = 'black';
-    label.style.fontSize = '24px';
+    label.style.fontSize = '16px';
     label.style.fontWeight = 'bold';
     label.style.fontFamily = 'Arial, sans-serif';
     label.style.pointerEvents = 'auto';
+    label.style.cursor = 'pointer';
+    label.style.marginTop = '2.2em';
     label.style.padding = '5px 10px';
     label.style.borderRadius = '8px';
     label.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
@@ -276,9 +310,12 @@ const ThreeScene: React.FC = () => {
     });
   };
 
+  // Update label position based on camera
   const updateLabelPosition = (label: HTMLDivElement, islandPosition: THREE.Vector3) => {
+    if (!cameraRef.current) return;
+
     const vector = islandPosition.clone();
-    vector.project(camera);
+    vector.project(cameraRef.current);
 
     const widthHalf = window.innerWidth / 2;
     const heightHalf = window.innerHeight / 2;
@@ -291,14 +328,11 @@ const ThreeScene: React.FC = () => {
     label.style.transform = 'translate(-50%, -100%)';
   };
 
-  const resize = () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  };
-
+  // Animation loop
   const animate = () => {
-    controls.update();
+    if (!controlsRef.current || !rendererRef.current || !sceneRef.current || !cameraRef.current) return;
+
+    controlsRef.current.update();
 
     labelsRef.current.forEach(({ label, island }) => {
       const islandBoundingBox = new THREE.Box3().setFromObject(island);
@@ -309,66 +343,52 @@ const ThreeScene: React.FC = () => {
       updateLabelPosition(label, new THREE.Vector3(centerX, centerY, centerZ));
     });
 
-    renderer.render(scene, camera);
+    rendererRef.current.render(sceneRef.current, cameraRef.current);
     requestAnimationFrame(animate);
   };
 
-  const onClick = (event: MouseEvent) => {
-    const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
+  // Main useEffect
+  React.useEffect(() => {
+    init();
 
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const effect = window.VANTA?.CLOUDS2({
+      el: ".s-page-1 .s-section-1 .s-section",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      scale: 1.0,
+      texturePath: "./texture.png",
+    });
+    setVantaEffect(effect as VantaEffect);
 
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(islandObjects.map((obj) => obj.object), true);
+    return () => {
+      if (vantaEffect) vantaEffect.destroy();
 
-    if (intersects.length > 0) {
-      let clickedObject = intersects[0].object;
-
-      while (clickedObject.parent && !islandObjects.some((obj) => obj.object === clickedObject)) {
-        clickedObject = clickedObject.parent;
+      if (rendererRef.current) {
+        rendererRef.current.dispose();
       }
-
-      const islandData = islandObjects.find((obj) => obj.object === clickedObject);
-      if (islandData) {
-        console.log('Island clicked:', clickedObject.name);
-
-        const islandCenter = new THREE.Vector3(
-          islandData.position.x,
-          islandData.position.y,
-          islandData.position.z
-        );
-
-        const directionToIsland = new THREE.Vector3().subVectors(camera.position, islandCenter).normalize();
-        const fixedScale = 120;
-        const zoomDistance = fixedScale * 2;
-        const newCameraPosition = islandCenter.clone().addScaledVector(directionToIsland, zoomDistance);
-
-        controls.enabled = false;
-
-        gsap.to(camera.position, {
-          duration: 2,
-          x: newCameraPosition.x,
-          y: newCameraPosition.y,
-          z: newCameraPosition.z,
-          onUpdate: () => {
-            camera.lookAt(islandCenter);
-          },
-          onComplete: () => {
-            controls.enabled = true;
-          },
-        });
-
-        gsap.to(controls.target, {
-          duration: 2,
-          x: islandCenter.x,
-          y: islandCenter.y,
-          z: islandCenter.z,
+      if (sceneRef.current) {
+        sceneRef.current.traverse((object) => {
+          if (object instanceof THREE.Mesh) {
+            object.geometry?.dispose();
+            object.material?.dispose();
+          }
         });
       }
-    }
-  };
+
+      labelsRef.current.forEach(({ label }) => {
+        if (label && document.body.contains(label)) {
+          document.body.removeChild(label);
+        }
+      });
+      labelsRef.current = [];
+
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('click', onClick);
+    };
+  }, [init, onClick, resize, vantaEffect]);
 
   return (
     <div className="s-page-1">

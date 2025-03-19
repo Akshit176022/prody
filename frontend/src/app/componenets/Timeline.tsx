@@ -42,7 +42,7 @@ export default function HorizontalTimeline() {
 //   }, []);
 
   return (
-    <div className="w-[80%] h-[50vh] ml-48 -mt-20 flex flex-col items-center justify-center bg-gradient-to-r from-black via-teal-900 to-black text-white">
+    <div className="w-[80%] h-[50vh] ml-60 -mt-20 flex flex-col items-center justify-center bg-gradient-to-r from-black via-teal-900 to-black text-white">
 
     <h1 className='mt-4 px-6 py-3  text-white font-semibold'>Timeline</h1>
     <h2 className='mt-4 px-6 py-3  text-white font-semibold'> Releasing soon!!</h2>

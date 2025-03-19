@@ -159,7 +159,7 @@ export default function EventDetails() {
 
       alert("Registration successful!");
       setShowRegistrationModal(false);
-      router.push("/");
+      router.push("/profile");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
