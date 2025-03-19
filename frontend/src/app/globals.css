@@ -98,3 +98,32 @@ body {
 body {
   -ms-overflow-style: none;
 }
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.rotating-border-effect {
+    --border-angle: 0deg;
+    --bg: hsl(190deg 20% 10%); /* Background color */
+    border-radius: 12px; /* Adjust to match your element's border radius */
+    animation: border-angle-rotate 5s infinite linear;
+    border: 0.5rem solid transparent; /* Adjust border thickness as needed */
+    background: linear-gradient(white, white) padding-box,
+        conic-gradient(
+            from var(--border-angle),
+            var(--bg) 50%,
+            hsl(180deg 100% 40%)
+        )
+        border-box;
+}
+
+@keyframes border-angle-rotate {
+    from {
+        --border-angle: 0deg;
+    }
+    to {
+        --border-angle: 360deg;
+    }
+}

@@ -10,6 +10,7 @@ const images = [
 ];
 
 const Workshop = () => {
+  const [hovered, setHovered] = useState(false);
   const navigateToWorkshop = () => {
     window.location.href = "/workshop";
   };
@@ -35,6 +36,8 @@ const Workshop = () => {
         initial={{ scale: 1 }}
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
         {/* Animated Image Change */}
         <AnimatePresence mode="wait">
@@ -50,10 +53,14 @@ const Workshop = () => {
               src={images[index]}
               alt="Workshop"
               fill
-              className="object-cover transition-transform duration-500 ease-out"
+              className="object-cover transition-transform duration-500 ease-out rotating-border-effect"
             />
           </motion.div>
         </AnimatePresence>
+        {hovered && (
+          <div className="absolute inset-0 flex items-center justify-center  bg-black bg-opacity-55 text-white/50 text-3xl font-bold transition-all duration-300 ">Explore Workshops
+          </div>
+        )}
       </motion.div>
 
       {/* Text Section */}

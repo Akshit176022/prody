@@ -184,9 +184,9 @@ export default function EventDetails() {
   return (
     <div className="min-h-screen bg-fixed bg-cover bg-center" style={{ backgroundImage: "url('/background.webp')" }}>
       <Navbar/>
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-md" style={{ WebkitBackdropFilter: "blur(10px)" }}></div>
+      <div className="fixed inset-0 bg-black/30 backdrop-blur-md " style={{ WebkitBackdropFilter: "blur(10px)" }}></div>
       <main className="relative pt-20 z-10">
-        <div className="max-w-4xl mx-auto p-6 rounded-3xl shadow-lg border-4 border-teal-700 backdrop-blur-sm">
+        <div className="max-w-4xl mx-auto p-6 rounded-3xl shadow-lg border-4 border-teal-700 backdrop-blur-sm mt-10">
           <Image
             src={event.poster}
             alt={event.name}

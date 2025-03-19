@@ -13,9 +13,10 @@ const Members = () => {
 
   return (
     <div
-      className="w-[60vw] h-[75vh] flex flex-row mt-20 ml-20 items-center justify-center gap-4"
+      className="w-[60vw] h-[75vh] flex flex-row mt-20 ml-20 items-center justify-center gap-4 p-4 transition-all duration-300 hover:shadow-lg hover:border-gray-400  "
       onClick={navigateToMembers}
     >
+     
       {/* Image Card */}
       <motion.div
         className="h-[65vh] w-[23vw] relative overflow-hidden rounded-2xl shadow-lg cursor-pointer"
@@ -31,12 +32,12 @@ const Members = () => {
           alt="Team"
           layout="fill"
           objectFit="cover"
-          className="transition-transform duration-300 ease-out"
+          className="transition-transform duration-300 ease-out rotating-border-effect"
         />
 
-        {/* Overlay Text (Example of using hovered state) */}
+        
         {hovered && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl font-bold">
+          <div className="absolute inset-0 flex items-center justify-center  bg-black bg-opacity-55 text-white/70 text-3xl font-bold transition-all duration-300 ">Explore Events
           </div>
         )}
       </motion.div>

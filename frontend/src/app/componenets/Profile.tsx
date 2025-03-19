@@ -26,12 +26,12 @@ const Register: React.FC = () => {
           alt="Team"
           layout="fill"
           objectFit="cover"
-          className="transition-transform duration-300 ease-out"
+          className="transition-transform duration-300 ease-out rotating-border-effect"
         />
 
         {/* Overlay Text (Example of using hovered state) */}
         {hovered && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-2xl font-bold">
+          <div className="absolute inset-0 flex items-center justify-center  bg-black bg-opacity-55 text-white/70 text-3xl font-bold transition-all duration-300 ">Explore Your Profile
           </div>
         )}
       </motion.div>
