@@ -67,14 +67,14 @@ const WorkshopSlider = () => {
     trackMouse: true,
   });
 
-  const handleRegisterClick = () => {
+  {/* const handleRegisterClick = () => {
     const token = localStorage.getItem("jwt");
     if (!token) {
       alert("You must be logged in to register for a workshop.");
       return;
     }
     setIsModalOpen(true);
-  };
+  };*/}
 
   const handleModalClose = () => {
     setIsModalOpen(false);
