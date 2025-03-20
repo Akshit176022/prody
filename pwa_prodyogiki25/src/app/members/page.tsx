@@ -96,13 +96,13 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
 
   return (
     <motion.div
-      className="h-[500px] mx-auto"
+      className="h-[500px] mb-8 mx-auto "
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1 }}
     >
       <div
-        className="w-[90vw] h-[400px] border-t-4 border-b-2 border-x-2  border-[#008080] rounded-xl"
+        className="w-[90vw] h-[400px]  border-t-4 border-b-2 border-x-2  border-[#008080] rounded-xl"
         onClick={handleCardClick}
         style={{
           transformStyle: "preserve-3d",
@@ -119,19 +119,19 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
             <Image
               width={400}
               height={400}
-              className="w-[320px] h-[300px] mx-auto rounded-md"
+              className="w-full h-full p-4 rounded-md"
               src={member.bitemoji}
               alt={`${member.name}'s bitmoji`}
             />
           ) : (
-            <div className="w-[320px] h-[300px] mx-auto rounded-md bg-gray-200 flex items-center justify-center">
+            <div className="w-[320px] h-[300px]  rounded-md bg-gray-200 flex items-center justify-center">
               <span className="text-gray-500">No Bitmoji</span>
             </div>
           )}
         </motion.div>
 
         <motion.div
-          className="w-[80%] h-full absolute inset-0 flex flex-col items-center justify-center"
+          className="w-full h-full absolute inset-0 flex flex-col items-center justify-center"
           style={{
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
@@ -141,12 +141,12 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
             <Image
               width={400}
               height={400}
-              className="w-[100px] h-[153px] mx-auto rounded-md"
+              className="w-full h-full p-4 rounded-md"
               src={member.image}
               alt={`${member.name}'s original`}
             />
           ) : (
-            <div className="w-[100px] h-[153px] mx-auto rounded-md bg-gray-200 flex items-center justify-center">
+            <div className="w-[320px] h-[300px] mx-auto rounded-md bg-gray-200 flex items-center justify-center">
               <span className="text-gray-500">No Image</span>
             </div>
           )}
@@ -244,7 +244,7 @@ const Members  = () => {
     <div>
       <Burger/>
     <div>
-      <div className="flex pt-20 space-x-6 overflow-x-auto whitespace-nowrap">
+      <div className="flex pt-20 space-x-6 mx-2 overflow-x-auto whitespace-nowrap">
         {teamSections.map((section) => (
           <motion.div
             key={section.id}

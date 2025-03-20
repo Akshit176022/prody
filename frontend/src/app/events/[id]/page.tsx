@@ -190,7 +190,7 @@ export default function EventDetails() {
           <Image
             src={event.poster}
             alt={event.name}
-            className="w-96 ml-4 mt-4 h-64 border-2 border-teal-500 rounded-2xl object-cover"
+            className="w-96 ml-4 mt-4 h-64 border-2  border-teal-500 rounded-2xl object-cover"
             height={256}
             width={384}
           />

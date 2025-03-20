@@ -9,7 +9,7 @@ import Register from "../componenets/Profile";
 import Events from "../componenets/Events";
 import Gallery from "../componenets/Workshop";
 import Messages from "../componenets/Messages";
-import Timeline from "../componenets/Timeline";
+import CountdownTimer from "../componenets/timer"
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -134,7 +134,6 @@ const MouseScrollGrids = () => {
       }
     };
 
-    // Add additional body style to prevent scrolling when scaled up
     if (!isScrollActive) {
       document.body.style.overflow = "hidden";
     } else {
@@ -152,7 +151,7 @@ const MouseScrollGrids = () => {
     <div className='scrollbar-hide'>
       <button
         onClick={toggleScale}
-        className="fixed right-[46%] top-[1%] z-50 px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition-all"
+        className="fixed right-[44%] top-[1%] z-50 px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition-all"
       >
         {isScaled ? "Scale Up" : "Scale Down"}
       </button>
@@ -175,7 +174,7 @@ const MouseScrollGrids = () => {
         <Register />
         <Gallery />
         <Messages />
-        <Timeline />
+        <CountdownTimer />
         <div className="w-[50vw] h-[50vh]">example</div>
       </div>
     </div>

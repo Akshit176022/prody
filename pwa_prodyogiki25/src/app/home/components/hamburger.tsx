@@ -1,12 +1,38 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
-import {links} from "../../../lib/constants"
+import { useState, useEffect } from "react"; // Import useEffect
+import { useRouter } from "next/navigation"; // Import useRouter
+import { links } from "../../../lib/constants";
 
 export default function Burger() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); 
+  const router = useRouter();
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt"); 
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const handleLogout = () => {
+    // Perform logout actions
+    localStorage.removeItem("jwt");
+    sessionStorage.removeItem("userSession");
+    setIsLoggedIn(false);
+    router.push("/login"); 
+  };
+
+  const filteredLinks = links.filter((link) => {
+    if (link.name === "Login") {
+      return !isLoggedIn; 
+    }
+    return true; 
+  });
 
   return (
     <>
@@ -36,8 +62,8 @@ export default function Burger() {
           className="fixed top-2 right-0 w-full min-h-screen bg-black bg-opacity-50 backdrop-blur-lg
           flex flex-col pt-16 pl-8 z-[200] rounded-3xl border border-white border-opacity-20"
         >
-          <ul className="text-white text-2xl  space-y-6">
-            {links.map((link) => (
+          <ul className="text-white text-2xl space-y-6">
+            {filteredLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -47,6 +73,20 @@ export default function Burger() {
                 </Link>
               </li>
             ))}
+            <li>
+
+
+{isLoggedIn ? (
+
+            <button onClick={handleLogout}>Logout</button>
+        ) : (
+
+            <Link href="/login" className="mt-4">Login</Link>
+
+
+        )}
+                    </li>
+
           </ul>
         </div>
       )}

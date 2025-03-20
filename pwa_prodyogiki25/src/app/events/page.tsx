@@ -56,7 +56,7 @@ export default function Event() {
         );
         setEvents(response.data);
       } catch (err) {
-        console.log("Error fetching events:", err); // Log error
+        console.log("Error fetching events:", err);
         setError("Failed to fetch events.");
       } finally {
         setLoading(false);
@@ -280,7 +280,7 @@ export default function Event() {
                     />
                     <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px]">
                     <Link href={event.abstract_link}>
-                      <div className="text-center border-2 absolute right-4 top-2 rounded-[4px] w-5/12 text-[10px] border-white">
+                      <div className="text-center border absolute right-4 top-2  w-5/12 text-[10px] border-white">
                         CLICK FOR ABSTRACT
                       </div>
                       </Link>

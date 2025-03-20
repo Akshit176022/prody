@@ -80,9 +80,9 @@ class FullUserSerializer(serializers.ModelSerializer):
             'is_completed_events': is_completed_events,
             'is_upcoming_events': is_upcoming_events,
         }
+    def get_registered_teams(self, obj):
+        return ", ".join([team.team_id for team in obj.registered_teams.all()])
 
-    def get_registered_teams(self, instance):
-        return TeamSerializer(instance.registered_teams.all(), many=True).data
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

@@ -5,7 +5,6 @@ import axios from "axios";
 import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
 
-// ✅ Define the Sponsor interface
 interface Sponsor {
   id: number;
   name: string;
@@ -25,7 +24,7 @@ const SponsorsPage: React.FC = () => {
         const response = await axios.get<Sponsor[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sponsors/`);
         setSponsors(response.data);
       } catch (err) {
-        console.error("Error fetching sponsors:", err); // ✅ Logs the error
+        console.error("Error fetching sponsors:", err);
         setError("Failed to fetch sponsors. Please try again later.");
       } finally {
         setLoading(false);
@@ -33,9 +32,7 @@ const SponsorsPage: React.FC = () => {
     };
     fetchSponsors();
   }, []);
-  
 
-  // ✅ Group sponsors by tier
   const groupedSponsors = sponsors.reduce((acc: Record<string, Sponsor[]>, sponsor: Sponsor) => {
     if (!acc[sponsor.tier]) {
       acc[sponsor.tier] = [];
@@ -50,6 +47,19 @@ const SponsorsPage: React.FC = () => {
 
   if (error) {
     return <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>;
+  }
+
+  if (Object.keys(groupedSponsors).length === 0) {
+    return (
+      <div className="text-white p-6">
+        <Navbar />
+        <h1 className="text-4xl mt-20 font-bold text-center mb-8">Our Partners</h1>
+        <div className="text-center text-xl">
+          <p>For partnership opportunities, please contact us at <a href="mailto:iste@nith.ac.in" className="text-teal-300 hover:text-teal-100">iste@nith.ac.in</a>.</p>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   return (

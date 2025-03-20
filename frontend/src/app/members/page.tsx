@@ -102,7 +102,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
       transition={{ duration: 1 }}
     >
       <div
-        className="w-[400px] h-[400px] border-t-4 border-b-2 border-x-2 border-[#008080] rounded-xl"
+        className="w-[360px] h-[360px] border-t-4 border-b-2 border-x-2 border-[#008080] rounded-xl"
         onClick={handleCardClick}
         style={{
           transformStyle: "preserve-3d",
@@ -112,14 +112,14 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
       >
         {/* Front Side */}
         <motion.div
-          className="w-full h-full absolute inset-0 flex flex-col items-center justify-center"
+          className="w-full h-full absolute inset-0  flex flex-col items-center justify-center"
           style={{ backfaceVisibility: "hidden" }}
         >
           {member.bitemoji ? (
             <Image
               width={400}
               height={400}
-              className="w-[320px] h-[300px] mx-auto rounded-md"
+              className="w-full h-full p-4 rounded-md"
               src={member.bitemoji}
               alt={`${member.name}'s bitmoji`}
             />
@@ -142,12 +142,12 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
             <Image
               width={400}
               height={400}
-              className="w-[100px] h-[153px] mx-auto rounded-md"
+              className="w-full h-full  p-4 rounded-md"
               src={member.image}
               alt={`${member.name}'s original`}
             />
           ) : (
-            <div className="w-[100px] h-[153px] mx-auto rounded-md bg-gray-200 flex items-center justify-center">
+            <div className="w-[320px] h-[300px] mx-auto rounded-md bg-gray-200 flex items-center justify-center">
               <span className="text-gray-500">No Image</span>
             </div>
           )}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; 
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -17,6 +17,12 @@ const LoginPage = () => {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [isClient, setIsClient] = useState(false); 
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -34,10 +40,12 @@ const LoginPage = () => {
           },
         }
       );
-  
-      localStorage.setItem("jwt", response.data.jwt);
-      console.log("Token stored in localStorage:", response.data.jwt); 
-  
+
+      if (isClient) {
+        localStorage.setItem("jwt", response.data.jwt); 
+        console.log("Token stored in localStorage:", response.data.jwt);
+      }
+
       router.push("/profile");
     } catch (error) {
       if (axios.isAxiosError(error)) {

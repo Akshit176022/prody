@@ -8,7 +8,6 @@ export const links: LinkState[] = [
   { href: "/workshop", name: "Workshop" },
   { href: "/timeline", name: "Timeline" },
   { href: "/signup", name: "SignUp" },
-  { href:"/login",name:"Login"},
   { href:"/sponsors",name:"Sponsors"}
 ];
 

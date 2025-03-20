@@ -22,10 +22,12 @@ type User = {
   username: string;
   user_id: string;
   prody_points: number;
+  registered_teams: string[];
   registered_events: {
     is_live_events: Event[];
     is_upcoming_events: Event[];
     is_completed_events: Event[];
+
   };
 };
 
@@ -142,6 +144,9 @@ const Profile = () => {
         </div>
         <div className="points text-lg font-medium mb-12 text-white">
           Prody Points: {user.prody_points}
+        </div>
+        <div className="points text-lg font-medium mb-12 text-white">
+          team_id: {user.registered_teams}
         </div>
       </div>
 

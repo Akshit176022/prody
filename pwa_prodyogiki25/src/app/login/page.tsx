@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col pt-5 items-center sm:pt-32 relative">
+    <div className="min-h-screen flex flex-col pt-7 items-center  relative">
       <Burger/>
       <div className="flex items-center justify-between w-[90%] max-w-[400px] sm:mb-12 mb-6 mt-10">
         <h2 className="text-white text-4xl sm:text-4xl font-black">Login</h2>

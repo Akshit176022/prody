@@ -117,3 +117,21 @@ class WorkshopSerializer(serializers.ModelSerializer):
             "max_participants",
             "registered_participants",
         ]
+        
+class TeamDetailSerializer(serializers.ModelSerializer):
+    registered_events = serializers.SerializerMethodField()
+    registered_users = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Team
+        fields = ['team_id', 'name', 'registered_events', 'registered_users']
+
+    def get_registered_events(self, instance):
+        # Fetch all events associated with the team
+        events = instance.registered_events.all()
+        return [{'id': event.id, 'name': event.name} for event in events]
+
+    def get_registered_users(self, instance):
+        # Fetch all users associated with the team
+        users = instance.registered_users.all()
+        return [{'user_id': user.user_id, 'username': user.username} for user in users]       

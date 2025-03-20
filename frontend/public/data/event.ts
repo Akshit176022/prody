@@ -11,13 +11,13 @@ export interface Event {
 
 export const events: Event[] = [
   {
-    id: 1,
+    id: 3,
     name: "Monopoly",
     description: "Description for Monopoly event.",
     abstractLink: "https://example.com/monopoly-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/monopoly-abstract.pdf",
-     Link:"/events/1"
+     Link:"/events/3"
     
   },
   {
@@ -30,13 +30,13 @@ export const events: Event[] = [
      Link:"/events/2"
   },
   {
-    id: 3,
+    id: 1,
     name: "Abhedya 4.0",
     description: "Description for Abhedya 4.0. hsgdushbdcs csdhufsdcns csdijcsdnc sdkjcfoksnc sdcdsjcs csdijcnsd cksdhcsdncsdcosjcnolsjdiosjcdosnc sdijcoisdnc scsidjcnsld csdjcscns csidjc sdcoc sdjcnsd csdcsdjcns dcsdcisdous dcsdcosdncsudhusdcsjdhsdbsdhhshsduhdhwhdjdnsjhsdhffyrfbrcjdhc ssdjsnc sjcnsdjn",
     abstractLink: "https://example.com/abhedya-4-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/abhedya-4-abstract.pdf",
-    Link:"/events/3"
+    Link:"/events/1"
   },
   {
     id: 4,

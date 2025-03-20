@@ -1,6 +1,6 @@
 from rest_framework import generics
 from .models import Event, Sponsor, ContactUs, FAQ,Workshop
-from .serializers import EventSerializer, SponsorSerializer, ContactUsSerializer, FAQSerializer, TeamSerializer,EventRegistrationSerializer, Team, CustomUser, WorkshopSerializer
+from .serializers import EventSerializer, SponsorSerializer,TeamDetailSerializer, ContactUsSerializer, FAQSerializer, TeamSerializer,EventRegistrationSerializer, Team, CustomUser, WorkshopSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -374,3 +374,18 @@ class RegisterForWorkshop(APIView):
             {"message": "Successfully registered for the workshop."},
             status=status.HTTP_200_OK,
         )
+        
+class TeamDetailView(APIView):
+    def get(self, request, team_id):
+        try:
+            # Fetch the team by team_id
+            team = Team.objects.get(team_id=team_id)
+            # Serialize the team data
+            serializer = TeamDetailSerializer(team)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Team.DoesNotExist:
+            # Handle case where team does not exist
+            return Response(
+                {'error': 'Team not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )

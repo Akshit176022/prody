@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Countdown from "./Countdown";
+import { useRouter } from "next/navigation";
+
 
 
 const sponsors = [
@@ -20,6 +22,20 @@ export default function Home() {
   const [textIndex, setTextIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+    setIsLoggedIn(!!jwt);
+  }, []);
+
+
+    const handleLogout = () => {
+      localStorage.removeItem("jwt"); 
+      router.push("/login"); 
+    };
 
 
 
@@ -31,7 +47,7 @@ export default function Home() {
       const timeout = setTimeout(() => {
         setDisplayedText((prev) => prev + currentText[charIndex]);
         setCharIndex(charIndex + 1);
-      }, 100); // Typing speed
+      }, 100); 
 
       return () => clearTimeout(timeout);
     }
@@ -64,19 +80,31 @@ export default function Home() {
         <div className="absolute top-44 right-40 h-24 w-72 flex items-center justify-center rounded-2xl border-2 border-white p-2 text-white text-[20px] font-bold shadow-lg text-center">
           REGISTER NOW FOR EXISTING EVENTS !!
         </div>
+        {isLoggedIn ? (
 
-        <button
+            <button onClick={handleLogout}
+            className="absolute top-80 right-20 -translate-x-7 w-56 h-16 flex items-center justify-center rounded-2xl border-[1px] border-white p-2 text-white text-[24px] hover:bg-teal-400 hover:scale-105 transition-transform duration-300 shadow-lg text-center">Logout</button>
+
+        ) : (
+          
+          <button
           onClick={() => window.location.href = '/signup'} 
           className="absolute top-80 right-20 -translate-x-7 w-56 h-16 flex items-center justify-center rounded-2xl border-[1px] border-white p-2 text-white text-[24px] hover:bg-teal-400 hover:scale-105 transition-transform duration-300 shadow-lg text-center"
         >
+          
           SIGN UP
         </button>
+
+
+        )}
+
+
       </div>
 
       <div className="absolute w-[50vw]  flex flex-col items-center  justify-center">
         <Image 
           className="p-4 m-4"
-          src="/images/bgnew5.png"
+          src="/images/bgnew5.webp"
           alt="Prodyogiki Logo"
           width={2000}
           height={1600}

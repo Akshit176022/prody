@@ -24,7 +24,7 @@ const SponsorsPage: React.FC = () => {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sponsors/`);
         setSponsors(response.data);
       } catch (err) {
-        console.error("Error fetching sponsors:", err); 
+        console.error("Error fetching sponsors:", err);
         setError("Failed to fetch sponsors. Please try again later.");
       } finally {
         setLoading(false);
@@ -32,7 +32,6 @@ const SponsorsPage: React.FC = () => {
     };
     fetchSponsors();
   }, []);
-  
 
   // Group sponsors by tier
   const groupedSponsors = sponsors.reduce((acc: Record<string, Sponsor[]>, sponsor: Sponsor) => {
@@ -55,6 +54,27 @@ const SponsorsPage: React.FC = () => {
     return (
       <div className="flex justify-center items-center min-h-screen text-red-500">
         {error}
+      </div>
+    );
+  }
+
+  // If no sponsors are available
+  if (sponsors.length === 0) {
+    return (
+      <div className="text-white p-6">
+        <Burger />
+        <h1 className="text-4xl mt-20 font-bold text-center mb-8">Our Partners</h1>
+        <div className="flex flex-col items-center justify-center min-h-[50vh]">
+          <p className="text-lg text-center">
+            Contact us for partnership opportunities at{" "}
+            <a
+              href="mailto:iste@nith.ac.in"
+              className="text-teal-300 hover:text-teal-100 underline"
+            >
+              iste@nith.ac.in
+            </a>
+          </p>
+        </div>
       </div>
     );
   }
