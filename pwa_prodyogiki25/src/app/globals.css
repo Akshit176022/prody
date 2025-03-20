@@ -16,6 +16,9 @@
   scrollbar-width: none;
 }
 
+.swiper-button-next, .swiper-button-prev {
+  display: none !important;
+}
 .bg-parent {
   background: var(--dark-secondary);
 }

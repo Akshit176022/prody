@@ -7,9 +7,24 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { useRouter } from "next/navigation";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+
+type TeamEventMapping = {
+  event: {
+    id: number;
+    name: string;
+    abstract_link: string;
+    is_team_event: boolean;
+    max_members: number;
+  };
+  team: {
+    id: string;
+    name: string;
+  };
+};
 
 type Event = {
   id: number;
@@ -27,11 +42,11 @@ type User = {
   username: string;
   user_id: string;
   prody_points: number;
-  registered_events: {
-    is_live_events: Event[];
-    is_upcoming_events: Event[];
-    is_completed_events: Event[];
-  };
+  registered_events: Event[];
+  team_event_mapping: TeamEventMapping[];
+  roll_no: string;
+  branch: string;
+  is_verified: boolean;
 };
 
 const Profile = () => {
@@ -42,14 +57,15 @@ const Profile = () => {
   const [isLoadingMoreEvents, setIsLoadingMoreEvents] = useState(false);
   const [errorMoreEvents, setErrorMoreEvents] = useState<unknown>(null);
   const [errorUser, setErrorUser] = useState<unknown>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
     
-    console.log("Token retrieved from localStorage:", storedToken);
 
     if (!storedToken) {
       console.error("No token found. Please log in.");
+      router.push("/login")
       return;
     }
 
@@ -67,6 +83,7 @@ const Profile = () => {
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
         setErrorUser(error);
+        router.push("/login")
       }
     };
 
@@ -116,9 +133,6 @@ const Profile = () => {
     );
   }
 
-  const { is_live_events = [], is_upcoming_events = [], is_completed_events = [] } =
-    user.registered_events || {};
-
   return (
     <div
       className="flex flex-col items-center h-screen bg-cover bg-center bg-no-repeat min-w-screen"
@@ -166,79 +180,41 @@ const Profile = () => {
     Registered Events
   </div>
   <Swiper
-    modules={[Pagination]} // Removed Navigation module
-    spaceBetween={20}
-    slidesPerView={1}
-    pagination={{ clickable: true }} // Keep pagination
-    breakpoints={{
-      640: { slidesPerView: 1 },
-      768: { slidesPerView: 2 },
-      1024: { slidesPerView: 3 },
-    }}
-    className="w-full"
-  >
-    {/* Live Events */}
-    {is_live_events.map((event) => (
-      <SwiperSlide key={event.id}>
-        <div
-          className="relative flex flex-col items-center justify-center h-[300px] bg-teal-800 bg-opacity-20 backdrop-blur-md rounded-lg p-4 shadow-lg border border-teal-500"
+      modules={[Pagination]} // Only using Pagination, no Navigation
+      spaceBetween={20}
+      slidesPerView={1}
+      navigation={false}
+      pagination={{ clickable: true }} // Only Pagination, no buttons
+      breakpoints={{
+        640: { slidesPerView: 1 },
+        768: { slidesPerView: 2 },
+        1024: { slidesPerView: 3 },
+      }}
+      className="w-full"
+    >
+      {/* Live Events */}
+      {user.team_event_mapping.map((mapping, index) => (
+        <SwiperSlide
+          key={index}
+          className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
         >
-          <div className="text-center mt-2 p-4">
-            <p className="font-semibold text-2xl text-white">{event.name}</p>
-            <p className="text-1xl text-[#FFD700]">Status: Live</p>
+          <div className="text-center mt-2">
+            <p className="font-semibold text-2xl text-white">{mapping.event.name}</p>
+
             <p className="text-1xl text-teal-200">
-              {event.is_team_event ? "Team Event" : "Individual Event"}
+              {mapping.event.is_team_event ? "Team Event" : "Individual Event"}
             </p>
-            <p className="font-semibold text-lg text-teal-100">{event.description}</p>
-            {event.is_team_event && (
-              <div className="text-sm mt-2 text-teal-200">
-                <p>Teams Registered:</p>
-                {event.registered_teams.map((team_id) => (
-                  <p key={team_id}>Team ID: {team_id}</p>
-                ))}
-              </div>
+
+            {mapping.event.is_team_event && (
+              <p className="text-sm text-gray-300">Team Name: {mapping.team.name}</p>
+            )}
+            {mapping.event.is_team_event && (
+              <p className="text-sm text-gray-300">Team Id: {mapping.team.id}</p>
             )}
           </div>
-        </div>
-      </SwiperSlide>
-    ))}
-
-    {/* Upcoming Events */}
-    {is_upcoming_events.map((event) => (
-      <SwiperSlide key={event.id}>
-        <div
-          className="relative flex flex-col items-center justify-center h-[300px] bg-teal-800 bg-opacity-20 backdrop-blur-md rounded-lg p-4 shadow-lg border border-teal-500"
-        >
-          <div className="text-center mt-2 p-4">
-            <p className="font-semibold text-lg text-white">{event.name}</p>
-            <p className="text-sm text-teal-300">Status: Upcoming</p>
-            <p className="text-sm text-teal-200">
-              {event.is_team_event ? "Team Event" : "Individual Event"}
-            </p>
-            <p className="font-semibold text-lg text-teal-100">{event.description}</p>
-          </div>
-        </div>
-      </SwiperSlide>
-    ))}
-
-    {/* Completed Events */}
-    {is_completed_events.map((event) => (
-      <SwiperSlide key={event.id}>
-        <div
-          className="relative flex flex-col items-center justify-center h-[300px] bg-teal-800 bg-opacity-20 backdrop-blur-md rounded-lg p-4 shadow-lg border border-teal-500"
-        >
-          <div className="text-center mt-2 p-4">
-            <p className="font-semibold text-lg text-white">{event.name}</p>
-            <p className="text-sm text-[#FF6347]">Status: Completed</p>
-            <p className="text-sm text-teal-200">
-              {event.is_team_event ? "Team Event" : "Individual Event"}
-            </p>
-            <p className="font-semibold text-lg text-teal-100">{event.description}</p>
-          </div>
-        </div>
-      </SwiperSlide>
-    ))}
-  </Swiper>
+        </SwiperSlide>
+      ))}
+    </Swiper>
 </div>
         </Swiper>
       </div>

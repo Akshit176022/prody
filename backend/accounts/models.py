@@ -50,6 +50,29 @@ class CustomUser(AbstractUser):
     def register_for_event(self, event):
         self.registered_events.add(event)
 
+    def register_individual(self, event):
+        self.registered_events.add(event)
+
+        if not isinstance(self.team_event_mapping, list):
+            self.team_event_mapping = []
+
+        # Create a dictionary for the event
+        individual_event_entry = {
+            "event": {
+                "id": event.id,
+                "name": event.name,
+                "abstract_link": event.abstract_link,
+                "is_team_event": event.is_team_event,
+                "max_members": event.max_members,
+            },
+            "team": None,  # No team since it's an individual event
+        }
+
+        # Append the new entry
+        self.team_event_mapping.append(individual_event_entry)
+
+        # Save changes
+        self.save(update_fields=['team_event_mapping'])
 
     def register_for_team(self, team, event):
         self.registered_teams.add(team)

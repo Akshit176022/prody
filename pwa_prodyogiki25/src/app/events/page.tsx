@@ -5,6 +5,7 @@ import Burger from "../home/components/hamburger";
 import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+
 import Link from "next/link";
 
 interface Event {
@@ -81,6 +82,7 @@ export default function Event() {
         setUser(response.data.user);
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
+        router.push("/login");
       }
     };
   
@@ -144,32 +146,23 @@ export default function Event() {
     try {
       if (selectedEvent.is_team_event) {
         if (isCreateTeam) {
-          const createTeamResponse = await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-team/`,
-            { name: teamName },
-            { headers: { Authorization: ` ${token}` } }
-          );
-
-          const newTeamId = createTeamResponse.data.team_id;
-
           await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${selectedEvent.id}/`,
-            { team_id: newTeamId },
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-team/`,
+            { name: teamName ,
+              user_id: tokenPayload.user_id,
+              event_id: selectedEvent.id
+            },
             { headers: { Authorization: ` ${token}` } }
           );
+
         } else if (isJoinTeam) {
           await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team/`,
-            { user_id: tokenPayload.user_id, team_id: teamId },
-            { headers: { Authorization: ` ${token}` } }
-          );
-
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${selectedEvent.id}/`,
-            { team_id: teamId },
+            { user_id: tokenPayload.user_id, team_id: teamId , event_id: selectedEvent.id},
             { headers: { Authorization: ` ${token}` } }
           );
         }
+        
       } else {
         
         await axios.post(
@@ -189,8 +182,8 @@ export default function Event() {
           localStorage.removeItem("jwt");
           router.push("/login");
         } else {
-          console.error("Registration failed:", error);
-          alert("Registration failed. Please try again.");
+          console.log("Already registered", error);
+          alert("Already registered!!");
         }
       } else {
         console.error("Registration failed:", error);
@@ -386,11 +379,28 @@ export default function Event() {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleRegister}
-                className="bg-teal-600 text-white px-4 py-2 rounded-lg"
+              <button 
+                onClick={handleRegister} 
+                className={`${
+                  (selectedEvent.is_team_event && 
+                    ((isCreateTeam && !teamName) || 
+                    (isJoinTeam && !teamId) || 
+                    (!isCreateTeam && !isJoinTeam))
+                  ) 
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "bg-teal-600 hover:bg-teal-700"
+                } text-white px-4 py-2 rounded-lg`}
+                disabled={selectedEvent.is_team_event && 
+                        ((isCreateTeam && !teamName) || 
+                          (isJoinTeam && !teamId) || 
+                          (!isCreateTeam && !isJoinTeam))}
               >
-                Register
+                {selectedEvent.is_team_event && 
+                ((isCreateTeam && !teamName) || 
+                  (isJoinTeam && !teamId) || 
+                  (!isCreateTeam && !isJoinTeam)) 
+                  ? "Register" 
+                  : "Register"}
               </button>
             </div>
           </div>

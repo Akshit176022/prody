@@ -123,29 +123,20 @@ export default function EventDetails() {
     try {
       if (event.is_team_event) {
         if (isCreateTeam) {
-          const createTeamResponse = await axios.post(
+            await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-team/`,
-            { name: teamName },
+            { name: teamName ,
+              user_id: tokenPayload.user_id,
+              event_id: id
+            },
             { headers: { Authorization: ` ${token}` } }
           );
 
-          const newTeamId = createTeamResponse.data.team_id;
-
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${id}/`,
-            { team_id: newTeamId },
-            { headers: { Authorization: ` ${token}` } }
-          );
+          
         } else if (isJoinTeam) {
           await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team/`,
-            { user_id: tokenPayload.user_id, team_id: teamId },
-            { headers: { Authorization: ` ${token}` } }
-          );
-
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team-event/${id}/`,
-            { team_id: teamId },
+            { user_id: tokenPayload.user_id, team_id: teamId , event_id: id},
             { headers: { Authorization: ` ${token}` } }
           );
         }
@@ -167,8 +158,8 @@ export default function EventDetails() {
           localStorage.removeItem("jwt");
           router.push("/login");
         } else {
-          console.error("Registration failed:", error);
-          alert("Registration failed. Please try again.");
+          console.log("Registration failed:", error);
+          alert(`Registration failed Team does not exist/Full`);
         }
       } else {
         console.error("Registration failed:", error);
@@ -301,13 +292,37 @@ export default function EventDetails() {
             )}
             <div className="flex justify-end">
               <button
-                onClick={() => setShowRegistrationModal(false)}
+                onClick={() => {
+                  setShowRegistrationModal(false);
+                  setIsCreateTeam(false);
+                  setIsJoinTeam(false);
+                }}
                 className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2"
               >
                 Cancel
               </button>
-              <button onClick={handleRegister} className="bg-teal-600 text-white px-4 py-2 rounded-lg">
-                Register
+              <button 
+                onClick={handleRegister} 
+                className={`${
+                  (event.is_team_event && 
+                    ((isCreateTeam && !teamName) || 
+                    (isJoinTeam && !teamId) || 
+                    (!isCreateTeam && !isJoinTeam))
+                  ) 
+                  ? "bg-gray-400 cursor-not-allowed" 
+                  : "bg-teal-600 hover:bg-teal-700"
+                } text-white px-4 py-2 rounded-lg`}
+                disabled={event.is_team_event && 
+                        ((isCreateTeam && !teamName) || 
+                          (isJoinTeam && !teamId) || 
+                          (!isCreateTeam && !isJoinTeam))}
+              >
+                {event.is_team_event && 
+                ((isCreateTeam && !teamName) || 
+                  (isJoinTeam && !teamId) || 
+                  (!isCreateTeam && !isJoinTeam)) 
+                  ? "Register" 
+                  : "Register"}
               </button>
             </div>
           </div>

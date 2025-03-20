@@ -6,6 +6,21 @@ import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
 import axios from "axios";
 
+
+type TeamEventMapping = {
+  event: {
+    id: number;
+    name: string;
+    abstract_link: string;
+    is_team_event: boolean;
+    max_members: number;
+  };
+  team: {
+    id: string;
+    name: string;
+  };
+};
+
 type Event = {
   id: number;
   name: string;
@@ -22,13 +37,11 @@ type User = {
   username: string;
   user_id: string;
   prody_points: number;
-  registered_teams: string[];
-  registered_events: {
-    is_live_events: Event[];
-    is_upcoming_events: Event[];
-    is_completed_events: Event[];
-
-  };
+  registered_events: Event[];
+  team_event_mapping: TeamEventMapping[];
+  roll_no: string;
+  branch: string;
+  is_verified: boolean;
 };
 
 const Profile = () => {
@@ -43,7 +56,6 @@ const Profile = () => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
-    console.log("Token retrieved from localStorage:", storedToken);
 
     if (!storedToken) {
       console.error("No token found. Please log in.");
@@ -114,9 +126,6 @@ const Profile = () => {
     );
   }
 
-  const { is_live_events = [], is_upcoming_events = [], is_completed_events = [] } =
-    user.registered_events || {};
-
   return (
     <div className="flex flex-col items-center">
       <Navbar />
@@ -145,9 +154,6 @@ const Profile = () => {
         <div className="points text-lg font-medium mb-12 text-white">
           Prody Points: {user.prody_points}
         </div>
-        <div className="points text-lg font-medium mb-12 text-white">
-          team_id: {user.registered_teams}
-        </div>
       </div>
 
       {/* Registered Events Section */}
@@ -156,22 +162,24 @@ const Profile = () => {
           Registered Events
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-          {[...is_live_events, ...is_upcoming_events, ...is_completed_events].map((event) => (
+          {user.team_event_mapping.map((mapping, index) => (
             <div
-              key={event.id}
+              key={index}
               className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
             >
               <div className="text-center mt-2">
-                <p className="font-semibold text-2xl text-white">{event.name}</p>
-                <p className={`text-1xl ${
-                  event.is_live ? "text-[#FFD700]" : event.is_completed ? "text-[#FF6347]" : "text-[#00FF00]"
-                }`}>
-                  Status: {event.is_live ? "Live" : event.is_completed ? "Completed" : "Upcoming"}
-                </p>
+                <p className="font-semibold text-2xl text-white">{mapping.event.name}</p>
+
                 <p className="text-1xl text-teal-200">
-                  {event.is_team_event ? "Team Event" : "Individual Event"}
+                  {mapping.event.is_team_event ? "Team Event" : "Individual Event"}
                 </p>
-                <p className="font-semibold text-lg text-teal-100">{event.description}</p>
+
+                {mapping.event.is_team_event && (
+                  <p className="text-sm text-gray-300">Team Name: {mapping.team.name}</p>
+                )}
+                {mapping.event.is_team_event && (
+                  <p className="text-sm text-gray-300">Team Id: {mapping.team.id}</p>
+                )}
               </div>
             </div>
           ))}
@@ -181,7 +189,7 @@ const Profile = () => {
       {/* More Events Section */}
       <div className="flex px-6 pb-2 mt-12 justify-between w-full">
         <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl">
-          Events
+         All Events
         </div>
       </div>
 

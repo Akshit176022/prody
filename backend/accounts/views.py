@@ -213,6 +213,7 @@ class RegisterEventView(APIView):
 
         event.registered_users.add(user)
         user.register_for_event(event)
+        user.register_individual(event)
         # serialized_events = FullUserSerializer(user).data['registered_events']
 
         return Response({'message': 'User registered for the event successfully', }, status=status.HTTP_200_OK)

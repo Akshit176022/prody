@@ -160,12 +160,12 @@ def join_team(request):
         try:
             team = Team.objects.get(team_id=team_id)
         except Team.DoesNotExist:
-            return Response({'error': 'Team does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'Team does not exist'}, status = status.HTTP_401_UNAUTHORIZED)
 
         try:
             user = CustomUser.objects.get(user_id=user_id)
         except CustomUser.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'User not found'}, status = status.HTTP_401_UNAUTHORIZED)
 
         # Check if team has reached its max members for this event
         if team.registered_users.count() >= event.max_members:
