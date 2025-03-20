@@ -195,7 +195,7 @@ const WorkshopSlider = () => {
           {new Date(workshops[currentIndex]?.date).toLocaleDateString()}
         </div>
 
-        <div
+        {/* <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
           style={{
             background: "linear-gradient(0deg, #8BDBD8, #70C6F6)",
@@ -204,6 +204,7 @@ const WorkshopSlider = () => {
         >
           Register Now
         </div>
+        */}
       </div>
 
       {isModalOpen && (
