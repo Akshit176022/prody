@@ -273,31 +273,30 @@ export default function Event() {
                     />
                     <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px]">
                     <Link href={event.abstract_link}>
-                      <div className="text-center border absolute right-4 top-2  w-5/12 text-[10px] border-white">
+                      <div className="text-center absolute right-4 top-2  w-7/12 text-[10px] border-white border rounded px-3 border-black bg-black/60 text-white/80">
                         CLICK FOR ABSTRACT
                       </div>
                       </Link>
-                      <div className="text-center mt-20 text-3xl">{event.name}</div>
+                      {/*<div className="text-center mt-20 text-3xl">{event.name}</div>
                 
                       <div className="text-[14px] mt-2 text-center">
                         {event.description}
-                      </div>
-                      <div className="text-center p-4">
+                      </div>*/}
+                      <div className="mt-56 text-center p-4">
                         {isRegistered ? (
-                          <button
-                          className="border px-3 border-white"
-                        >
-                          Registered
-                        </button>
+                          <button className="border px-3 border-white bg-white/20 text-white/80">
+                            Registered
+                          </button>
                         ) : (
                           <button
-                          className="border px-3 border-white"
-                          onClick={() => handleRegisterClick(event)}
-                        >
-                          Register
-                        </button>
+                            className="border rounded px-3 border-black bg-black/60 text-white/80"
+                            onClick={() => handleRegisterClick(event)}
+                          >
+                            Register
+                          </button>
                         )}
                       </div>
+
                     </div>
                   </motion.div>
                 </motion.div>

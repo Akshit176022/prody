@@ -25,11 +25,11 @@ export default function Main() {
                 PRODYOGIKI&apos;25
               </div>
             </div>
-            <div className="ml-8 -mt-2 text-white text-[15px] text-opacity-60">
+            {/* <div className="ml-8 -mt-2 text-white text-[15px] text-opacity-60">
               24-26th January
-            </div>
+            </div> */}
             <div className="w-full h-[1px] mt-5 bg-gradient-to-r from-transparent via-custom to-transparent"></div>
-            <div className="mt-2 ml-8 text-white text-[14px]">
+            <div className="mt-2 ml-8 text-white font-semibold text-[14px]">
               REALMS OF ENGINEERING MARVELS
             </div>
           </motion.div>
@@ -44,7 +44,7 @@ export default function Main() {
         </motion.div>
       </div>
 
-      <div className="text-white border-b-4 mx-auto text-[17px] z-50 border-[#008080] text-center border-2 w-[219px] h-[48px] rounded-3xl p-2">
+      <div className="text-white border-b-4 font-bold mx-auto text-[17px] z-50 border-[#008080] text-center border-2 w-[219px] h-[48px] rounded-3xl p-2">
         WHAT IS PRODYOGIKI?
       </div>
 
@@ -53,7 +53,7 @@ export default function Main() {
           <AnimatedTestimonials testimonials={testimonials} />
         </div>
 
-        <div className="w-6/12 ml-4 mr-2 h-[205px] text-[14px] text-white">
+        <div className="w-6/12 ml-4 mr-2 h-[205px] text-[12px] text-white">
         Prodyogiki is a technical event organized every year by ISTE at NIT Hamirpur. It is a nurturing and motivating environment where students get to showcase their technical expertise.
         </div>
       </div>

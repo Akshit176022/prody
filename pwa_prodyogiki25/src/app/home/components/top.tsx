@@ -9,8 +9,8 @@ export default function Top() {
                 <Image width={149} height={149} src="/images/logo.png" alt="" />
               </div>
               <div className="flex flex-col pt-3 ml-2">
-                <div className="text-white">Hello,</div>
-                <div className="text-white -mt-1 text-opacity-70 text-[15px]">Welcome to PRODYOGIKI&apos;25</div>
+                <div className="text-white font-semibold">Hello,</div>
+                <div className="text-white -mt-1 text-opacity-70 font-semibold text-[15px]">Welcome to PRODYOGIKI&apos;25</div>
               </div>
             </div>
       
