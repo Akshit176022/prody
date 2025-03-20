@@ -104,7 +104,7 @@ export default function Home() {
       <div className="absolute w-[50vw]  flex flex-col items-center  justify-center">
         <Image 
           className="p-4 m-4"
-          src="/images/bgnew5.webp"
+          src="/images/bgnew51.webp"
           alt="Prodyogiki Logo"
           width={2000}
           height={1600}
