@@ -12,20 +12,29 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    registered_events = serializers.SerializerMethodField()
-
     class Meta:
         model = Team
-        fields = ['id', 'team_id', 'name', 'registered_events']
+        fields = ['name', 'registered_events', 'registered_users']
 
-    def get_registered_events(self, instance):
-        first_event = instance.registered_events.first()
-        if first_event:
-            return {
-                'id': first_event.id,
-                'name': first_event.name,
-            }
-        return None
+    def create(self, validated_data):
+        registered_events_data = validated_data.pop('registered_events', [])
+        registered_users_data = validated_data.pop('registered_users', [])
+
+        team = Team.objects.create(**validated_data)
+
+        for event_data in registered_events_data:
+            event_id = event_data.get('id')
+            if event_id is not None:
+                event = Event.objects.get(pk=event_id)
+                team.registered_events.add(event)
+
+        for user_data in registered_users_data:
+            user_id = user_data.get('user_id')
+            if user_id is not None:
+                user = CustomUser.objects.get(user_id=user_id)
+                team.registered_users.add(user)
+
+        return team
 
 
 class SponsorSerializer(serializers.ModelSerializer):

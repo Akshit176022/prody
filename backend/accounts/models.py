@@ -42,14 +42,41 @@ class CustomUser(AbstractUser):
     )
     prody_points = models.IntegerField(default=0)
 
+    team_event_mapping = models.JSONField(default=list, blank=True)
+
     def __str__(self):
         return f"{self.username} - {self.user_id}"
 
     def register_for_event(self, event):
         self.registered_events.add(event)
 
-    def register_for_team(self, team):
+
+    def register_for_team(self, team, event):
         self.registered_teams.add(team)
+
+        if not isinstance(self.team_event_mapping, list):
+            self.team_event_mapping = []    
+
+        # Create a dictionary with event and team details
+        team_event_entry = {
+            "event": {
+                "id": event.id,
+                "name": event.name,
+                "abstract_link": event.abstract_link,
+                "is_team_event": event.is_team_event,
+                "max_members": event.max_members,
+            },
+            "team": {
+                "id": team.team_id,
+                "name": team.name,
+            }
+        }
+
+        # Append the new entry to the list
+        self.team_event_mapping.append(team_event_entry)
+
+        self.save(update_fields=['team_event_mapping'])
+
 
     def clear_registered_events(self):
         for event in self.registered_events.all():
