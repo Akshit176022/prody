@@ -207,7 +207,7 @@ const Profile = () => {
                   alt={event.name}
                   width={200}
                   height={200}
-                  className="rounded-full object-cover w-20 translate-x-2"
+                  className="rounded-full object-cover w-20 h-20 translate-x-2"
                 />
                 <Image
                   src="/Subtract.svg"
