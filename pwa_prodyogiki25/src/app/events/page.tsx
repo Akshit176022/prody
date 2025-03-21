@@ -270,22 +270,22 @@ export default function Event() {
     <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px] flex flex-col h-full">
       
       <Link href={event.abstract_link}>
-        <div className="text-center absolute right-4 top-2 text-[10px] rounded px-3 bg-black/60 text-white/80">
+        <div className="text-center absolute right-4 top-2 text-[14px] rounded px-3 bg-black/60 text-white/80">
           ABSTRACT
         </div>
       </Link>
 
     
-      <div className="flex-1 flex items-center justify-center">
+      {/* <div className="flex-1 flex items-center justify-center">
         <div className="text-[14px] text-center backdrop-blur-sm px-4 opacity-75">
           {event.description}
         </div>
-      </div>
+      </div> */}
 
       {/* <div className="text-center  mt-12 mx-[20%] backdrop-blur-2xl text-3xl">{event.name}</div> */}
 
       
-      <div className="mt-auto text-center p-4">
+      <div className="mt-80 text-center p-4">
         {isLoggedIn && isRegistered ? (
           <button className="border px-3 border-white bg-white/20 text-white/80">
             Registered

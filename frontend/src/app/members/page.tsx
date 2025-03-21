@@ -117,7 +117,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
         >
           {member.bitemoji ? (
             <Image
-              width={400}
+              width={600}
               height={400}
               className="w-full h-full p-4 rounded-md object-cover object-center"
               src={member.bitemoji}
