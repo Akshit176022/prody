@@ -8,17 +8,165 @@ import logging
 from rest_framework.exceptions import AuthenticationFailed
 import jwt
 import datetime
+from django.core.mail import send_mail
+from django.conf import settings
+from django.urls import reverse
+from rest_framework.exceptions import AuthenticationFailed
+from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
+
+def generate_verification_token(user):
+    payload = {
+        'user_id': user.user_id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),  # Token valid for 24 hours
+        'iat': datetime.datetime.utcnow()
+    }
+    return jwt.encode(payload, 'secret', algorithm='HS256')
 
 
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message': 'User registered successfully', 'user_data': serializer.data}, status=status.HTTP_200_OK)
+        user = serializer.save(is_verified=False)  # Set is_verified to False
 
+        # Generate verification token
+        token = generate_verification_token(user)
+
+        # Create email verification link
+        verification_link = request.build_absolute_uri(
+            reverse('verify-email') + f"?token={token}"
+        )
+
+        # Send email
+        send_mail(
+            subject="Verify Your Email",
+            message=f"Click the link to verify your email: {verification_link}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+
+        return Response({
+            'message': 'User registered successfully. Please check your email to verify your account.',
+            'user_data': serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+
+class VerifyEmailView(APIView):
+    def get(self, request):
+        token = request.GET.get('token')
+
+        if not token:
+            return self.html_response("Invalid or missing token!", "red")
+
+        try:
+            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+            user = CustomUser.objects.filter(user_id=payload['user_id']).first()
+            if not user:
+                return self.html_response("User not found!", "red")
+
+            if user.is_verified:
+                return self.html_response("Your account is already verified!", "blue")
+
+            # Mark user as verified
+            user.is_verified = True
+            user.save()
+
+            return self.html_response("Email verified successfully! You can now log in.", "green")
+
+        except jwt.ExpiredSignatureError:
+            return self.html_response("Verification link expired!", "red")
+        except jwt.DecodeError:
+            return self.html_response("Invalid token!", "red")
+
+    def html_response(self, message, color):
+        """Helper function to generate styled HTML response"""
+        return HttpResponse(f"""
+            <html>
+            <head>
+                <title>Email Verification</title>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        background-color: #f4f4f4;
+                    }}
+                    .container {{
+                        text-align: center;
+                        background: white;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+                    }}
+                    h1 {{
+                        color: {color};
+                    }}
+                    a {{
+                        display: inline-block;
+                        margin-top: 10px;
+                        padding: 8px 16px;
+                        background: #007bff;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                    }}
+                    a:hover {{
+                        background: #0056b3;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>{message}</h1>
+                </div>
+            </body>
+            </html>
+        """, content_type="text/html")
+# class RegisterView(APIView):
+#     def post(self, request):
+#         serializer = UserSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response({'message': 'User registered successfully', 'user_data': serializer.data}, status=status.HTTP_200_OK)
+
+
+# class LoginView(APIView):
+#     def post(self, request):
+#         email = request.data['email']
+#         password = request.data['password']
+
+#         user = CustomUser.objects.filter(email=email).first()
+
+#         if user is None:
+#             raise AuthenticationFailed('User not found!')
+
+#         if not user.check_password(password):
+#             raise AuthenticationFailed('Incorrect password!')
+
+#         payload = {
+#             'user_id': user.user_id,
+#             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
+#             'iat': datetime.datetime.utcnow()
+#         }
+
+#         token = jwt.encode(payload, 'secret',
+#                            algorithm='HS256')
+
+#         response = Response()
+
+#         response.set_cookie(key='jwt', value=token, httponly=True)
+#         response.data = {
+#             'jwt': token
+#         }
+
+#         response['Authorization'] = token
+
+#         return response
 
 class LoginView(APIView):
     def post(self, request):
@@ -33,14 +181,16 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed('Incorrect password!')
 
+        if not user.is_verified:
+            raise AuthenticationFailed('Your email is not verified! Please check your email.')
+
         payload = {
             'user_id': user.user_id,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=7),
             'iat': datetime.datetime.utcnow()
         }
 
-        token = jwt.encode(payload, 'secret',
-                           algorithm='HS256')
+        token = jwt.encode(payload, 'secret', algorithm='HS256')
 
         response = Response()
 

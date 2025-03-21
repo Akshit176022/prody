@@ -51,28 +51,28 @@ const SignupPage: React.FC = () => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
-  
+
     try {
       const response = await axios.post(`${backendUrl}/api/auth/register/`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-    
-      console.log("Registration response:", response.data); // Logging response data for debugging
-    
+      console.log("Registration successful:", response.data);
       setSuccessMessage("User registered successfully!");
+      alert("Registered Successfully!! Please check your mail to verify your account before login")
       setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data?.message || "Registration failed. Please try again.");
+      console.log("Registration failed:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        setErrorMessage(error.response.data?.message || "Username/Email already exists. Please try again.");
       } else {
-        setErrorMessage("Registration failed. Please try again.");
+        setErrorMessage("An unexpected error occurred. Please try again.");
       }
     }
-  };    
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },

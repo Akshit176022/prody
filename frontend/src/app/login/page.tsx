@@ -49,8 +49,22 @@ const LoginPage = () => {
       router.push("/profile");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+        const errorMessage = error.response?.data?.detail || "Login failed. Please try again.";
+
+        // Show specific alerts based on the backend message
+        if (errorMessage === "Your email is not verified! Please check your email.") {
+          alert("⚠️ Your email is not verified! Please check your inbox.");
+        } else if (errorMessage === "Incorrect password!") {
+          alert("❌ Incorrect password! Please try again.");
+        } else if (errorMessage === "User not found!") {
+          alert("⚠️ No account found with this email.");
+        } else {
+          alert(errorMessage);
+        }
+
+        setErrorMessage(errorMessage);
       } else {
+        alert("An unexpected error occurred.");
         setErrorMessage("An unexpected error occurred.");
       }
     }

@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
       router.push("/home");
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data?.message || "Login failed. Please try again.");
+        setErrorMessage(error.response?.data?.detail || "Login failed. Please try again.");
       } else {
         setErrorMessage("An unexpected error occurred.");
       }

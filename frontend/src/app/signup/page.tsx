@@ -46,7 +46,6 @@ export default function SignupPage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
@@ -58,16 +57,21 @@ export default function SignupPage() {
           "Content-Type": "application/json",
         },
       });
-      console.log("Registration successful:", response.data); // Use response to avoid lint error
+      console.log("Registration successful:", response.data);
       setSuccessMessage("User registered successfully!");
+      alert("Registered Successfully!! Please check your mail to verify your account before login")
       setTimeout(() => {
         router.push("/login");
       }, 2000);
     } catch (error) {
-      console.error("Registration failed:", error); // ✅ Log error to use the variable
-      setErrorMessage("Registration failed. Please try again.");
+      console.log("Registration failed:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        setErrorMessage(error.response.data?.message || "Username/Email already exists. Please try again.");
+      } else {
+        setErrorMessage("An unexpected error occurred. Please try again.");
+      }
     }
-  };    
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -100,7 +104,7 @@ export default function SignupPage() {
         animate="visible"
       >
         <form onSubmit={handleSubmit} className="w-full">
-          {["username", "email", "password", "branch", "roll_no"].map((field, index) => (
+          {Object.keys(formData).map((field, index) => (
             <div key={index} className="w-full max-w-[400px] mb-11 sm:mb-9">
               <label htmlFor={field} className="block text-white font-semibold lg:text-lg mb-2">
                 {field === "username" ? "Username" : field === "roll_no" ? "Roll No" : field.charAt(0).toUpperCase() + field.slice(1)}
@@ -135,18 +139,18 @@ export default function SignupPage() {
               </div>
             </div>
           ))}
-<div className="flex items-center justify-center">
-  <button
-    type="submit"
-    className="mt-6 px-6 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-52 hover:scale-105 transition delay-100 duration-300 ease-in-out text-lg"
-  >
-    Sign Up
-  </button>
-</div>
+          <div className="flex items-center justify-center">
+            <button
+              type="submit"
+              className="mt-6 px-6 border-[3px] border-[#1B7774] bg-[#171717] text-white rounded-2xl h-16 w-52 hover:scale-105 transition delay-100 duration-300 ease-in-out text-lg"
+            >
+              Sign Up
+            </button>
+          </div>
         </form>
 
         <div className="mt-6 text-white text-lg">
-          Already have an account?{" "}
+          Already have an account? {" "}
           <a href="/login" className="text-white/90 font-semibold hover:underline">
             Login
           </a>
