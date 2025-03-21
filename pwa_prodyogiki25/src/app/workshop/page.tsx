@@ -202,6 +202,9 @@ const WorkshopSlider = () => {
         <div className="text-white font-bold mt-6 text-lg lg:text-2xl mb-6">
           {new Date(workshops[currentIndex]?.date).toLocaleDateString()}
         </div>
+        <div className="text-white text-lg lg:text-xl mb-6">
+    Location: {workshops[currentIndex]?.location}
+  </div>
 
          <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
