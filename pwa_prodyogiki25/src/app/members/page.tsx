@@ -119,7 +119,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
             <Image
               width={400}
               height={400}
-              className="w-full h-full p-4 rounded-md"
+              className="w-full h-full p-4 rounded-md object-cover object-center"
               src={member.bitemoji}
               alt={`${member.name}'s bitmoji`}
             />
@@ -141,7 +141,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
             <Image
               width={400}
               height={400}
-              className="w-full h-full p-4 rounded-md"
+              className="w-full h-full p-4 rounded-md object-cover object-center"
               src={member.image}
               alt={`${member.name}'s original`}
             />
@@ -257,14 +257,14 @@ const Members  = () => {
             <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
               <span className="text-xl text-black">{getIcon(section.id)}</span>
             </div>
-            <div className="text-white text-center pt-4">{section.label}</div>
+            <div className="text-white text-center pt-4 font-bold">{section.label}</div>
           </motion.div>
         ))}
       </div>
 
       {teamSections.map((section) => (
         <div key={section.id} id={section.id}  className="py-16 ">
-          <div className="flex flex-row justify-center text-[24px]  pt-0 pb-8 items-center text-white text-opacity-80">
+          <div className="flex flex-row justify-center text-[30px]  pt-0 pb-8 items-center text-white text-opacity-80 font-bold">
             {section.label}
           </div>
           <div className="flex flex-wrap justify-center">
