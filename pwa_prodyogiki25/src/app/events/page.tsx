@@ -277,7 +277,7 @@ export default function Event() {
 
     
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-[14px] text-center backdrop-blur-sm px-4">
+        <div className="text-[14px] text-center backdrop-blur-sm px-4 opacity-75">
           {event.description}
         </div>
       </div>
