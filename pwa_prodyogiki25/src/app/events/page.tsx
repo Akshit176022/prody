@@ -229,7 +229,7 @@ export default function Event() {
                 {visibleEvent !== index && (
                   <motion.div
                     onClick={() => toggleEventDetails(index)}
-                    className="w-3/4 border-x-[3px] border-t-[3px] border-b-[1px] border-teal-600 rounded-[20px] py-3 pl-4 text-[24px] cursor-pointer transition-transform duration-500"
+                    className="w-3/4 border-x-[3px] border-t-[3px]  border-b-[1px] border-teal-600 rounded-[20px] py-3 pl-4 text-[24px] cursor-pointer transition-transform duration-500"
                     whileHover={{
                       scale: 1.05,
                       transition: { duration: 0.3 },
@@ -239,64 +239,72 @@ export default function Event() {
                   </motion.div>
                 )}
 
-                <motion.div
-                  className={`w-3/4 relative mb-10 rounded-[30px] border border-teal-600 overflow-hidden text-white ${
-                    visibleEvent === index
-                      ? "max-h-[500px] opacity-100"
-                      : "max-h-0 opacity-0"
-                  }`}
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: visibleEvent === index ? 1 : 0,
-                    height: visibleEvent === index ? "auto" : "0",
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <motion.div
-                    className="cursor-pointer"
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: visibleEvent === index ? 1 : 0.8 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    <Image
-                      width={149}
-                      height={149}
-                      src={event.poster}
-                      alt="Event Image"
-                      className="w-full h-full object-cover rounded-t-[30px]"
-                    />
-                    <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px]">
-                      <Link href={event.abstract_link}>
-                        <div className="text-center absolute right-4 top-2  text-[10px rounded px-3 bg-black/60 text-white/80">
-                          ABSTRACT
-                        </div>
-                      </Link>
-                      <div className="text-center mt-12 mx-[20%] backdrop-blur-2xl text-3xl">{event.name}</div>
-                
-                      <div className="text-[14px] mt-2 text-center backdrop-blur-2xl">
-                        {event.description}
-                      </div>
-                      <div className="mt-0 text-center p-4">
-                        {isLoggedIn && isRegistered ? (
-                          <button className="border px-3 border-white bg-white/20 text-white/80">
-                            Registered
-                          </button>
-                        ) : (
-                          <button
-                            className="border rounded px-3 border-black bg-black/60 text-white/80"
-                            onClick={() => handleRegisterClick(event)}
-                          >
-                            Register
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
+<motion.div
+  className={`w-3/4 relative mb-10 rounded-[30px] border border-teal-600 overflow-hidden text-white ${
+    visibleEvent === index ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+  }`}
+  initial={{ opacity: 0 }}
+  animate={{
+    opacity: visibleEvent === index ? 1 : 0,
+    height: visibleEvent === index ? "auto" : "0",
+  }}
+  transition={{
+    duration: 0.5,
+    ease: "easeInOut",
+  }}
+>
+  <motion.div
+    className="cursor-pointer"
+    initial={{ scale: 0.8 }}
+    animate={{ scale: visibleEvent === index ? 1 : 0.8 }}
+    transition={{ duration: 0.4 }}
+  >
+    <Image
+      width={149}
+      height={149}
+      src={event.poster}
+      alt="Event Image"
+      className="w-full h-full object-cover rounded-t-[30px]"
+    />
+    
+    <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px] flex flex-col h-full">
+      
+      <Link href={event.abstract_link}>
+        <div className="text-center absolute right-4 top-2 text-[10px] rounded px-3 bg-black/60 text-white/80">
+          ABSTRACT
+        </div>
+      </Link>
+
+    
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-[14px] text-center backdrop-blur-sm px-4">
+          {event.description}
+        </div>
+      </div>
+
+      {/* <div className="text-center  mt-12 mx-[20%] backdrop-blur-2xl text-3xl">{event.name}</div> */}
+
+      
+      <div className="mt-auto text-center p-4">
+        {isLoggedIn && isRegistered ? (
+          <button className="border px-3 border-white bg-white/20 text-white/80">
+            Registered
+          </button>
+        ) : (
+          <button
+            className="border rounded px-3 border-black bg-black/60 text-white/80"
+            onClick={() => handleRegisterClick(event)}
+          >
+            Register
+          </button>
+        )}
+      </div>
+      
+    </div>
+  </motion.div>
+</motion.div>
+</motion.div>
+
             ))}
           </div>
         </div>
