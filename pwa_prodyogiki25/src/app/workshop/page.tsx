@@ -155,7 +155,8 @@ const WorkshopSlider = () => {
       {...handlers}
     >
       <Burger />
-      <div className="mt-32 relative w-[351px] h-[438px] lg:w-[500px] lg:h-[600px] overflow-hidden rounded-[22px] transition-transform duration-300 ease-in-out transform hover:scale-105">
+      <div className="text-white text-3xl text-center font-bold mb-8 mt-20">WORKSHOP</div>
+      <div className="mt-0 relative w-[351px] h-[500px] lg:w-[500px] lg:h-[800px] overflow-hidden rounded-[22px] transition-transform duration-300 ease-in-out transform hover:scale-105">
         <div
           className="flex transition-transform duration-500"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}

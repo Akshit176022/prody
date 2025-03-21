@@ -244,6 +244,7 @@ const Members  = () => {
     <div>
       <Burger/>
     <div>
+
       <div className="flex pt-20 space-x-6 mx-2 overflow-x-auto whitespace-nowrap">
         {teamSections.map((section) => (
           <motion.div
