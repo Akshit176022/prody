@@ -71,14 +71,14 @@ const WorkshopSlider = () => {
     trackMouse: true,
   });
 
-  //  const handleRegisterClick = () => {
-  //   const token = localStorage.getItem("jwt");
-  //   if (!token) {
-  //     alert("You must be logged in to register for a workshop.");
-  //     return;
-  //   }
-  //   setIsModalOpen(true);
-  // };
+   const handleRegisterClick = () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      alert("You must be logged in to register for a workshop.");
+      return;
+    }
+    setIsModalOpen(true);
+  };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -205,7 +205,7 @@ const WorkshopSlider = () => {
           {new Date(workshops[currentIndex]?.date).toLocaleDateString()}
         </div>
 
-                {/* <div
+                 <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
           style={{
             background: "linear-gradient(0deg, #8BDBD8, #70C6F6)",
@@ -213,7 +213,7 @@ const WorkshopSlider = () => {
           onClick={handleRegisterClick}
         >
           Register Now
-        </div> */}
+        </div> 
        
 
       </div>
