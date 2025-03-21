@@ -10,7 +10,7 @@ export default function Top() {
               </div>
               <div className="flex flex-col pt-3 ml-2">
                 <div className="text-white font-semibold">Hello,</div>
-                <div className="text-white -mt-1 text-opacity-70 font-semibold text-[15px]">Welcome to PRODYOGIKI&apos;25</div>
+                <div className="text-white -mt-1  font-semibold text-[15px]">Welcome to PRODYOGIKI&apos;25</div>
               </div>
             </div>
       

@@ -24,7 +24,7 @@ const WorkshopSlider = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [registrationLoading, setRegistrationLoading] = useState(false);
-
+  const [isAutoSlideActive, setIsAutoSlideActive] = useState(true);
 
   useEffect(() => {
     const fetchWorkshops = async () => {
@@ -46,17 +46,21 @@ const WorkshopSlider = () => {
   }, []);
 
   useEffect(() => {
-    if (workshops.length > 0) {
+    if (workshops.length > 0 && isAutoSlideActive) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % workshops.length);
       }, 5000);
 
       return () => clearInterval(interval);
     }
-  }, [workshops]);
+  }, [workshops, isAutoSlideActive]);
 
   const handleCardChange = (index: number) => {
     setCurrentIndex(index);
+  };
+
+  const handleCardClick = () => {
+    setIsAutoSlideActive((prev) => !prev);
   };
 
   const handlers = useSwipeable({
@@ -67,14 +71,14 @@ const WorkshopSlider = () => {
     trackMouse: true,
   });
 
-  {/* const handleRegisterClick = () => {
-    const token = localStorage.getItem("jwt");
-    if (!token) {
-      alert("You must be logged in to register for a workshop.");
-      return;
-    }
-    setIsModalOpen(true);
-  };*/}
+  //  const handleRegisterClick = () => {
+  //   const token = localStorage.getItem("jwt");
+  //   if (!token) {
+  //     alert("You must be logged in to register for a workshop.");
+  //     return;
+  //   }
+  //   setIsModalOpen(true);
+  // };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -151,7 +155,10 @@ const WorkshopSlider = () => {
       {...handlers}
     >
       <Navbar />
-      <div className="mt-32 relative w-[300px] h-[438px] lg:w-[500px] lg:h-[600px] overflow-hidden rounded-[22px] transition-transform duration-300 ease-in-out transform hover:scale-105">
+      <div
+        className="mt-32 relative w-[300px] h-[438px] lg:w-[500px] lg:h-[600px] overflow-hidden rounded-[22px] transition-transform duration-300 ease-in-out transform hover:scale-105"
+        onClick={handleCardClick}
+      >
         <div
           className="flex transition-transform duration-500"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
@@ -161,13 +168,13 @@ const WorkshopSlider = () => {
               key={workshop.id}
               className="flex-shrink-0 w-[351px] h-[438px] lg:w-[500px] lg:h-[600px] p-[2px] rounded-[22px] border-[3px] border-teal-500"
             >
-              <div className="flex flex-col items-center rounded-[22px] w-full h-full p-4  opacity-80">
+              <div className="flex flex-col items-center rounded-[22px] w-full h-full p-4   opacity-80">
                 <Image
                   src={workshop.image}
                   alt={workshop.title}
                   width={200}
                   height={200}
-                  className="mt-4 mb-4 object-cover w-40 h-40 lg:w-72 lg:h-72"
+                  className="mt-4 mb-4 object-cover lg:w-72 lg:h-72"
                 />
                 <div className="text-center text-md lg:text-lg text-white mx-4">
                   {workshop.description}
@@ -198,7 +205,7 @@ const WorkshopSlider = () => {
           {new Date(workshops[currentIndex]?.date).toLocaleDateString()}
         </div>
 
-        {/* <div
+                {/* <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
           style={{
             background: "linear-gradient(0deg, #8BDBD8, #70C6F6)",
@@ -206,8 +213,9 @@ const WorkshopSlider = () => {
           onClick={handleRegisterClick}
         >
           Register Now
-        </div>
-        */}
+        </div> */}
+       
+
       </div>
 
       {isModalOpen && (

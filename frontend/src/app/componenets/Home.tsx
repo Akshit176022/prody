@@ -6,15 +6,15 @@ import { useRouter } from "next/navigation";
 
 
 
-const sponsors = [
-  { type: "Title Sponsor", name: "Company A", description: "Leading industry giant.", image: "/images/bgnew5.png" },
-  { type: "Gold Sponsor", name: "Company B", description: "Innovators in tech.", image: "/images/bgnew5.png" },
-  { type: "Silver Sponsor", name: "Company C", description: "Revolutionizing AI.", image: "/images/bgnew5.png" },
-  { type: "Bronze Sponsor", name: "Company D", description: "Your trusted partner.", image: "/images/bgnew5.png" },
-  { type: "Silver Sponsor", name: "Company C", description: "Revolutionizing AI.", image: "/images/bgnew5.png" },
-  { type: "Bronze Sponsor", name: "Company D", description: "Your trusted partner.", image: "/images/bgnew5.png" },
+// const sponsors = [
+//   { type: "Title Sponsor", name: "Company A", description: "Leading industry giant.", image: "/images/bgnew5.png" },
+//   { type: "Gold Sponsor", name: "Company B", description: "Innovators in tech.", image: "/images/bgnew5.png" },
+//   { type: "Silver Sponsor", name: "Company C", description: "Revolutionizing AI.", image: "/images/bgnew5.png" },
+//   { type: "Bronze Sponsor", name: "Company D", description: "Your trusted partner.", image: "/images/bgnew5.png" },
+//   { type: "Silver Sponsor", name: "Company C", description: "Revolutionizing AI.", image: "/images/bgnew5.png" },
+//   { type: "Bronze Sponsor", name: "Company D", description: "Your trusted partner.", image: "/images/bgnew5.png" },
 
-];
+// ];
 
 
 export default function Home() {
@@ -112,7 +112,7 @@ export default function Home() {
         <div className="m-2 text-bold text-7xl">PRODYOGIKI</div>
         <div className="m-2">{displayedText}<span className="animate-blink">|</span></div>
 
-        <div className="grid grid-cols-3 grid-rows-1 gap-8 p-8 mt-20 bg-black">
+        {/* <div className="grid grid-cols-3 grid-rows-1 gap-8 p-8 mt-20 bg-black">
       {sponsors.map((sponsor, index) => (
         <div key={index} className="flex flex-col justify-center p-4  rounded-lg shadow-lg">
           <h3 className="text-lg font-bold text-white">{sponsor.type}</h3>
@@ -123,8 +123,23 @@ export default function Home() {
       
         </div>
       ))}
+    </div> */}
+
+    <div className="mt-28  ">
+      <div className="text-4xl border-2 border-white p-4 px-8  rounded-2xl ">ABOUT PRODYOGIKI</div>
+
     </div>
+    <div className="mt-12  font-thin text-2xl">Prodyogiki, an exciting event hosted by ISTE NIT Hamirpur, brings together technology and engineering enthusiasts to showcase their skills and apply their knowledge practically. The event features interactive sessions, workshops, events, quizzes, and more. At ISTE NIT Hamirpur, we are committed to fostering a culture of technological advancement. Prodyogiki unites various engineering and technical disciplines, setting new standards of excellence at NIT Hamirpur.</div>
+
+
+    <div className="mt-8 ">
+
+        </div>
+        <p className="mt-8 text-3xl">For partnership opportunities, please contact us at <a href="mailto:iste@nith.ac.in" className="text-teal-300 hover:text-teal-100">iste@nith.ac.in</a>.</p>
       </div>
+
+
+
 
 
 

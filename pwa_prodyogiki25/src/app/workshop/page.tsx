@@ -23,6 +23,7 @@ const WorkshopSlider = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [registrationLoading, setRegistrationLoading] = useState(false);
+  const [isAutoSlideActive, setIsAutoSlideActive] = useState(true);
 
   useEffect(() => {
     const fetchWorkshops = async () => {
@@ -42,18 +43,22 @@ const WorkshopSlider = () => {
     };
     fetchWorkshops();
   }, []);
-
   useEffect(() => {
-    if (workshops.length > 0) {
+    if (workshops.length > 0 && isAutoSlideActive) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % workshops.length);
       }, 5000);
+  
       return () => clearInterval(interval);
     }
-  }, [workshops]);
+  }, [workshops, isAutoSlideActive]);
 
   const handleCardChange = (index: number) => {
     setCurrentIndex(index);
+  };
+
+  const handleCardClick = () => {
+    setIsAutoSlideActive((prev) => !prev);
   };
 
   const handlers = useSwipeable({
@@ -146,6 +151,7 @@ const WorkshopSlider = () => {
   return (
     <div
       className="flex flex-col items-center min-h-screen bg-cover bg-center bg-no-repeat px-4"
+      onClick={handleCardClick}
       {...handlers}
     >
       <Burger />
@@ -159,7 +165,7 @@ const WorkshopSlider = () => {
               key={workshop.id}
               className="flex-shrink-0 w-[351px] h-[438px] lg:w-[500px] lg:h-[600px] p-[2px] rounded-[22px] border-[3px] border-teal-500"
             >
-              <div className="flex flex-col items-center rounded-[22px] w-full h-full p-4 bg-[#121212] opacity-80">
+              <div className="flex flex-col items-center rounded-[22px] w-full h-full opacity-80">
                 <Image
                   src={workshop.image}
                   alt={workshop.title}

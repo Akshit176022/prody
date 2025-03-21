@@ -5,7 +5,6 @@ import Burger from "../home/components/hamburger";
 import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
 import Link from "next/link";
 
 interface Event {
@@ -32,7 +31,6 @@ interface User {
   };
 }
 
-
 export default function Event() {
   const [visibleEvent, setVisibleEvent] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,8 +45,9 @@ export default function Event() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
+  // Fetch events (no authentication required)
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -66,49 +65,53 @@ export default function Event() {
     fetchEvents();
   }, []);
 
+  // Check if the user is logged in
   useEffect(() => {
     const token = localStorage.getItem("jwt");
-  
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
-          {
-            headers: {
-              Authorization: `${token}`,
-            },
-          }
-        );
-        setUser(response.data.user);
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
-        router.push("/login");
-      }
-    };
-  
-    fetchUserProfile();
-  }, []); // Runs only on mount
-  
+    if (token) {
+      setIsLoggedIn(true);
+      fetchUserProfile(token);
+    }
+  }, []);
+
+  // Fetch user profile if logged in
+  const fetchUserProfile = async (token: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/user/`,
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+        }
+      );
+      setUser(response.data.user);
+    } catch (error) {
+      console.error("Failed to fetch user profile:", error);
+      setIsLoggedIn(false);
+    }
+  };
+
+  // Check if the user is registered for the selected event
   useEffect(() => {
-    if (user && user.registered_events) {
+    if (user && user.registered_events && selectedEvent) {
       const { is_live_events, is_completed_events, is_upcoming_events } = user.registered_events;
       const userRegisteredEvents = [...is_live_events, ...is_completed_events, ...is_upcoming_events];
-      
-      // Check if the event is already registered
-      if (selectedEvent) {
-        const found = userRegisteredEvents.some((e) => e.id === selectedEvent.id);
-        console.log(`Event ${selectedEvent.id} is registered:`, found);
-        setIsRegistered(found);
-      }
+      const found = userRegisteredEvents.some((e) => e.id === selectedEvent.id);
+      setIsRegistered(found);
     }
-  }, [user,events]); 
-  
+  }, [user, selectedEvent]);
 
   const toggleEventDetails = (index: number) => {
     setVisibleEvent((prev) => (prev === index ? null : index));
   };
 
   const handleRegisterClick = (event: Event) => {
+    if (!isLoggedIn) {
+      alert("You must be logged in to register for an event.");
+      router.push("/login");
+      return;
+    }
     setSelectedEvent(event);
     setIsModalOpen(true);
   };
@@ -148,23 +151,17 @@ export default function Event() {
         if (isCreateTeam) {
           await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-team/`,
-            { name: teamName ,
-              user_id: tokenPayload.user_id,
-              event_id: selectedEvent.id
-            },
+            { name: teamName, user_id: tokenPayload.user_id, event_id: selectedEvent.id },
             { headers: { Authorization: ` ${token}` } }
           );
-
         } else if (isJoinTeam) {
           await axios.post(
             `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/join-team/`,
-            { user_id: tokenPayload.user_id, team_id: teamId , event_id: selectedEvent.id},
+            { user_id: tokenPayload.user_id, team_id: teamId, event_id: selectedEvent.id },
             { headers: { Authorization: ` ${token}` } }
           );
         }
-        
       } else {
-        
         await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/register-event/${selectedEvent.id}/`,
           { user_id: tokenPayload.user_id },
@@ -210,7 +207,7 @@ export default function Event() {
 
   return (
     <>
-      <div className=" bg-cover bg-center font-sans min-h-screen">
+      <div className="bg-cover bg-center font-sans min-h-screen">
         <Burger />
         <div className="text-center pt-24 text-white font-sans text-[28px]">
           OUR EVENTS
@@ -272,18 +269,18 @@ export default function Event() {
                       className="w-full h-full object-cover rounded-t-[30px]"
                     />
                     <div className="absolute top-0 bg-transparent w-full px-2 rounded-b-[30px]">
-                    <Link href={event.abstract_link}>
-                      <div className="text-center absolute right-4 top-2  w-7/12 text-[10px] border-white border rounded px-3 border-black bg-black/60 text-white/80">
-                        CLICK FOR ABSTRACT
-                      </div>
+                      <Link href={event.abstract_link}>
+                        <div className="text-center absolute right-4 top-2  text-[10px rounded px-3 bg-black/60 text-white/80">
+                          ABSTRACT
+                        </div>
                       </Link>
-                      {/*<div className="text-center mt-20 text-3xl">{event.name}</div>
+                      <div className="text-center mt-12 mx-[20%] backdrop-blur-2xl text-3xl">{event.name}</div>
                 
-                      <div className="text-[14px] mt-2 text-center">
+                      <div className="text-[14px] mt-2 text-center backdrop-blur-2xl">
                         {event.description}
-                      </div>*/}
-                      <div className="mt-56 text-center p-4">
-                        {isRegistered ? (
+                      </div>
+                      <div className="mt-0 text-center p-4">
+                        {isLoggedIn && isRegistered ? (
                           <button className="border px-3 border-white bg-white/20 text-white/80">
                             Registered
                           </button>
@@ -296,7 +293,6 @@ export default function Event() {
                           </button>
                         )}
                       </div>
-
                     </div>
                   </motion.div>
                 </motion.div>
@@ -378,28 +374,24 @@ export default function Event() {
               >
                 Cancel
               </button>
-              <button 
-                onClick={handleRegister} 
+              <button
+                onClick={handleRegister}
                 className={`${
-                  (selectedEvent.is_team_event && 
-                    ((isCreateTeam && !teamName) || 
-                    (isJoinTeam && !teamId) || 
-                    (!isCreateTeam && !isJoinTeam))
-                  ) 
-                  ? "bg-gray-400 cursor-not-allowed" 
-                  : "bg-teal-600 hover:bg-teal-700"
+                  (selectedEvent.is_team_event &&
+                    ((isCreateTeam && !teamName) ||
+                      (isJoinTeam && !teamId) ||
+                      (!isCreateTeam && !isJoinTeam)))
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-teal-600 hover:bg-teal-700"
                 } text-white px-4 py-2 rounded-lg`}
-                disabled={selectedEvent.is_team_event && 
-                        ((isCreateTeam && !teamName) || 
-                          (isJoinTeam && !teamId) || 
-                          (!isCreateTeam && !isJoinTeam))}
+                disabled={
+                  selectedEvent.is_team_event &&
+                  ((isCreateTeam && !teamName) ||
+                    (isJoinTeam && !teamId) ||
+                    (!isCreateTeam && !isJoinTeam))
+                }
               >
-                {selectedEvent.is_team_event && 
-                ((isCreateTeam && !teamName) || 
-                  (isJoinTeam && !teamId) || 
-                  (!isCreateTeam && !isJoinTeam)) 
-                  ? "Register" 
-                  : "Register"}
+                Register
               </button>
             </div>
           </div>
