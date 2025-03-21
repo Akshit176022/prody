@@ -287,7 +287,7 @@ export default function Event() {
       
       <div className="mt-64 text-center p-4">
         {isLoggedIn && isRegistered ? (
-          <button className="border px-3 border-white bg-white/20 text-white/80">
+          <button className="border px-3 border-white bg-black text-white/80">
             Registered
           </button>
         ) : (
