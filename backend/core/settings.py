@@ -191,8 +191,8 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = "Celery <iste@nith.ac.in>"
-
+# DEFAULT_FROM_EMAIL = "Celery <iste@nith.ac.in>"
+DEFAULT_FROM_EMAIL = "ISTE NITH <iste@nith.ac.in>"
 
 CORS_ALLOW_ALL_ORIGINS = True 
 CORS_ALLOW_CREDENTIALS = True
