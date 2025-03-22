@@ -6,9 +6,9 @@ import Burger from "../home/components/hamburger";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
 import { useRouter } from "next/navigation";
 import "swiper/css";
+import { Pagination } from "swiper/modules";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
