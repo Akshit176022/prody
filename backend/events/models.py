@@ -90,6 +90,7 @@ class Workshop(models.Model):
     date = models.DateTimeField()
     image = models.ImageField(upload_to="workshops/")
     location = models.CharField(max_length=200)
+    whatsapp_group = models.URLField(blank=True)
     max_participants = models.PositiveIntegerField()
     registered_participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,  

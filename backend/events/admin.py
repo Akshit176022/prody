@@ -144,7 +144,7 @@ class FAQAdmin(admin.ModelAdmin):
 
 @admin.register(Workshop)
 class WorkshopAdmin(admin.ModelAdmin):
-    list_display = ("title", "date", "location", "max_participants", "registered_participants_list")
+    list_display = ("title", "date", "location", "max_participants", "registered_participants_list", "whatsapp_group")
     search_fields = ("title", "location")
     list_filter = ("date", "location")
 

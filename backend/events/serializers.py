@@ -116,6 +116,7 @@ class WorkshopSerializer(serializers.ModelSerializer):
             "location",
             "max_participants",
             "registered_participants",
+            "whatsapp_group"
         ]
         
 class TeamDetailSerializer(serializers.ModelSerializer):

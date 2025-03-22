@@ -89,7 +89,7 @@ const CountdownTimer = () => {
   return (
 
 <div className="ml-32" >
-<div className="bg-black backdrop-blur-md  rounded-3xl shadow-2xl mt-24  text-white border-2 mx-[20%] justify-center h-[30%] border-white">
+<div className="bg-black backdrop-blur-md  rounded-3xl shadow-2xl mt-32  text-white border-2 mx-[20%] justify-center h-[30%] border-white">
         <h1 className="text-4xl font-bold mb-8 text-center mt-12 ">TIME LEFT</h1>
         <h1 className="text-4xl text-center text-white"> STAY TUNED FOR UPDATES</h1>
         {/* <div className="flex gap-4 justify-center">

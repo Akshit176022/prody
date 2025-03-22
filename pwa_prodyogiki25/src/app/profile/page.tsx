@@ -57,15 +57,18 @@ const Profile = () => {
   const [isLoadingMoreEvents, setIsLoadingMoreEvents] = useState(false);
   const [errorMoreEvents, setErrorMoreEvents] = useState<unknown>(null);
   const [errorUser, setErrorUser] = useState<unknown>(null);
+  const [showLoginMessage, setShowLoginMessage] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
-    
 
     if (!storedToken) {
-      console.error("No token found. Please log in.");
-      router.push("/login")
+      setShowLoginMessage(true);
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000); 
       return;
     }
 
@@ -83,7 +86,7 @@ const Profile = () => {
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
         setErrorUser(error);
-        router.push("/login")
+        router.push("/login");
       }
     };
 
@@ -115,7 +118,7 @@ const Profile = () => {
 
     fetchUserProfile();
     fetchMoreEvents();
-  }, [profileImages]);
+  }, [profileImages, router]);
 
   if (errorUser) {
     return (
@@ -134,10 +137,20 @@ const Profile = () => {
   }
 
   return (
-    <div
-      className="flex flex-col items-center h-screen bg-cover bg-center bg-no-repeat min-w-screen"
-     
-    >
+    <div className="flex flex-col items-center h-screen bg-cover bg-center bg-no-repeat min-w-screen">
+      {showLoginMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="text-lg font-semibold text-gray-800">
+              You must be logged in to access this page.
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Redirecting to the login page...
+            </p>
+          </div>
+        </div>
+      )}
+
       <Burger />
       <div className="mt-20 participant_info font-inter flex flex-col text-white items-center justify-center">
         <div className="relative flex items-center justify-center w-36 h-36 rounded-full bg-gradient-to-b from-[#1B7774] to-[#0E1F25]">
@@ -164,61 +177,42 @@ const Profile = () => {
           Registered Events
         </div>
         <Swiper
-          modules={[Navigation, Pagination]}
+          modules={[Pagination]} 
           spaceBetween={20}
           slidesPerView={1}
-          navigation
-          pagination={{ clickable: true }}
+          navigation={false}
+          pagination={{ clickable: true }} 
           breakpoints={{
             640: { slidesPerView: 1 },
             768: { slidesPerView: 2 },
             1024: { slidesPerView: 3 },
           }}
           className="w-full"
-><div className="w-full px-6 pb-2 mt-12">
-  <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
-    Registered Events
-  </div>
-  <Swiper
-      modules={[Pagination]} // Only using Pagination, no Navigation
-      spaceBetween={20}
-      slidesPerView={1}
-      navigation={false}
-      pagination={{ clickable: true }} // Only Pagination, no buttons
-      breakpoints={{
-        640: { slidesPerView: 1 },
-        768: { slidesPerView: 2 },
-        1024: { slidesPerView: 3 },
-      }}
-      className="w-full"
-    >
-      {/* Live Events */}
-      {user.team_event_mapping.map((mapping, index) => (
-        <SwiperSlide
-          key={index}
-          className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
         >
-          <div className="text-center mt-2">
-            <p className="font-semibold text-2xl text-white">{mapping.event.name}</p>
 
-            <p className="text-1xl text-teal-200">
-              {mapping.event.is_team_event ? "Team Event" : "Individual Event"}
-            </p>
+          {user.team_event_mapping.map((mapping, index) => (
+            <SwiperSlide
+              key={index}
+              className="flex flex-col items-center hover:scale-105 transition-all duration-300 mb-8 bg-teal-800/20 backdrop-blur-md border border-teal-500/30 rounded-lg p-4 shadow-lg"
+            >
+              <div className="text-center mt-2">
+                <p className="font-semibold text-2xl text-white">{mapping.event.name}</p>
 
-            {mapping.event.is_team_event && (
-              <p className="text-sm text-gray-300">Team Name: {mapping.team.name}</p>
-            )}
-            {mapping.event.is_team_event && (
-              <p className="text-sm text-gray-300">Team Id: {mapping.team.id}</p>
-            )}
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
-</div>
+                <p className="text-1xl text-teal-200">
+                  {mapping.event.is_team_event ? "Team Event" : "Individual Event"}
+                </p>
+
+                {mapping.event.is_team_event && (
+                  <p className="text-sm text-gray-300">Team Name: {mapping.team.name}</p>
+                )}
+                {mapping.event.is_team_event && (
+                  <p className="text-sm text-gray-300">Team Id: {mapping.team.id}</p>
+                )}
+              </div>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
-
 
       <div className="flex px-6 pt-7 pb-2 justify-between w-full">
         <div className="text-white font-semibold text-lg">
@@ -235,33 +229,33 @@ const Profile = () => {
         <div className="text-red-500">Failed to load more events.</div>
       ) : (
         <Link href="/events">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 w-full text-white">
-          {moreEvents.map((event) => (
-            <div
-              key={event.id}
-              className="flex items-center mb-4 hover:scale-110 transition-all duration-300"
-            >
-              <Image
-                src={event.poster}
-                alt={event.name}
-                width={64}
-                height={64}
-                className="rounded-full object-cover w-[14vw] translate-x-2"
-              />
-              <Image
-                src="/Subtract.svg"
-                alt="Decoration"
-                width={500}
-                height={500}
-                className="w-[30vw] relative"
-              />
-              <div className="absolute translate-x-20 -translate-y-2 bg- px-2">
-                {event.name}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 w-full text-white">
+            {moreEvents.map((event) => (
+              <div
+                key={event.id}
+                className="flex items-center mb-4 hover:scale-110 transition-all duration-300"
+              >
+                <Image
+                  src={event.poster}
+                  alt={event.name}
+                  width={64}
+                  height={64}
+                  className="rounded-full object-cover w-[14vw] translate-x-2"
+                />
+                <Image
+                  src="/Subtract.svg"
+                  alt="Decoration"
+                  width={500}
+                  height={500}
+                  className="w-[30vw] relative"
+                />
+                <div className="absolute translate-x-20 -translate-y-2 bg- px-2">
+                  {event.name}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </Link>
+            ))}
+          </div>
+        </Link>
       )}
     </div>
   );

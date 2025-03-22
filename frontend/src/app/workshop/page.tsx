@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useSwipeable } from "react-swipeable";
 import Navbar from '../componenets/Navbar';
 import Footer from '../componenets/Footer';
+import Link from "next/link";
 
 interface Workshop {
   id: number;
@@ -14,6 +15,8 @@ interface Workshop {
   location: string;
   max_participants: number;
   registered_participants: number[]; 
+  whatsapp_group: string;
+
 }
 
 const WorkshopSlider = () => {
@@ -207,6 +210,18 @@ const WorkshopSlider = () => {
   <div className="text-white text-lg lg:text-xl mb-6">
     Location: {workshops[currentIndex]?.location}
   </div>
+  <div className="text-white text-lg lg:text-xl mb-6">
+  WhatsApp Group:{" "}
+  <Link
+    href={workshops[currentIndex]?.whatsapp_group}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-blue-400 underline"
+  >
+    Join WhatsApp Group
+  </Link>
+</div>
+
 
                  <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"

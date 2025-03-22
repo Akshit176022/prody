@@ -2,10 +2,10 @@
 import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; 
 import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
 import axios from "axios";
-
 
 type TeamEventMapping = {
   event: {
@@ -45,6 +45,7 @@ type User = {
 };
 
 const Profile = () => {
+  const router = useRouter(); 
   const profileImages = useMemo(() => ["/p1.svg", "/p2.svg", "/p3.svg", "/p4.svg", "/p5.svg"], []);
 
   const [profileImg, setProfileImg] = useState("");
@@ -53,12 +54,17 @@ const Profile = () => {
   const [isLoadingMoreEvents, setIsLoadingMoreEvents] = useState(false);
   const [errorMoreEvents, setErrorMoreEvents] = useState<unknown>(null);
   const [errorUser, setErrorUser] = useState<unknown>(null);
+  const [showLoginMessage, setShowLoginMessage] = useState(false); 
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwt");
 
     if (!storedToken) {
-      console.error("No token found. Please log in.");
+      setShowLoginMessage(true);
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 3000); 
       return;
     }
 
@@ -97,7 +103,7 @@ const Profile = () => {
 
     fetchUserProfile();
     fetchMoreEvents();
-  }, []);
+  }, [router]); 
 
   useEffect(() => {
     const storedImage = localStorage.getItem("profileImg");
@@ -128,9 +134,22 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col items-center">
+
+      {showLoginMessage && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+            <p className="text-lg font-semibold text-gray-800">
+              You must be logged in to access this page.
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Redirecting to the login page...
+            </p>
+          </div>
+        </div>
+      )}
+
       <Navbar />
 
-      {/* Profile Section */}
       <div className="mt-28 participant_info font-inter flex flex-col text-white items-center justify-center">
         <div className="relative flex items-center justify-center w-36 h-36 rounded-full bg-gradient-to-b from-[#1B7774] to-[#0E1F25]">
           <div className="w-28 h-28 rounded-full overflow-hidden my-3">
@@ -156,7 +175,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Registered Events Section */}
       <div className="w-full px-6 pb-2 mt-12">
         <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl text-center">
           Registered Events
@@ -186,7 +204,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* More Events Section */}
       <div className="flex px-6 pb-2 mt-12 justify-between w-full">
         <div className="text-white mt-7 mx-auto font-semibold pb-8 text-2xl">
          All Events

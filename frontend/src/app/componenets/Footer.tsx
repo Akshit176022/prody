@@ -7,7 +7,6 @@ const Footer = () => {
   return (
     <div className="flex flex-col justify-center items-center px-10 py-3 text-white shadow">
       
-      {/* Main Logo */}
       <div>
         <Image
           src="/images/logo.png"
@@ -20,14 +19,9 @@ const Footer = () => {
 
       
       <div className="mt-7 font-medium text-3xl">PRODYOGIKI 2025</div>
-
-      
       <div className="line bg-white w-[85vw] h-[1px] rounded-3xl mt-5"></div>
 
-      
-      <div className="flex justify-center w-[100vw] items-center py-3  ">
-        
-        
+      <div className="flex justify-center w-[100vw] items-center py-3">
         <div className="flex items-center justify-center ">
           <Image
             src="/iste.webp"
@@ -40,7 +34,7 @@ const Footer = () => {
         </div>
 
         <div className="flex items-center pl-40 justify-center mb-4 space-x-6">
-          <a href="" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.instagram.com/teamistenith?igsh=ZGYweDRha211bTN5" target="_blank" rel="noopener noreferrer">
             <FaInstagram size={40} className="hover:text-gray-600 transition-colors duration-200" />
           </a>
 

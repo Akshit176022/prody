@@ -135,7 +135,7 @@ export default function Home() {
     <div className="mt-8 ">
 
         </div>
-        <p className="mt-8 text-3xl">For partnership opportunities, please contact us at <a href="mailto:iste@nith.ac.in" className="text-teal-300 hover:text-teal-100">iste@nith.ac.in</a>.</p>
+        <p className="mt-8 text-2xl">For partnership opportunities, please contact us at <a href="mailto:iste@nith.ac.in" className="text-teal-300 hover:text-teal-100">iste@nith.ac.in</a>.</p>
       </div>
 
 

@@ -60,7 +60,7 @@ const SignupPage: React.FC = () => {
       });
       console.log("Registration successful:", response.data);
       setSuccessMessage("User registered successfully!");
-      alert("Registered Successfully!! Please check your mail to verify your account before login")
+      alert("Registered Successfully!! Please check your mail to verify your account before login (Check spam folder too)")
       setTimeout(() => {
         router.push("/login");
       }, 2000);
