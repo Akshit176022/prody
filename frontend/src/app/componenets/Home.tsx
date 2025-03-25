@@ -40,7 +40,7 @@ export default function Home() {
 
 
   useEffect(() => {
-    const texts = ["REALMS OF ENGINEERING", "WHERE ENGINEERING MEETS INNOVATION"]; 
+    const texts = ["REALMS OF ENGINEERING MARVELS", "WHERE ENGINEERING MEETS INNOVATION"]; 
     const currentText = texts[textIndex];
 
     if (!isDeleting && charIndex < currentText.length) {
@@ -110,6 +110,9 @@ export default function Home() {
           height={1600}
         />
         <div className="m-2 text-bold text-7xl">PRODYOGIKI</div>
+        <div className="m-2 font-bold text-3xl ">
+ 4<sup>th</sup> - 6<sup>th</sup> April, 2025
+</div>
         <div className="m-2">{displayedText}<span className="animate-blink">|</span></div>
 
         {/* <div className="grid grid-cols-3 grid-rows-1 gap-8 p-8 mt-20 bg-black">
@@ -125,7 +128,7 @@ export default function Home() {
       ))}
     </div> */}
 
-    <div className="mt-28  ">
+    <div className="mt-12 ">
       <div className="text-4xl border-2 border-white p-4 px-8  rounded-2xl ">ABOUT PRODYOGIKI</div>
 
     </div>

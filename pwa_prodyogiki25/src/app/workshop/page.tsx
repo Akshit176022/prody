@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Burger from "../home/components/hamburger";
 import { useSwipeable } from "react-swipeable";
-import Link from "next/link";
 
 interface Workshop {
   id: number;
@@ -14,7 +13,6 @@ interface Workshop {
   location: string;
   max_participants: number;
   registered_participants: number[];
-  whatsapp_group: string;
 }
 
 const WorkshopSlider = () => {
@@ -27,6 +25,11 @@ const WorkshopSlider = () => {
   const [registrationLoading, setRegistrationLoading] = useState(false);
   const [isAutoSlideActive, setIsAutoSlideActive] = useState(true);
 
+  // const whatsappGroupLinks: { [key: number]: string } = {
+  //   1: "https://chat.whatsapp.com/workshop1link",
+  //   2: "https://chat.whatsapp.com/workshop2link", 
+  // };
+
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
@@ -35,7 +38,7 @@ const WorkshopSlider = () => {
           throw new Error(`Failed to fetch workshops: ${response.statusText}`);
         }
         const data = await response.json();
-        console.log(data); // Check if whatsapp_group is present
+        console.log(data); 
         setWorkshops(data);
         setSelectedWorkshop(data[0]);
       } catch (err) {
@@ -74,14 +77,14 @@ const WorkshopSlider = () => {
     trackMouse: true,
   });
 
-  const handleRegisterClick = () => {
-    const token = localStorage.getItem("jwt");
-    if (!token) {
-      alert("You must be logged in to register for a workshop.");
-      return;
-    }
-    setIsModalOpen(true);
-  };
+  // const handleRegisterClick = () => {
+  //   const token = localStorage.getItem("jwt");
+  //   if (!token) {
+  //     alert("You must be logged in to register for a workshop.");
+  //     return;
+  //   }
+  //   setIsModalOpen(true);
+  // };
 
 
   const handleModalClose = () => {
@@ -211,26 +214,15 @@ const WorkshopSlider = () => {
     Location: {workshops[currentIndex]?.location}
   </div>
 
-  <div className="text-white text-lg lg:text-xl mb-6">
-  WhatsApp Group:{" "}
-  <Link
-    href={workshops[currentIndex]?.whatsapp_group}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-blue-400 underline"
-  >
-    Join WhatsApp Group
-  </Link>
-</div>
+
 
          <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
           style={{
             background: "linear-gradient(0deg, #8BDBD8, #70C6F6)",
           }}
-          onClick={handleRegisterClick}
         >
-          Register Now
+          Register For Workshop are closed.
         </div>
 
       </div>

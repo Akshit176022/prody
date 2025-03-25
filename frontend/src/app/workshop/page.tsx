@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSwipeable } from "react-swipeable";
-import Navbar from '../componenets/Navbar';
-import Footer from '../componenets/Footer';
-import Link from "next/link";
+import Navbar from "../componenets/Navbar";
+import Footer from "../componenets/Footer";
 
 interface Workshop {
   id: number;
@@ -14,9 +13,7 @@ interface Workshop {
   image: string;
   location: string;
   max_participants: number;
-  registered_participants: number[]; 
-  whatsapp_group: string;
-
+  registered_participants: number[];
 }
 
 const WorkshopSlider = () => {
@@ -29,6 +26,7 @@ const WorkshopSlider = () => {
   const [registrationLoading, setRegistrationLoading] = useState(false);
   const [isAutoSlideActive, setIsAutoSlideActive] = useState(true);
 
+
   useEffect(() => {
     const fetchWorkshops = async () => {
       try {
@@ -37,9 +35,11 @@ const WorkshopSlider = () => {
           throw new Error(`Failed to fetch workshops: ${response.statusText}`);
         }
         const data = await response.json();
+        console.log("Fetched workshops:", data); // Debugging
         setWorkshops(data);
-        setSelectedWorkshop(data[0]);
+        setSelectedWorkshop(data[0]); // Set the first workshop as selected
       } catch (err) {
+        console.error("Error fetching workshops:", err); // Debugging
         setError(err instanceof Error ? err.message : "Failed to load workshops. Please try again later.");
       } finally {
         setLoading(false);
@@ -74,14 +74,14 @@ const WorkshopSlider = () => {
     trackMouse: true,
   });
 
-   const handleRegisterClick = () => {
-    const token = localStorage.getItem("jwt");
-    if (!token) {
-      alert("You must be logged in to register for a workshop.");
-      return;
-    }
-    setIsModalOpen(true);
-  };
+  // const handleRegisterClick = () => {
+  //   const token = localStorage.getItem("jwt");
+  //   if (!token) {
+  //     alert("You must be logged in to register for a workshop.");
+  //     return;
+  //   }
+  //   setIsModalOpen(true);
+  // };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -117,7 +117,7 @@ const WorkshopSlider = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Backend error response:", errorData);
+        console.error("Backend error response:", errorData); // Debugging
         throw new Error(errorData.error || "Failed to register for the workshop");
       }
 
@@ -125,7 +125,7 @@ const WorkshopSlider = () => {
       alert(data.message);
       handleModalClose();
     } catch (error) {
-      console.error("Error registering for workshop:", error);
+      console.error("Error registering for workshop:", error); // Debugging
       if (error instanceof Error) {
         alert(error.message);
       } else {
@@ -169,15 +169,15 @@ const WorkshopSlider = () => {
           {workshops.map((workshop) => (
             <div
               key={workshop.id}
-              className="flex-shrink-0 w-[351px] h-[438px] lg:w-[500px] lg:h-[600px] p-[2px] rounded-[22px] border-[3px] border-teal-500"
+              className="flex-shrink-0 w-[300px] h-[438px] lg:w-[500px] lg:h-[600px] p-[2px] rounded-[22px] border-[3px] border-teal-500"
             >
-              <div className="flex flex-col items-center rounded-[22px] w-full h-full p-4   opacity-80">
+              <div className="flex flex-col items-center rounded-[22px] w-full h-full p-4 opacity-80">
                 <Image
                   src={workshop.image}
                   alt={workshop.title}
                   width={200}
                   height={200}
-                  className="mt-4 mb-4 object-cover lg:w-72 lg:h-72"
+                  className="mt-4 mb-4 object-cover w-40 h-40 lg:w-56 lg:h-56"
                 />
                 <div className="text-center text-md lg:text-lg text-white mx-4">
                   {workshop.description}
@@ -207,33 +207,19 @@ const WorkshopSlider = () => {
         <div className="text-white font-bold mt-6 text-lg lg:text-2xl mb-6">
           {new Date(workshops[currentIndex]?.date).toLocaleDateString()}
         </div>
-  <div className="text-white text-lg lg:text-xl mb-6">
-    Location: {workshops[currentIndex]?.location}
-  </div>
-  <div className="text-white text-lg lg:text-xl mb-6">
-  WhatsApp Group:{" "}
-  <Link
-    href={workshops[currentIndex]?.whatsapp_group}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="text-blue-400 underline"
-  >
-    Join WhatsApp Group
-  </Link>
-</div>
+        <div className="text-white text-lg lg:text-xl mb-6">
+          Location: {workshops[currentIndex]?.location}
+        </div>
 
 
-                 <div
+        <div
           className="mt-6 text-black px-10 py-3 text-base lg:text-lg rounded-full cursor-pointer transition-transform transform hover:scale-110 mb-32"
           style={{
             background: "linear-gradient(0deg, #8BDBD8, #70C6F6)",
           }}
-          onClick={handleRegisterClick}
         >
-          Register Now
-        </div> 
-       
-
+         Registration for workshops is closed
+        </div>
       </div>
 
       {isModalOpen && (

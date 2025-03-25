@@ -7,12 +7,12 @@ type TargetDateResponse = {
 
 const CountdownTimer = () => {
   const [targetDate, setTargetDate] = useState<Date | null>(null);
-  // const [timeLeft, setTimeLeft] = useState({
-  //   days: 0,
-  //   hours: 0,
-  //   minutes: 0,
-  //   seconds: 0,
-  // });
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,29 +38,29 @@ const CountdownTimer = () => {
     fetchTargetDate();
   }, []);
 
-  // useEffect(() => {
-  //   if (!targetDate) return;
+  useEffect(() => {
+    if (!targetDate) return;
 
-  //   const interval = setInterval(() => {
-  //     const now = new Date().getTime();
-  //     const difference = targetDate.getTime() - now;
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const difference = targetDate.getTime() - now;
 
-  //     if (difference <= 0) {
-  //       clearInterval(interval);
-  //       setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  //       return;
-  //     }
+      if (difference <= 0) {
+        clearInterval(interval);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
 
-  //     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  //     const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  //     const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-  //     const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-  //     setTimeLeft({ days, hours, minutes, seconds });
-  //   }, 1000);
+      setTimeLeft({ days, hours, minutes, seconds });
+    }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, [targetDate]);
+    return () => clearInterval(interval);
+  }, [targetDate]);
 
   if (isLoading) {
     return (
@@ -90,9 +90,8 @@ const CountdownTimer = () => {
 
 <div className="ml-32" >
 <div className="bg-black backdrop-blur-md  rounded-3xl shadow-2xl mt-32  text-white border-2 mx-[20%] justify-center h-[30%] border-white">
-        <h1 className="text-4xl font-bold mb-8 text-center mt-12 ">TIME LEFT</h1>
-        <h1 className="text-4xl text-center text-white"> STAY TUNED FOR UPDATES</h1>
-        {/* <div className="flex gap-4 justify-center">
+        <h1 className="text-4xl font-bold mb-8 text-center mt-8 ">TIME LEFT</h1>
+        <div className="flex gap-4 justify-center">
 
           <div className="flex flex-col  ">
             <div className="flex flex-row">
@@ -125,7 +124,7 @@ const CountdownTimer = () => {
             <span className="text-6xl font-mono font-bold">{timeLeft.seconds}</span>
             <span className="text-lg">Seconds</span>
           </div>
-        </div> */}
+        </div> 
       </div>
 </div>
 

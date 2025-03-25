@@ -20,14 +20,14 @@ export default function Main() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 4 }}
           >
-            <div className="flex ml-12 mt-0">
-              <div className="flex flex-col mt-3 -ml-4 font-bold text-[28px] text-gradient bg-gradient-to-r from-[#59F7E2] to-white text-transparent bg-clip-text">
+            <div className="flex ml-12 mt-2">
+              <div className="flex flex-col mt-1 -ml-4 font-bold text-[28px] text-gradient bg-gradient-to-r from-[#59F7E2] to-white text-transparent bg-clip-text">
                 PRODYOGIKI&apos;25
               </div>
             </div>
-            {/* <div className="ml-8 -mt-2 text-white text-[15px] text-opacity-60">
-              24-26th January
-            </div> */}
+            <div className="  ml-10  text-white text-1xl ">
+ 4<sup>th</sup> - 6<sup>th</sup>  April, 2025
+</div>
             <div className="w-full h-[1px] mt-5 bg-gradient-to-r from-transparent via-custom to-transparent"></div>
             <div className="mt-2 ml-8 text-white font-semibold text-[16px]">
               REALMS OF ENGINEERING MARVELS
