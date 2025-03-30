@@ -17,7 +17,7 @@ export const events: Event[] = [
     abstractLink: "https://example.com/abhedya-4-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/abhedya-4-abstract.pdf",
-    Link:"/events/3"
+    Link:"/events/5"
   },
  
   {
@@ -46,7 +46,7 @@ export const events: Event[] = [
     abstractLink: "https://example.com/cybersiege-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/cybersiege-abstract.pdf",
-     Link:"/events/4"
+     Link:"/events/12"
   },
   {
     id: 3,
@@ -55,7 +55,7 @@ export const events: Event[] = [
     abstractLink: "https://example.com/aeroquest-glider-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/aeroquest-glider-abstract.pdf",
-     Link:"/events/5"
+     Link:"/events/3"
   },
   {
     id: 6,
@@ -118,6 +118,6 @@ export const events: Event[] = [
     abstractLink: "https://example.com/game-on-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/game-on-abstract.pdf",
-     Link:"/events/12"
+     Link:"/events/4"
   },
 ];
