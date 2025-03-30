@@ -172,8 +172,8 @@ export default function Event() {
       alert("Registration successful!");
       handleCloseModal();
       // router.push("/profile");
-      if (selectedEvent.id === 10) {
-        window.location.href = "https://chat.deepseek.com/a/chat/s/9dd2acce-a777-4090-ac27-9225be26d73a";
+      if (selectedEvent.id === 5) {
+        window.location.href = "https://abhedya.istenith.com/";
       } else {
         router.push("/profile");
       }

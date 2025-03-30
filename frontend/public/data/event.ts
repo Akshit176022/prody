@@ -11,7 +11,7 @@ export interface Event {
 
 export const events: Event[] = [
   {
-    id: 1,
+    id: 5,
     name: "Abhedya 4.0",
     description: "Description for Abhedya 4.0. hsgdushbdcs csdhufsdcns csdijcsdnc sdkjcfoksnc sdcdsjcs csdijcnsd cksdhcsdncsdcosjcnolsjdiosjcdosnc sdijcoisdnc scsidjcnsld csdjcscns csidjc sdcoc sdjcnsd csdcsdjcns dcsdcisdous dcsdcosdncsudhusdcsjdhsdbsdhhshsduhdhwhdjdnsjhsdhffyrfbrcjdhc ssdjsnc sjcnsdjn",
     abstractLink: "https://example.com/abhedya-4-abstract",
@@ -30,7 +30,7 @@ export const events: Event[] = [
      Link:"/events/2"
   },
   {
-    id: 3,
+    id: 1,
     name: "Monopoly",
     description: "Description for Monopoly event.",
     abstractLink: "https://example.com/monopoly-abstract",
@@ -40,7 +40,7 @@ export const events: Event[] = [
     
   },
   {
-    id: 4,
+    id: 12,
     name: "CyberSiege",
     description: "Description for CyberSiege event.",
     abstractLink: "https://example.com/cybersiege-abstract",
@@ -49,7 +49,7 @@ export const events: Event[] = [
      Link:"/events/4"
   },
   {
-    id: 5,
+    id: 3,
     name: "AeroQuest Glider",
     description: "Description for AeroQuest Glider event.",
     abstractLink: "https://example.com/aeroquest-glider-abstract",
@@ -112,7 +112,7 @@ export const events: Event[] = [
      Link:"/events/11"
   },
   {
-    id: 12,
+    id: 4,
     name: "Game on",
     description: "Description for Game on event.",
     abstractLink: "https://example.com/game-on-abstract",

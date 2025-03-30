@@ -171,7 +171,7 @@ const Profile = () => {
         <div className="points text-lg font-semibold text-white">{user.prody_points}</div>
         <div className="points text-base font-medium mb-8 text-white">Prody Points</div>
         <div
-      onClick={() => (window.location.href = "https://chat.whatsapp.com/your-community-link")}
+      onClick={() => (window.location.href = "https://chat.whatsapp.com/L9oRQK10eGL25CSGI6wZQK")}
       className="bg-teal-500 text-white text-lg font-semibold px-6 py-3 rounded-2xl shadow-md cursor-pointer hover:bg-teal-600 active:bg-teal-700 transition duration-300"
     >
       Join WhatsApp Community
