@@ -171,7 +171,13 @@ export default function Event() {
 
       alert("Registration successful!");
       handleCloseModal();
-      router.push("/profile");
+      // router.push("/profile");
+      if (selectedEvent.id === 10) {
+        window.location.href = "https://chat.deepseek.com/a/chat/s/9dd2acce-a777-4090-ac27-9225be26d73a";
+      } else {
+        router.push("/profile");
+      }
+      
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {

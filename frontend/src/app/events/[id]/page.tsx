@@ -84,6 +84,7 @@ export default function EventDetails() {
     fetchUserProfile();
   }, []); // Runs only on mount
   
+  
   useEffect(() => {
     if (user && user.registered_events) {
       const { is_live_events, is_completed_events, is_upcoming_events } = user.registered_events;
@@ -150,7 +151,12 @@ export default function EventDetails() {
 
       alert("Registration successful!");
       setShowRegistrationModal(false);
-      router.push("/profile");
+      if (id === "10") {
+        window.location.href = "https://chat.deepseek.com/a/chat/s/9dd2acce-a777-4090-ac27-9225be26d73a";
+      } else {
+        router.push("/profile");
+      }
+    
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
