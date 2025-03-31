@@ -1,7 +1,9 @@
 "use client"
 import { useEffect, useRef } from "react";
-import { timelineData, Day } from "@/lib/timeline";
-import Burger from "../home/components/hamburger";
+import Navbar from "../componenets/Navbar";
+import Footer from "../componenets/Footer";
+import { timelineData,Day } from "@/lib/timeline";
+
 
 const Timeline = () => {
   const eventRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -38,8 +40,8 @@ const Timeline = () => {
 
   return (
     <div className="min-h-screen p-6 "> 
-      <Burger />
-      <div className="flex items-center justify-center mt-12">
+      <Navbar/>
+      <div className="flex items-center justify-center mt-24">
         <div className="text-white text-3xl font-bold mb-4">Timeline</div>
       </div>
 
@@ -51,7 +53,7 @@ const Timeline = () => {
         }
 
         return (
-          <div key={day.day} className="mb-8">
+          <div key={day.day} className="mb-8 w-[70%] ">
             <h2 className="text-2xl font-bold text-teal-500 mb-4">{day.day}</h2>
             {day.events.map((event, eventIndex) => {
               const refIndex = startingIndex + eventIndex;
@@ -73,6 +75,7 @@ const Timeline = () => {
           </div>
         );
       })}
+      <Footer/>
     </div>
   );
 };
