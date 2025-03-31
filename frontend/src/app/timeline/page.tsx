@@ -1,81 +1,94 @@
-"use client"
-import { useEffect, useRef } from "react";
+"use client";
+import {  useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Navbar from "../componenets/Navbar";
 import Footer from "../componenets/Footer";
-import { timelineData,Day } from "@/lib/timeline";
-
+import { timelineData, Day } from "@/lib/timeline";
 
 const Timeline = () => {
-  const eventRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  useEffect(() => {
-    // Initialize refs array with correct length
-    const totalEvents = timelineData.reduce((sum, day) => sum + day.events.length, 0);
-    eventRefs.current = Array(totalEvents).fill(null);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("opacity-100", "translate-y-0");
-            entry.target.classList.remove("opacity-0", "translate-y-10");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    
-    const currentRefs = eventRefs.current;
-    currentRefs.forEach((event) => {
-      if (event) observer.observe(event);
-    });
-
-    return () => {
-      currentRefs.forEach((event) => {
-        if (event) observer.unobserve(event);
-      });
-    };
-  }, []);
+  // Animated track line
+  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div className="min-h-screen p-6 "> 
-      <Navbar/>
-      <div className="flex items-center justify-center mt-24">
-        <div className="text-white text-3xl font-bold mb-4">Timeline</div>
+    <div className="min-h-screen p-6 ">
+      <Navbar />
+      
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex items-center justify-center mt-24 mb-12"
+      >
+        <h1 className="text-4xl font-bold  text-white">
+          EVENT TIMELINE
+        </h1>
+      </motion.div>
+
+      <div ref={containerRef} className="relative mx-auto w-[70%]">
+        {/* Animated track line */}
+        <motion.div
+          className="absolute left-[2px] top-0 h-full w-1 bg-teal-500 origin-top"
+          style={{ scaleY: pathLength }}
+        />
+        
+        {/* Timeline items */}
+        {timelineData.map((day: Day) => (
+          <div key={day.day} className="relative mb-12 p-8 pl-8">
+            <div className="bg-gray-800/50 backdrop-blur-sm border text-2xl text-white border-gray-700 rounded-xl p-6 shadow-lg hover:shadow-teal-500/10 transition-all duration-300 hover:border-teal-400/3 ">
+
+
+              {day.day}
+              </div>
+
+
+            {/* Events */}
+            {day.events.map((event, eventIndex) => (
+              <motion.div
+                key={`${day.day}-${event.title}-${eventIndex}`}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: eventIndex * 0.1 }}
+                className="relative mb-8 mt-8"
+              >
+                {/* Event dot */}
+                <div className="absolute -left-10 top-4 h-4 w-4  rounded-full bg-teal-500 ring-4 ring-teal-500/30" />
+                
+                {/* Event card */}
+                <div className="bg-gray-800/50 backdrop-blur-sm border  border-gray-700 rounded-xl p-6 shadow-lg hover:shadow-teal-500/10 transition-all duration-300 hover:border-teal-400/30">
+                  <motion.h3 
+                    whileHover={{ x: 5 }}
+                    className="text-xl font-semibold text-teal-300 mb-2"
+                  >
+                    {event.title}
+                  </motion.h3>
+                  <motion.p 
+                    whileHover={{ x: 2 }}
+                    className="text-gray-300"
+                  >
+                    {event.description}
+                  </motion.p>
+                  
+                  {/* Decorative elements */}
+                  <motion.div 
+                    initial={{ scale: 0 }}
+                    whileInView={{ scale: 1 }}
+                    className="absolute -right-2 -top-2 h-3 w-3 rounded-full bg-teal-400"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ))}
       </div>
 
-      {timelineData.map((day: Day, dayIndex: number) => {
-        // Calculate starting index for this day's events
-        let startingIndex = 0;
-        for (let i = 0; i < dayIndex; i++) {
-          startingIndex += timelineData[i].events.length;
-        }
-
-        return (
-          <div key={day.day} className="mb-8 w-[70%] ">
-            <h2 className="text-2xl font-bold text-teal-500 mb-4">{day.day}</h2>
-            {day.events.map((event, eventIndex) => {
-              const refIndex = startingIndex + eventIndex;
-              return (
-                <div
-                  key={`${day.day}-${event.title}-${eventIndex}`}
-                  ref={(el) => {
-                    eventRefs.current[refIndex] = el;
-                  }}
-                  className="opacity-100 translate-y-0 transition-all duration-500 ease-in-out bg-teal-900 bg-opacity-20 border-l-4 border-teal-500 p-4 rounded-lg mb-4"
-                >
-                  <h3 className="text-xl font-semibold text-teal-300">
-                    {event.title}
-                  </h3>
-                  <p className="text-gray-300">{event.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-      <Footer/>
+      <Footer />
     </div>
   );
 };

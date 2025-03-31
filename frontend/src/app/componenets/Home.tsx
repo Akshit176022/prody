@@ -134,11 +134,6 @@ export default function Home() {
     </div>
     <div className="mt-12  font-thin text-2xl">Prodyogiki, an exciting event hosted by ISTE NIT Hamirpur, brings together technology and engineering enthusiasts to showcase their skills and apply their knowledge practically. The event features interactive sessions, workshops, events, quizzes, and more. At ISTE NIT Hamirpur, we are committed to fostering a culture of technological advancement. Prodyogiki unites various engineering and technical disciplines, setting new standards of excellence at NIT Hamirpur.</div>
 
-
-    <div className="mt-8 ">
-
-        </div>
-        <p className="mt-8 text-2xl">For partnership opportunities, please contact us at <a href="mailto:iste@nith.ac.in" className="text-teal-300 hover:text-teal-100">iste@nith.ac.in</a>.</p>
       </div>
 
 

@@ -13,7 +13,7 @@ const navItems = [
   { name: "Members", path: "/members" },
   { name: "Profile", path: "/profile" },
   { name: "Sponsors", path: "/sponsors" },
-  // { name: "Timeline", path: "/timeline" },
+  { name: "Timeline", path: "/timeline" },
 ];
 
 const Navbar = () => {

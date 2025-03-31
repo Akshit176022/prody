@@ -89,14 +89,14 @@ const CountdownTimer = () => {
   return (
 
 <div className="ml-32" >
-<div className="bg-black backdrop-blur-md  rounded-3xl shadow-2xl mt-32  text-white border-2 mx-[20%] justify-center h-[30%] border-white">
-        <h1 className="text-4xl font-bold mb-8 text-center mt-8 ">TIME LEFT</h1>
+<div className="bg-black backdrop-blur-md  rounded-3xl shadow-2xl mt-12  text-white border-2 mx-[20%] justify-center h-64 border-white">
+        <h1 className="text-3xl font-bold mb-8 text-center mt-8 ">TIME LEFT</h1>
         <div className="flex gap-4 justify-center">
 
           <div className="flex flex-col  ">
             <div className="flex flex-row">
-            <span className="text-6xl font-mono font-bold">{timeLeft.days}</span>
-            <span className="text-6xl ml-2 font-mono font-bold">:</span>
+            <span className="text-5xl font-mono font-bold">{timeLeft.days}</span>
+            <span className="text-5xl ml-2 font-mono font-bold">:</span>
             </div>
   
             <span className="text-lg ">Days</span>
@@ -104,8 +104,8 @@ const CountdownTimer = () => {
 
           <div className="flex flex-col ">
             <div className="flex flex-row">
-            <span className="text-6xl font-mono font-bold">{timeLeft.hours}</span>
-            <span className="text-6xl ml-2 font-mono font-bold">:</span>
+            <span className="text-5xl font-mono font-bold">{timeLeft.hours}</span>
+            <span className="text-5xl ml-2 font-mono font-bold">:</span>
             </div>
 
             <span className="text-lg">Hours</span>
@@ -113,15 +113,15 @@ const CountdownTimer = () => {
 
           <div className="flex flex-col ">
             <div className="flex flex-row">
-            <span className="text-6xl font-mono font-bold">{timeLeft.minutes}</span>
-            <span className="text-6xl ml-2 font-mono font-bold">:</span>
+            <span className="text-5xl font-mono font-bold">{timeLeft.minutes}</span>
+            <span className="text-5xl ml-2 font-mono font-bold">:</span>
             </div>
  
             <span className="text-lg">Minutes</span>
           </div>
 
           <div className="flex flex-col ">
-            <span className="text-6xl font-mono font-bold">{timeLeft.seconds}</span>
+            <span className="text-5xl font-mono font-bold">{timeLeft.seconds}</span>
             <span className="text-lg">Seconds</span>
           </div>
         </div> 

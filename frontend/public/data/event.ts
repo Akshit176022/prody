@@ -21,13 +21,13 @@ export const events: Event[] = [
   },
  
   {
-    id: 2,
+    id: 14,
     name: "Codequest Chronicle 2.0",
     description: "Description for Codequest Chronicle 2.0.",
     abstractLink: "https://example.com/codequest-chronicle-2-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/codequest-chronicle-2-abstract.pdf",
-     Link:"/events/2"
+     Link:"/events/14"
   },
   {
     id: 1,
@@ -40,58 +40,58 @@ export const events: Event[] = [
     
   },
   {
-    id: 12,
+    id: 8,
     name: "CyberSiege",
     description: "Description for CyberSiege event.",
     abstractLink: "https://example.com/cybersiege-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/cybersiege-abstract.pdf",
-     Link:"/events/12"
+     Link:"/events/8"
   },
   {
-    id: 3,
+    id: 13,
     name: "AeroQuest Glider",
     description: "Description for AeroQuest Glider event.",
     abstractLink: "https://example.com/aeroquest-glider-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/aeroquest-glider-abstract.pdf",
-     Link:"/events/3"
+     Link:"/events/13"
   },
   {
-    id: 6,
+    id: 12,
     name: "Chemystery 2.0",
     description: "Description for Chemystery 2.0 event.",
     abstractLink: "https://example.com/chemystery-2-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/chemystery-2-abstract.pdf",
-     Link:"/events/6"
+     Link:"/events/12"
   },
   {
-    id: 7,
+    id: 9,
     name: "FilteRaid",
     description: "Description for FilteRaid event.",
     abstractLink: "https://example.com/filteraid-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/filteraid-abstract.pdf",
-     Link:"/events/7"
+     Link:"/events/9"
   },
   {
-    id: 8,
+    id: 7,
     name: "Ohm Alone",
     description: "Description for Ohm Alone event.",
     abstractLink: "https://example.com/ohm-alone-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/ohm-alone-abstract.pdf",
-     Link:"/events/8"
+     Link:"/events/7"
   },
   {
-    id: 9,
+    id: 6,
     name: "Torque Dash",
     description: "Description for Torque Dash event.",
     abstractLink: "https://example.com/torque-dash-abstract",
     photoUrl: "/images/1.jpeg",
     abstractUrl: "https://example.com/torque-dash-abstract.pdf",
-     Link:"/events/9"
+     Link:"/events/6"
   },
   {
     id: 10,
@@ -104,7 +104,7 @@ export const events: Event[] = [
   },
   {
     id: 11,
-    name: "Breach-o-beach",
+    name: "Breach-O-Beach",
     description: "Description for Breach-o-beach event.",
     abstractLink: "https://example.com/breach-o-beach-abstract",
     photoUrl: "/images/1.jpeg",
@@ -113,7 +113,7 @@ export const events: Event[] = [
   },
   {
     id: 4,
-    name: "Game on",
+    name: "Game On",
     description: "Description for Game on event.",
     abstractLink: "https://example.com/game-on-abstract",
     photoUrl: "/images/1.jpeg",
