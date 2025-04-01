@@ -13,7 +13,7 @@ export interface Event {
     {
       day: "Day 1",
       events: [
-        { title: "Breach-O-Beach, Torque Dash", description: "Material Distribution, 4-7pm" },
+        { title: "Aeroquest Glider, Torque Dash", description: "Material Distribution, 4-7pm" },
         { title: "Game-on!", description: "Building Phase, 4-7pm" },
         { title: "Chemystrey 2.O", description: "Round 1, 4-7pm" },
       ],
@@ -36,7 +36,7 @@ export interface Event {
         { title: "Torque Dash", description: "Final Evaluation, 10am-12:30pm"},
         { title: "Ohm Alone", description: "Round 2, 9am-1pm"},
         { title: "Game-On!", description: "Final Evaluation, 9am-2pm"},
-        { title: "Bidwiser", description: "Final Evaluation, 2pm-7pm"},
+        { title: "Bidwiser", description: "Round 2, 2pm-7pm"},
         { title: "FilteRaid", description: "Round 2, 2pm-7pm"},
         { title: "Aeroquest Glider", description: "Final Evaluation, 4pm-6pm"},
       ],
