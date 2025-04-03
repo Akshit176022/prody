@@ -96,3 +96,11 @@ class FullUserSerializer(serializers.ModelSerializer):
         data['registered_teams'] = self.get_registered_teams(instance)
 
         return data
+
+class ProdyPointsUpdateSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    points_to_add = serializers.IntegerField(default=100, min_value=1)
+    reason = serializers.CharField(required=False, allow_blank=True)
+
+class BulkProdyPointsUpdateSerializer(serializers.Serializer):
+    updates = ProdyPointsUpdateSerializer(many=True)

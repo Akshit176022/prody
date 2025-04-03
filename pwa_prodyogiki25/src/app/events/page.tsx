@@ -135,8 +135,7 @@ export default function Event() {
     const tokenPayload = JSON.parse(atob(token.split(".")[1]));
     const expiration = tokenPayload.exp * 1000;
     if (Date.now() > expiration) {
-      alert("Your session has expired. Please log in again.");
-      localStorage.removeItem("jwt");
+      alert("Your session has expire. Please log in again");
       router.push("/login");
       return;
     }
@@ -181,8 +180,7 @@ export default function Event() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
-          alert("Your session has expired. Please log in again.");
-          localStorage.removeItem("jwt");
+          alert("Team id do not exist enter correct team id");
           router.push("/login");
         } else {
           console.log("Already registered", error);

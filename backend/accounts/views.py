@@ -3,15 +3,17 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import CustomUser
 from events.models import Event, Team
-from .serializers import UserSerializer, FullUserSerializer
+from .serializers import UserSerializer, FullUserSerializer, ProdyPointsUpdateSerializer,BulkProdyPointsUpdateSerializer
 import logging
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import NotFound
 import jwt
 import datetime
 from django.core.mail import send_mail
 from django.conf import settings
 from django.urls import reverse
-from rest_framework.exceptions import AuthenticationFailed
+
 from django.http import HttpResponse
 
 logger = logging.getLogger(__name__)
@@ -367,3 +369,155 @@ class RegisterEventView(APIView):
         # serialized_events = FullUserSerializer(user).data['registered_events']
 
         return Response({'message': 'User registered for the event successfully', }, status=status.HTTP_200_OK)
+
+
+class ProdyPointsManagementView(APIView):
+    """
+    API endpoint for managing Prody points
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get_user_by_email(self, email):
+        try:
+            return CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            raise NotFound(detail="User not found")
+
+    def post(self, request):
+        """
+        Add Prody points to a single user
+        """
+        serializer = ProdyPointsUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data['email']
+        points_to_add = serializer.validated_data['points_to_add']
+        reason = serializer.validated_data.get('reason', '')
+
+        user = self.get_user_by_email(email)
+        user.prody_points += points_to_add
+        user.save()
+
+        # Log the points update
+        logger.info(
+            f"Added {points_to_add} Prody points to {email} by {request.user.email}. Reason: {reason}"
+        )
+
+        return Response({
+            'message': f'Successfully added {points_to_add} points to {email}',
+            'new_balance': user.prody_points,
+            'user_id': user.user_id
+        })
+
+    def put(self, request):
+        """
+        Bulk update Prody points for multiple users
+        """
+        serializer = BulkProdyPointsUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        results = []
+        for update in serializer.validated_data['updates']:
+            email = update['email']
+            points_to_add = update['points_to_add']
+            reason = update.get('reason', '')
+
+            try:
+                user = self.get_user_by_email(email)
+                user.prody_points += points_to_add
+                user.save()
+
+                # Log each update
+                logger.info(
+                    f"Bulk added {points_to_add} Prody points to {email} by {request.user.email}. Reason: {reason}"
+                )
+
+                results.append({
+                    'email': email,
+                    'status': 'success',
+                    'new_balance': user.prody_points,
+                    'user_id': user.user_id
+                })
+            except Exception as e:
+                results.append({
+                    'email': email,
+                    'status': 'failed',
+                    'error': str(e)
+                })
+
+        return Response({
+            'message': 'Bulk update completed',
+            'results': results
+        })
+
+class ProdyPointsTransferView(APIView):
+    """
+    API endpoint for transferring Prody points between users
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        from_email = request.data.get('from_email')
+        to_email = request.data.get('to_email')
+        points = request.data.get('points')
+        reason = request.data.get('reason', '')
+
+        # Validate inputs
+        if not all([from_email, to_email, points]):
+            return Response(
+                {'error': 'from_email, to_email and points are required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            points = int(points)
+            if points <= 0:
+                raise ValueError
+        except ValueError:
+            return Response(
+                {'error': 'points must be a positive integer'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # Get both users
+            from_user = CustomUser.objects.get(email=from_email)
+            to_user = CustomUser.objects.get(email=to_email)
+
+            # Check sufficient balance
+            if from_user.prody_points < points:
+                return Response(
+                    {'error': 'Insufficient Prody points'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Perform transfer
+            from_user.prody_points -= points
+            to_user.prody_points += points
+
+            from_user.save()
+            to_user.save()
+
+            # Log the transfer
+            logger.info(
+                f"Transferred {points} Prody points from {from_email} to {to_email} "
+                f"by {request.user.email}. Reason: {reason}"
+            )
+
+            return Response({
+                'message': 'Transfer successful',
+                'from_user': {
+                    'email': from_email,
+                    'new_balance': from_user.prody_points
+                },
+                'to_user': {
+                    'email': to_email,
+                    'new_balance': to_user.prody_points
+                }
+            })
+
+        except CustomUser.DoesNotExist:
+            return Response(
+                {'error': 'One or both users not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )

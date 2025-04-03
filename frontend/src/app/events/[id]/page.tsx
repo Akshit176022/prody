@@ -160,8 +160,7 @@ export default function EventDetails() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 401) {
-          alert("Your session has expired. Please log in again.");
-          localStorage.removeItem("jwt");
+          alert("Team id do not match or either user is not login");
           router.push("/login");
         } else {
           console.log("Registration failed:", error);
