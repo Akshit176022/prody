@@ -24,7 +24,7 @@ export default function Redirect() {
             initial ={{opacity:0}}
             animate={{opacity:1}}
             transition ={{duration:2}}>
-                          <div className="text-3xl mt-16">PRODYOGIKI&apos;25</div>
+                          <div className="text-3xl mt-16">PRODYOGIKI&apos;26</div>
             </motion.div>
             
 
