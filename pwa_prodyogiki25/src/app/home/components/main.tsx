@@ -22,11 +22,11 @@ export default function Main() {
           >
             <div className="flex ml-12 mt-2">
               <div className="flex flex-col mt-1 -ml-4 font-bold text-[28px] text-gradient bg-gradient-to-r from-[#59F7E2] to-white text-transparent bg-clip-text">
-                PRODYOGIKI&apos;25
+                PRODYOGIKI&apos;26
               </div>
             </div>
             <div className="  ml-10  text-white text-1xl ">
- 4<sup>th</sup> - 6<sup>th</sup>  April, 2025
+ 3<sup>th</sup> - 5<sup>th</sup>  April, 2026
 </div>
             <div className="w-full h-[1px] mt-5 bg-gradient-to-r from-transparent via-custom to-transparent"></div>
             <div className="mt-2 ml-8 text-white font-semibold text-[16px]">
