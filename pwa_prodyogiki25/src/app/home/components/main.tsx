@@ -26,7 +26,7 @@ export default function Main() {
               </div>
             </div>
             <div className="  ml-10  text-white text-1xl ">
- 3<sup>th</sup> - 5<sup>th</sup>  April, 2026
+ 3<sup>rd</sup> - 5<sup>th</sup>  April, 2026
 </div>
             <div className="w-full h-[1px] mt-5 bg-gradient-to-r from-transparent via-custom to-transparent"></div>
             <div className="mt-2 ml-8 text-white font-semibold text-[16px]">
