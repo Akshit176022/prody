@@ -18,7 +18,7 @@ const Footer = () => {
       </div>
 
       
-      <div className="mt-7 font-medium text-3xl">PRODYOGIKI 2025</div>
+      <div className="mt-7 font-medium text-3xl">PRODYOGIKI 2026</div>
       <div className="line bg-white w-[85vw] h-[1px] rounded-3xl mt-5"></div>
 
       <div className="flex justify-center w-[100vw] items-center py-3">
