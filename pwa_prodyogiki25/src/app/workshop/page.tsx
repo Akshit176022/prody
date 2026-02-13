@@ -148,13 +148,22 @@ const WorkshopSlider = () => {
       </div>
     );
   }
-  if (error) {
-    return (
-      <div className="flex justify-center items-center min-h-screen text-red-500">
-        {error}
+  if (error || workshops.length === 0) {
+  return (
+    <div
+      className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat px-4"
+    >
+      <Burger />
+      <div className="text-white text-4xl font-bold mt-20">
+        WORKSHOP
       </div>
-    );
-  }
+      <div className="text-white text-3xl font-bold mt-10">
+        Coming Soon
+      </div>
+    </div>
+  );
+}
+
 
   return (
     <div
