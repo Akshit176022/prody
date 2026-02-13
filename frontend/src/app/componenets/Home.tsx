@@ -111,7 +111,7 @@ export default function Home() {
         />
         <div className="m-2 text-bold text-7xl">PRODYOGIKI</div>
         <div className="m-2 font-bold text-3xl ">
- 4<sup>th</sup> - 6<sup>th</sup> April, 2025
+ 3<sup>rd</sup> - 5<sup>th</sup> April, 2026
 </div>
         <div className="m-2">{displayedText}<span className="animate-blink">|</span></div>
 
