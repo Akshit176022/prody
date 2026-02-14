@@ -11,7 +11,7 @@ const navItems = [
   { name: "Events", path: "/events" },
   { name: "Workshop", path: "/workshop" },
   { name: "Members", path: "/members" },
-  { name: "Profile", path: "/profile" },
+  // { name: "Profile", path: "/profile" }, 
   { name: "Sponsors", path: "/sponsors" },
   { name: "Timeline", path: "/timeline" },
 ];
@@ -67,7 +67,7 @@ const Navbar = () => {
             whileHover={{ scale: 1.1, color: "#26e9e3" }}
             transition={{ duration: 0.2 }}
           >
-            <Link href="/login">Login</Link>
+        
           </motion.li>
         )}
       </ul>

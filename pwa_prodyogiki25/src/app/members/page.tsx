@@ -8,8 +8,8 @@ export default function Members() {
       <Burger />
 
       <div className="flex items-center justify-center h-screen">
-        <div className="text-white text-4xl font-bold">
-          Team Coming Soon
+        <div className="text-white text-2xl -mt-32 font-thin mx-8">
+          The team will be revealed soon — stay tuned for exciting updates! 🚀
         </div>
       </div>
     </div>

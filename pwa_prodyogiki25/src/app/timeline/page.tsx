@@ -64,7 +64,7 @@ const Timeline = () => {
                   className="opacity-100 translate-y-0 transition-all duration-500 ease-in-out bg-teal-900 bg-opacity-20 border-l-4 border-teal-500 p-4 rounded-lg mb-4"
                 >
                   <h3 className="text-xl font-semibold text-teal-300">
-                    {event.title}
+                    {event.title} 
                   </h3>
                   <p className="text-gray-300">{event.description}</p>
                 </div>

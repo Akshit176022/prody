@@ -4,10 +4,10 @@ export const links: LinkState[] = [
   { href: "/home", name: "Home" },
   { href: "/events", name: "Events" },
   { href: "/members", name: "Members" },
-  { href: "/profile", name: "Profile" },
+  // { href: "/profile", name: "Profile" },
   { href: "/workshop", name: "Workshop" },
-  { href: "/timeline", name: "Timeline" },
-  { href: "/signup", name: "SignUp" },
+  // { href: "/timeline", name: "Timeline" },
+  // { href: "/signup", name: "SignUp" }, 
   { href:"/sponsors",name:"Sponsors"}
 ];
 

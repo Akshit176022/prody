@@ -78,7 +78,7 @@ export default function Home() {
       </div>
       <div className=" flex items-end">
         <div className="absolute top-44 right-40 h-24 w-72 flex items-center justify-center rounded-2xl border-2 border-white p-2 text-white text-[20px] font-bold shadow-lg text-center">
-          REGISTER NOW FOR EXISTING EVENTS !!
+          REGISTERATIONS WILL BEGIN SOON
         </div>
         {isLoggedIn ? (
 
@@ -88,11 +88,11 @@ export default function Home() {
         ) : (
           
           <button
-          onClick={() => window.location.href = '/signup'} 
+          onClick={() => window.location.href = '/timeline'} 
           className="absolute top-80 right-20 -translate-x-7 w-56 h-16 flex items-center justify-center rounded-2xl border-[1px] border-white p-2 text-white text-[24px] hover:bg-teal-400 hover:scale-105 transition-transform duration-300 shadow-lg text-center"
         >
           
-          SIGN UP
+         Timeline
         </button>
 
 

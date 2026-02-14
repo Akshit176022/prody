@@ -10,9 +10,9 @@ export default function Event() {
         OUR EVENTS
       </div>
 
-      <div className="flex items-center justify-center mt-40">
-        <div className="text-white text-4xl font-bold">
-          Events Coming Soon
+      <div className="flex items-center justify-center mt-20">
+        <div className="text-white text-2xl mx-8 font-thin">
+          Events will be announced soon — stay tuned for more updates and surprises! 🎉
         </div>
       </div>
     </div>
