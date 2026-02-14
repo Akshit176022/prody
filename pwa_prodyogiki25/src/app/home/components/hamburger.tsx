@@ -89,7 +89,7 @@ export default function Burger() {
 
           </ul>
           {/* Legal Links */}
-<div className="mt-12 border-t border-white/20 pt-6 text-white/60 text-sm space-y-4">
+<div className="mt-12 border-t border-white/20 pt-6 text-white text-lg space-y-4">
   {legalLinks.map((link) => (
     <Link
       key={link.href}

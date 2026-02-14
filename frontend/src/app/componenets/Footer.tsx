@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+
 import { FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
 
 const Footer = () => {
@@ -48,6 +50,16 @@ const Footer = () => {
         </div>
         
       </div>
+      {/* Code of Conduct */}
+<div className="mt-6 text-lg text-gray-300">
+  <Link
+    href="/code-of-conduct"
+    className="hover:text-white transition-colors duration-200"
+  >
+    Code of Conduct
+  </Link>
+</div>
+
     </div>
   );
 };
