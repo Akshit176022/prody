@@ -10,6 +10,10 @@ export const links: LinkState[] = [
   // { href: "/signup", name: "SignUp" }, 
   { href:"/sponsors",name:"Sponsors"}
 ];
+export const legalLinks = [
+  { href: "/code-of-conduct", name: "Code of Conduct" },
+];
+
 
 export const testimonials = [
     {src: "/images/1.jpeg"},

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react"; // Import useEffect
 import { useRouter } from "next/navigation"; // Import useRouter
-import { links } from "../../../lib/constants";
+import { links,legalLinks } from "../../../lib/constants";
 
 export default function Burger() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -88,6 +88,20 @@ export default function Burger() {
                     </li>
 
           </ul>
+          {/* Legal Links */}
+<div className="mt-12 border-t border-white/20 pt-6 text-white/60 text-sm space-y-4">
+  {legalLinks.map((link) => (
+    <Link
+      key={link.href}
+      href={link.href}
+      onClick={toggleMenu}
+      className="block hover:text-white transition"
+    >
+      {link.name}
+    </Link>
+  ))}
+</div>
+
         </div>
       )}
     </>
