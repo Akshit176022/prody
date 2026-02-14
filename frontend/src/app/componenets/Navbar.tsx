@@ -14,6 +14,7 @@ const navItems = [
   // { name: "Profile", path: "/profile" }, 
   { name: "Sponsors", path: "/sponsors" },
   { name: "Timeline", path: "/timeline" },
+  { name: "Code of Conduct", path: "/code-of-conduct" },
 ];
 
 const Navbar = () => {
@@ -45,7 +46,7 @@ const Navbar = () => {
         <div className="text-3xl font-semibold pl-4">PRODYOGIKI</div>
       </div>
 
-      <ul className="flex space-x-8 text-1xl">
+      <ul className="flex space-x-6 text-lg">
         {navItems.map((item, index) => (
           <motion.li
             key={index}
